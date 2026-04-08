@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 
 const NAV_LINKS = [
   { href: "/#generator", label: "Generator" },
+  { href: "/gallery", label: "Gallery" },
   { href: "/invoice-template", label: "Templates" },
   { href: "/invoice-generator", label: "By Country" },
   { href: "/how-to", label: "Guides" },

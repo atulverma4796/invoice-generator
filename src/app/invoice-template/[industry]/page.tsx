@@ -2,6 +2,8 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { INDUSTRIES, INDUSTRY_LIST } from "@/lib/industries";
+import { getStaticSampleInvoice, INDUSTRY_TEMPLATE_IDS } from "@/lib/sampleInvoice";
+import TemplatePreviewCard from "@/components/TemplatePreviewCard";
 import JsonLd from "@/components/JsonLd";
 
 const SITE_URL = "https://invoicegen.app";
@@ -55,8 +57,11 @@ export default async function IndustryPage({ params }: { params: Promise<{ indus
     ],
   };
 
-  // Related industries (4 random others)
+  // Related industries (6 others)
   const related = INDUSTRY_LIST.filter((i) => i.slug !== data.slug).slice(0, 6);
+
+  // Sample data with this industry's line items — used for template previews
+  const baseInvoice = getStaticSampleInvoice({ industry: data });
 
   return (
     <div>
@@ -99,32 +104,26 @@ export default async function IndustryPage({ params }: { params: Promise<{ indus
         </div>
       </section>
 
-      {/* Sample Items */}
+      {/* Template Gallery — pick a design pre-filled with this industry's items */}
       <section className="py-12 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Sample {data.name} Invoice Items</h2>
-          <p className="text-gray-600 mb-6">Pre-filled examples to get you started instantly:</p>
-          <div className="bg-gray-50 rounded-2xl border border-gray-200 overflow-hidden">
-            <table className="w-full">
-              <thead className="bg-gray-100">
-                <tr>
-                  <th className="text-left px-5 py-3 text-xs font-semibold uppercase text-gray-600">Description</th>
-                  <th className="text-right px-5 py-3 text-xs font-semibold uppercase text-gray-600">Qty</th>
-                  <th className="text-right px-5 py-3 text-xs font-semibold uppercase text-gray-600">Rate</th>
-                  <th className="text-right px-5 py-3 text-xs font-semibold uppercase text-gray-600">Amount</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.sampleItems.map((item, i) => (
-                  <tr key={i} className={i % 2 === 0 ? "bg-white" : ""}>
-                    <td className="px-5 py-3 text-sm text-gray-800">{item.description}</td>
-                    <td className="px-5 py-3 text-sm text-right text-gray-600">{item.qty}</td>
-                    <td className="px-5 py-3 text-sm text-right text-gray-600">${item.rate.toFixed(2)}</td>
-                    <td className="px-5 py-3 text-sm text-right font-medium text-gray-800">${(item.qty * item.rate).toFixed(2)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="flex items-end justify-between mb-6 flex-wrap gap-3">
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">Pick a {data.name} Invoice Template</h2>
+              <p className="text-gray-600">All 6 designs come pre-filled with sample {data.name.toLowerCase()} items. Click <strong>Use this template</strong> to start editing.</p>
+            </div>
+            <Link href="/gallery" className="text-sm text-blue-600 hover:text-blue-700 font-medium inline-flex items-center gap-1">
+              View all 10 templates →
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {INDUSTRY_TEMPLATE_IDS.map((templateId) => (
+              <TemplatePreviewCard
+                key={templateId}
+                templateId={templateId}
+                data={baseInvoice}
+              />
+            ))}
           </div>
         </div>
       </section>

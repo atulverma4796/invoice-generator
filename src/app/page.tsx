@@ -337,6 +337,22 @@ export default function Home() {
         // ignore parse errors
       }
     }
+
+    // Check if user clicked "Use this template" from gallery or industry page
+    const useTemplate = sessionStorage.getItem("invoicegen_use_template");
+    if (useTemplate) {
+      sessionStorage.removeItem("invoicegen_use_template");
+      try {
+        const loaded = JSON.parse(useTemplate) as InvoiceData;
+        setInvoice(loaded);
+        setShowErrors(false);
+        setTimeout(() => {
+          document.getElementById("generator")?.scrollIntoView({ behavior: "smooth" });
+        }, 100);
+      } catch {
+        // ignore parse errors
+      }
+    }
   }, []);
 
   // Load a recurring template by index (from reminder banner)

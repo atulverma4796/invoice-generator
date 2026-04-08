@@ -224,16 +224,11 @@ export default function RootLayout({
               </a>
               <nav className="hidden md:flex items-center gap-5 text-sm font-medium text-gray-600">
                 <a href="/#generator" className="hover:text-blue-600 transition-colors">Generator</a>
+                <a href="/gallery" className="hover:text-blue-600 transition-colors">Gallery</a>
                 <a href="/invoice-template" className="hover:text-blue-600 transition-colors">Templates</a>
                 <a href="/invoice-generator" className="hover:text-blue-600 transition-colors">By Country</a>
                 <a href="/how-to" className="hover:text-blue-600 transition-colors">Guides</a>
-                <a href="/templates" className="hover:text-amber-600 transition-colors inline-flex items-center gap-1">
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
-                  </svg>
-                  My Invoices
-                </a>
-                <a href="/#faq" className="hover:text-blue-600 transition-colors">FAQ</a>
+                <a href="/templates" className="hover:text-amber-600 transition-colors">My Invoices</a>
               </nav>
               <MobileMenu />
             </div>
@@ -267,6 +262,7 @@ export default function RootLayout({
                 <h4 className="text-sm font-semibold text-gray-800 mb-3">Quick Links</h4>
                 <nav className="flex flex-col gap-2">
                   <a href="/#generator" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">Generator</a>
+                  <a href="/gallery" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">Template Gallery</a>
                   <a href="/invoice-template" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">All Templates</a>
                   <a href="/invoice-generator" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">By Country</a>
                   <a href="/how-to" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">How-To Guides</a>
