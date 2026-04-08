@@ -6,7 +6,7 @@ import { getStaticSampleInvoice, INDUSTRY_TEMPLATE_IDS } from "@/lib/sampleInvoi
 import TemplatePreviewCard from "@/components/TemplatePreviewCard";
 import JsonLd from "@/components/JsonLd";
 
-const SITE_URL = "https://invoicegen.app";
+const SITE_URL = "https://freeinvoicegen.org";
 
 export function generateStaticParams() {
   return INDUSTRY_LIST.map((i) => ({ industry: i.slug }));

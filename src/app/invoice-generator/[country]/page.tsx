@@ -4,7 +4,7 @@ import Link from "next/link";
 import { SEO_COUNTRIES, SEO_COUNTRY_LIST } from "@/lib/seoCountries";
 import JsonLd from "@/components/JsonLd";
 
-const SITE_URL = "https://invoicegen.app";
+const SITE_URL = "https://freeinvoicegen.org";
 
 export function generateStaticParams() {
   return SEO_COUNTRY_LIST.map((c) => ({ country: c.slug }));

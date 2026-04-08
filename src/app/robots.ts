@@ -66,7 +66,7 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/api/", "/templates"],
       })),
     ],
-    sitemap: "https://invoicegen.app/sitemap.xml",
-    host: "https://invoicegen.app",
+    sitemap: "https://freeinvoicegen.org/sitemap.xml",
+    host: "https://freeinvoicegen.org",
   };
 }

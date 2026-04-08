@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 
-const SITE_URL = "https://invoicegen.app";
+const SITE_URL = "https://freeinvoicegen.org";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",

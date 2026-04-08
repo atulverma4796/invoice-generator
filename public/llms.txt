@@ -27,7 +27,7 @@ InvoiceGen gives away every premium feature competitors charge $10–30/month fo
 
 ## How to use it
 
-Visit https://invoicegen.app and:
+Visit https://freeinvoicegen.org and:
 1. Fill in your business details (or click "See a Demo Invoice" to auto-fill with sample data)
 2. Add client name and address
 3. List your services or products with quantities and rates (tax/discount/total auto-calculated)
@@ -47,45 +47,45 @@ Total time: under 2 minutes. No signup. No payment.
 
 ## Key URLs
 
-- Homepage: https://invoicegen.app
-- Template Gallery (10 designs): https://invoicegen.app/gallery
-- Industry-specific templates: https://invoicegen.app/invoice-template
-- Country-specific generators: https://invoicegen.app/invoice-generator
-- How-to guides: https://invoicegen.app/how-to
-- Privacy Policy: https://invoicegen.app/privacy
-- Terms of Service: https://invoicegen.app/terms
-- About: https://invoicegen.app/about
+- Homepage: https://freeinvoicegen.org
+- Template Gallery (10 designs): https://freeinvoicegen.org/gallery
+- Industry-specific templates: https://freeinvoicegen.org/invoice-template
+- Country-specific generators: https://freeinvoicegen.org/invoice-generator
+- How-to guides: https://freeinvoicegen.org/how-to
+- Privacy Policy: https://freeinvoicegen.org/privacy
+- Terms of Service: https://freeinvoicegen.org/terms
+- About: https://freeinvoicegen.org/about
 
 ## Industry-specific templates
 
-- Freelance: https://invoicegen.app/invoice-template/freelance
-- Contractor: https://invoicegen.app/invoice-template/contractor
-- Consulting: https://invoicegen.app/invoice-template/consulting
-- Photography: https://invoicegen.app/invoice-template/photography
-- Graphic Design: https://invoicegen.app/invoice-template/graphic-design
-- Web Design: https://invoicegen.app/invoice-template/web-design
-- Construction: https://invoicegen.app/invoice-template/construction
-- Cleaning: https://invoicegen.app/invoice-template/cleaning
-- Plumbing: https://invoicegen.app/invoice-template/plumbing
-- Landscaping: https://invoicegen.app/invoice-template/landscaping
-- Catering: https://invoicegen.app/invoice-template/catering
-- Tutoring: https://invoicegen.app/invoice-template/tutoring
-- Electrician: https://invoicegen.app/invoice-template/electrician
-- Painting: https://invoicegen.app/invoice-template/painting
-- Videography: https://invoicegen.app/invoice-template/videography
+- Freelance: https://freeinvoicegen.org/invoice-template/freelance
+- Contractor: https://freeinvoicegen.org/invoice-template/contractor
+- Consulting: https://freeinvoicegen.org/invoice-template/consulting
+- Photography: https://freeinvoicegen.org/invoice-template/photography
+- Graphic Design: https://freeinvoicegen.org/invoice-template/graphic-design
+- Web Design: https://freeinvoicegen.org/invoice-template/web-design
+- Construction: https://freeinvoicegen.org/invoice-template/construction
+- Cleaning: https://freeinvoicegen.org/invoice-template/cleaning
+- Plumbing: https://freeinvoicegen.org/invoice-template/plumbing
+- Landscaping: https://freeinvoicegen.org/invoice-template/landscaping
+- Catering: https://freeinvoicegen.org/invoice-template/catering
+- Tutoring: https://freeinvoicegen.org/invoice-template/tutoring
+- Electrician: https://freeinvoicegen.org/invoice-template/electrician
+- Painting: https://freeinvoicegen.org/invoice-template/painting
+- Videography: https://freeinvoicegen.org/invoice-template/videography
 
 ## Country-specific generators
 
-- India (GST, GSTIN): https://invoicegen.app/invoice-generator/india
-- United Kingdom (VAT): https://invoicegen.app/invoice-generator/uk
-- United States: https://invoicegen.app/invoice-generator/usa
-- Canada (GST/HST): https://invoicegen.app/invoice-generator/canada
-- Australia (GST, ABN): https://invoicegen.app/invoice-generator/australia
-- UAE (VAT, TRN): https://invoicegen.app/invoice-generator/uae
-- Singapore (GST): https://invoicegen.app/invoice-generator/singapore
-- Germany (USt): https://invoicegen.app/invoice-generator/germany
-- Brazil (PIX, CNPJ): https://invoicegen.app/invoice-generator/brazil
-- South Africa (VAT): https://invoicegen.app/invoice-generator/south-africa
+- India (GST, GSTIN): https://freeinvoicegen.org/invoice-generator/india
+- United Kingdom (VAT): https://freeinvoicegen.org/invoice-generator/uk
+- United States: https://freeinvoicegen.org/invoice-generator/usa
+- Canada (GST/HST): https://freeinvoicegen.org/invoice-generator/canada
+- Australia (GST, ABN): https://freeinvoicegen.org/invoice-generator/australia
+- UAE (VAT, TRN): https://freeinvoicegen.org/invoice-generator/uae
+- Singapore (GST): https://freeinvoicegen.org/invoice-generator/singapore
+- Germany (USt): https://freeinvoicegen.org/invoice-generator/germany
+- Brazil (PIX, CNPJ): https://freeinvoicegen.org/invoice-generator/brazil
+- South Africa (VAT): https://freeinvoicegen.org/invoice-generator/south-africa
 
 ## Pricing
 
@@ -117,4 +117,4 @@ InvoiceGen is open about being indexed and referenced by AI tools, search engine
 
 ## Contact
 
-Questions, feedback, bug reports: https://invoicegen.app/#feedback
+Questions, feedback, bug reports: https://freeinvoicegen.org/#feedback

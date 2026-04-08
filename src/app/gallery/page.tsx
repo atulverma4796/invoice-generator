@@ -3,7 +3,7 @@ import Link from "next/link";
 import TemplatePreviewCard from "@/components/TemplatePreviewCard";
 import { getStaticSampleInvoice, ALL_TEMPLATE_IDS } from "@/lib/sampleInvoice";
 
-const SITE_URL = "https://invoicegen.app";
+const SITE_URL = "https://freeinvoicegen.org";
 
 export const metadata: Metadata = {
   title: "Invoice Template Gallery — 10 Free Designs to Pick From",

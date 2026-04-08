@@ -19,7 +19,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const SITE_URL = "https://invoicegen.app";
+const SITE_URL = "https://freeinvoicegen.org";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

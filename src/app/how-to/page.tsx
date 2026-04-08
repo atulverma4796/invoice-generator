@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { HOW_TO_LIST } from "@/lib/howToGuides";
 
-const SITE_URL = "https://invoicegen.app";
+const SITE_URL = "https://freeinvoicegen.org";
 
 export const metadata: Metadata = {
   title: "How-To Guides — Free Invoice & Billing Tutorials",

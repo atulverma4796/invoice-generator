@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { SEO_COUNTRY_LIST } from "@/lib/seoCountries";
 
-const SITE_URL = "https://invoicegen.app";
+const SITE_URL = "https://freeinvoicegen.org";
 
 export const metadata: Metadata = {
   title: "Free Invoice Generator by Country - 10+ Country-Specific Templates",

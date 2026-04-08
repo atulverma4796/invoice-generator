@@ -1,6 +1,6 @@
 import { MetadataRoute } from "next";
 
-const BASE_URL = "https://invoicegen.app";
+const BASE_URL = "https://freeinvoicegen.org";
 
 const INDUSTRIES = [
   "freelance", "contractor", "consulting", "photography", "graphic-design",

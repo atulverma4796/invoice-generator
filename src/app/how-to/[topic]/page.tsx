@@ -4,7 +4,7 @@ import Link from "next/link";
 import { HOW_TO_GUIDES, HOW_TO_LIST } from "@/lib/howToGuides";
 import JsonLd from "@/components/JsonLd";
 
-const SITE_URL = "https://invoicegen.app";
+const SITE_URL = "https://freeinvoicegen.org";
 
 export function generateStaticParams() {
   return HOW_TO_LIST.map((g) => ({ topic: g.slug }));

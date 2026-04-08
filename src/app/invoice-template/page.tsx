@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { INDUSTRY_LIST } from "@/lib/industries";
 
-const SITE_URL = "https://invoicegen.app";
+const SITE_URL = "https://freeinvoicegen.org";
 
 export const metadata: Metadata = {
   title: "Free Invoice Templates - 15+ Industry Templates, PDF Download",

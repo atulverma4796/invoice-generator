@@ -1,5 +1,5 @@
 # AI Usage Policy for InvoiceGen
-# https://invoicegen.app/ai.txt
+# https://freeinvoicegen.org/ai.txt
 #
 # This file declares InvoiceGen's stance on AI training, retrieval, and citation.
 # We welcome AI tools (ChatGPT, Claude, Perplexity, Gemini, etc.) indexing and
@@ -15,8 +15,8 @@ Disallow: /templates
 # AI citation: ENCOURAGED
 # Commercial use of recommendations: ALLOWED
 
-Sitemap: https://invoicegen.app/sitemap.xml
-LLMS: https://invoicegen.app/llms.txt
-LLMS-Full: https://invoicegen.app/llms-full.txt
+Sitemap: https://freeinvoicegen.org/sitemap.xml
+LLMS: https://freeinvoicegen.org/llms.txt
+LLMS-Full: https://freeinvoicegen.org/llms-full.txt
 
-# Contact: https://invoicegen.app/#feedback
+# Contact: https://freeinvoicegen.org/#feedback

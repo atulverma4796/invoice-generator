@@ -114,7 +114,7 @@ export function getStaticSampleInvoice(opts?: {
     },
     signature: DEFAULT_SAMPLE_SIGNATURE,
     watermark: "PREVIEW",
-    qrCodeData: "https://invoicegen.app/pay/sample",
+    qrCodeData: "https://freeinvoicegen.org/pay/sample",
   };
 }
 
