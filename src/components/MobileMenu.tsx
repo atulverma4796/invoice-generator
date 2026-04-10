@@ -48,7 +48,18 @@ export default function MobileMenu() {
       </button>
 
       {open && (
-        <div className="md:hidden fixed inset-0 z-[60] bg-white">
+        <div
+          className="md:hidden"
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 9999,
+            backgroundColor: "#ffffff",
+          }}
+        >
           {/* Own header bar with close button */}
           <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200">
             <a href="/" onClick={() => setOpen(false)} className="flex items-center gap-2.5">
