@@ -17,13 +17,39 @@ export default function MobileMenu() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
+    // When menu opens: hide EVERYTHING else on the page
+    const main = document.querySelector("main");
+    const header = document.querySelector("header");
+    const footer = document.querySelector("footer");
+
     if (open) {
       document.body.style.overflow = "hidden";
+      if (main) main.style.display = "none";
+      if (footer) footer.style.display = "none";
+      if (header) {
+        header.style.backgroundColor = "#ffffff";
+        header.style.backdropFilter = "none";
+        header.style.webkitBackdropFilter = "none";
+      }
     } else {
       document.body.style.overflow = "";
+      if (main) main.style.display = "";
+      if (footer) footer.style.display = "";
+      if (header) {
+        header.style.backgroundColor = "";
+        header.style.backdropFilter = "";
+        header.style.webkitBackdropFilter = "";
+      }
     }
     return () => {
       document.body.style.overflow = "";
+      if (main) main.style.display = "";
+      if (footer) footer.style.display = "";
+      if (header) {
+        header.style.backgroundColor = "";
+        header.style.backdropFilter = "";
+        header.style.webkitBackdropFilter = "";
+      }
     };
   }, [open]);
 
@@ -48,43 +74,7 @@ export default function MobileMenu() {
       </button>
 
       {open && (
-        <div
-          className="md:hidden"
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            zIndex: 9999,
-            backgroundColor: "#ffffff",
-          }}
-        >
-          {/* Own header bar with close button */}
-          <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200">
-            <a href="/" onClick={() => setOpen(false)} className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-200">
-                <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-                </svg>
-              </div>
-              <span className="text-lg font-bold text-gray-900">
-                Invoice<span className="text-blue-600">Gen</span>
-              </span>
-            </a>
-            <button
-              type="button"
-              aria-label="Close menu"
-              onClick={() => setOpen(false)}
-              className="inline-flex items-center justify-center w-10 h-10 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
-            >
-              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
-
-          {/* Nav links */}
+        <div className="md:hidden bg-white w-full">
           <nav className="px-4 py-6 flex flex-col gap-1">
             {NAV_LINKS.map((link) => (
               <a
