@@ -29,7 +29,7 @@ export default function MobileMenu() {
       if (header) {
         header.style.backgroundColor = "#ffffff";
         header.style.backdropFilter = "none";
-        header.style.webkitBackdropFilter = "none";
+        (header.style as unknown as Record<string, string>).webkitBackdropFilter = "none";
       }
     } else {
       document.body.style.overflow = "";
@@ -38,7 +38,7 @@ export default function MobileMenu() {
       if (header) {
         header.style.backgroundColor = "";
         header.style.backdropFilter = "";
-        header.style.webkitBackdropFilter = "";
+        (header.style as unknown as Record<string, string>).webkitBackdropFilter = "";
       }
     }
     return () => {
@@ -48,7 +48,7 @@ export default function MobileMenu() {
       if (header) {
         header.style.backgroundColor = "";
         header.style.backdropFilter = "";
-        header.style.webkitBackdropFilter = "";
+        (header.style as unknown as Record<string, string>).webkitBackdropFilter = "";
       }
     };
   }, [open]);
