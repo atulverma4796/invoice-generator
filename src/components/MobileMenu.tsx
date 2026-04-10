@@ -16,15 +16,19 @@ const NAV_LINKS = [
 export default function MobileMenu() {
   const [open, setOpen] = useState(false);
 
-  // Close menu on route change / link click — also lock body scroll when open
+  // Lock body scroll + make header opaque when menu is open
   useEffect(() => {
+    const header = document.querySelector("header");
     if (open) {
       document.body.style.overflow = "hidden";
+      if (header) header.style.backgroundColor = "#ffffff";
     } else {
       document.body.style.overflow = "";
+      if (header) header.style.backgroundColor = "";
     }
     return () => {
       document.body.style.overflow = "";
+      if (header) header.style.backgroundColor = "";
     };
   }, [open]);
 
