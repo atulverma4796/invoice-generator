@@ -729,10 +729,8 @@ export default function Home() {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                   </svg>
                 </summary>
-                <div className="p-3">
-                  <div className="transform scale-[0.48] origin-top -mb-[300px]">
-                    <InvoicePreview data={invoice} />
-                  </div>
+                <div className="p-2 overflow-x-auto">
+                  <InvoicePreview data={invoice} />
                 </div>
               </details>
             </div>
