@@ -49,7 +49,7 @@ export default function MobileMenu() {
       </button>
 
       {open && (
-        <div className="md:hidden fixed inset-0 top-16 z-40 bg-white/95 backdrop-blur-xl animate-in fade-in duration-200">
+        <div className="md:hidden fixed inset-0 top-16 z-40 bg-white animate-in fade-in duration-200">
           <nav className="max-w-7xl mx-auto px-4 py-6 flex flex-col gap-1">
             {NAV_LINKS.map((link) => (
               <a
