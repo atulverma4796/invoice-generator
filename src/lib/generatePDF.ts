@@ -2,7 +2,7 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { InvoiceData } from "@/types/invoice";
 import { getPdfCurrencySymbol } from "./defaultInvoice";
-import { getLabels } from "./languages";
+import { getPdfLabels } from "./languages";
 import {
   calculateSubtotal,
   calculateTax,
@@ -34,7 +34,7 @@ export function generateInvoicePDF(data: InvoiceData, qrDataURL?: string): jsPDF
   const doc = new jsPDF("p", "mm", "a4");
   const style = data.customStyle;
   const sym = getPdfCurrencySymbol(data.currency);
-  const L = getLabels(data.language);
+  const L = getPdfLabels(data.language);
   const taxLabel = data.taxLabel || "Tax";
   const primaryRgb = hexToRgb(style.primaryColor);
   const isLight = data.template === "minimal";
