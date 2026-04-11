@@ -67,6 +67,14 @@ export const metadata: Metadata = {
     description:
       "Create professional invoices in seconds. 10 templates, 30+ currencies, instant PDF download. 100% free.",
   },
+  icons: {
+    icon: [
+      { url: "/favicon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon-48.png", sizes: "48x48", type: "image/png" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
+    apple: [{ url: "/apple-icon", sizes: "180x180", type: "image/png" }],
+  },
   robots: {
     index: true,
     follow: true,
