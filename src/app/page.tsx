@@ -13,6 +13,41 @@ import InvoicePreview from "@/components/InvoicePreview";
 import PDFDownloadButton from "@/components/PDFDownloadButton";
 import { validateInvoice, hasErrors } from "@/lib/validation";
 import RecurringReminder from "@/components/RecurringReminder";
+import JsonLd from "@/components/JsonLd";
+
+const SITE_URL = "https://freeinvoicegen.org";
+
+const homeFaqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Is this invoice generator really free?", "acceptedAnswer": { "@type": "Answer", "text": "Yes, InvoiceGen is 100% free with no hidden charges, no signup required, and no limits on the number of invoices you can create or download." } },
+    { "@type": "Question", "name": "Do I need to create an account?", "acceptedAnswer": { "@type": "Answer", "text": "No. Start creating your invoice immediately. No registration, login, or email address required. Your data stays in your browser." } },
+    { "@type": "Question", "name": "What currencies are supported?", "acceptedAnswer": { "@type": "Answer", "text": "InvoiceGen supports 30+ currencies including USD, EUR, GBP, INR, CAD, AUD, JPY, AED, SAR, BRL, MXN, KRW, SGD, CHF, NGN, PKR, BDT, and many more." } },
+    { "@type": "Question", "name": "Is my data safe?", "acceptedAnswer": { "@type": "Answer", "text": "All invoice data stays in your browser. Nothing is stored on our servers. Your financial information never leaves your device." } },
+    { "@type": "Question", "name": "Can I add my company logo and signature?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Upload your logo, draw or upload a digital signature, customize colors and fonts — all free features that other tools charge $10-20/month for." } },
+    { "@type": "Question", "name": "How do I create an invoice?", "acceptedAnswer": { "@type": "Answer", "text": "Fill in your business details, add client information, list your items or services, choose a template, and click Download PDF. The entire process takes under 2 minutes." } },
+    { "@type": "Question", "name": "Can I send invoices by email?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. InvoiceGen lets you email invoices directly to clients with the PDF attached, using a professional email template." } },
+    { "@type": "Question", "name": "Does it work for my country?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. InvoiceGen supports 120+ countries with auto-detected currency, country-specific tax labels (GST, VAT, IVA, etc.), and compliance notes for legal invoice requirements." } },
+  ],
+};
+
+const homeHowToSchema = {
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to Create a Professional Invoice Online for Free",
+  "description": "Create and download a professional PDF invoice in under 2 minutes using InvoiceGen.",
+  "totalTime": "PT2M",
+  "estimatedCost": { "@type": "MonetaryAmount", "currency": "USD", "value": "0" },
+  "tool": { "@type": "HowToTool", "name": "InvoiceGen Free Invoice Generator" },
+  "step": [
+    { "@type": "HowToStep", "position": 1, "name": "Enter your business details", "text": "Add your company name, address, email, and optionally upload your logo.", "url": `${SITE_URL}/#generator` },
+    { "@type": "HowToStep", "position": 2, "name": "Add client information", "text": "Enter the client name and billing address. Save clients for reuse on future invoices.", "url": `${SITE_URL}/#generator` },
+    { "@type": "HowToStep", "position": 3, "name": "List your items or services", "text": "Add line items with descriptions, quantities, and rates. Tax, discounts, and totals calculate automatically.", "url": `${SITE_URL}/#generator` },
+    { "@type": "HowToStep", "position": 4, "name": "Choose a template and customize", "text": "Select from 10 professional templates. Customize colors, fonts, add payment QR codes and digital signatures.", "url": `${SITE_URL}/#generator` },
+    { "@type": "HowToStep", "position": 5, "name": "Download or email your invoice", "text": "Click Download PDF for an instant professional invoice, or email it directly to your client.", "url": `${SITE_URL}/#generator` },
+  ],
+};
 
 const FEATURES = [
   {
@@ -396,6 +431,8 @@ export default function Home() {
 
   return (
     <div>
+      <JsonLd data={homeFaqSchema} />
+      <JsonLd data={homeHowToSchema} />
       <Toaster position="top-right" toastOptions={{ duration: 3000 }} />
       {/* Hero Section */}
       <section className="relative overflow-hidden">
