@@ -104,11 +104,12 @@ function MiniPreview({ data }: { data: InvoiceData }) {
 
   const isLight = data.template === "minimal" || data.template === "pastel" || data.template === "monochrome";
   const isDark = data.template === "executive";
+  const templateConfig = TEMPLATES[data.template];
   const headerBg = isLight
     ? data.template === "pastel" ? "#f5f0e8"
     : data.template === "monochrome" ? "#ffffff"
     : "#f9fafb"
-    : style.primaryColor;
+    : (templateConfig?.headerBg || style.primaryColor);
   const headerText = isLight
     ? (data.template === "monochrome" ? "#000000" : style.primaryColor)
     : (isDark ? "#d4a843" : "#ffffff");

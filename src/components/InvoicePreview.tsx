@@ -6,6 +6,7 @@ import { getCurrencySymbol } from "@/lib/defaultInvoice";
 import { getLabels } from "@/lib/languages";
 import { getStatusColors } from "./StatusBadge";
 import { generateQRDataURL } from "./QRCodeSection";
+import { TEMPLATES } from "@/lib/templates";
 import {
   calculateSubtotal,
   calculateTax,
@@ -36,7 +37,8 @@ export default function InvoicePreview({ data }: InvoicePreviewProps) {
   const total = calculateTotal(subtotal, tax, discount) + (data.shippingFee || 0);
   const isLight = data.template === "minimal" || data.template === "pastel" || data.template === "monochrome";
   const isDark = data.template === "executive";
-  const headerBg = isLight ? (data.template === "pastel" ? "#f5f0e8" : data.template === "monochrome" ? "#ffffff" : "#f9fafb") : style.primaryColor;
+  const templateConfig = TEMPLATES[data.template];
+  const headerBg = isLight ? (data.template === "pastel" ? "#f5f0e8" : data.template === "monochrome" ? "#ffffff" : "#f9fafb") : (templateConfig?.headerBg || style.primaryColor);
   const taxLabel = data.taxLabel || "Tax";
   const bodyBg = data.template === "pastel" ? "#faf8f4" : isDark ? "#1c1c1e" : "white";
   const bodyText = isDark ? "#e5e5e5" : "#1f2937";
