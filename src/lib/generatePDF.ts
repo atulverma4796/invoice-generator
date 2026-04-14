@@ -3,6 +3,7 @@ import autoTable from "jspdf-autotable";
 import { InvoiceData } from "@/types/invoice";
 import { getPdfCurrencySymbol } from "./defaultInvoice";
 import { getPdfLabels } from "./languages";
+import { TEMPLATES } from "./templates";
 import {
   calculateSubtotal,
   calculateTax,
@@ -38,6 +39,10 @@ export function generateInvoicePDF(data: InvoiceData, qrDataURL?: string): jsPDF
   const taxLabel = data.taxLabel || "Tax";
   const primaryRgb = hexToRgb(style.primaryColor);
   const isLight = data.template === "minimal";
+  const isDark = data.template === "executive";
+  const templateConfig = TEMPLATES[data.template];
+  const headerBgHex = templateConfig?.headerBg || style.primaryColor;
+  const headerBgRgb = hexToRgb(headerBgHex);
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
   const mL = 15;
@@ -46,7 +51,7 @@ export function generateInvoicePDF(data: InvoiceData, qrDataURL?: string): jsPDF
 
   // Header Background
   if (!isLight) {
-    doc.setFillColor(...primaryRgb);
+    doc.setFillColor(...headerBgRgb);
     doc.rect(0, 0, pageWidth, 42, "F");
   } else {
     doc.setFillColor(249, 250, 251);
@@ -64,8 +69,8 @@ export function generateInvoicePDF(data: InvoiceData, qrDataURL?: string): jsPDF
     }
   }
 
-  // Header Text
-  const hColor: [number, number, number] = isLight ? primaryRgb : [255, 255, 255];
+  // Header Text — gold on dark for Executive, white on primary for others, primary on light bg for Minimal
+  const hColor: [number, number, number] = isLight ? primaryRgb : (isDark ? primaryRgb : [255, 255, 255]);
   doc.setTextColor(...hColor);
   doc.setFontSize(22);
   doc.setFont("helvetica", "bold");
