@@ -246,8 +246,9 @@ export function generateInvoicePDF(data: InvoiceData, qrDataURL?: string): jsPDF
   // ──────────── Payment Info ────────────
   const hasPayment = Object.values(data.paymentInfo).some((v) => v.trim() !== "");
   if (hasPayment) {
-    tY += 12;
-    if (tY > pageHeight - 60) { doc.addPage(); tY = 20; }
+    tY += 8;
+    // Payment section needs ~25-30mm; only break if less than 30mm remaining
+    if (tY > pageHeight - 30) { doc.addPage(); tY = 20; }
 
     const entries = [
       data.paymentInfo.bankName && `Bank: ${data.paymentInfo.bankName}`,
@@ -286,8 +287,9 @@ export function generateInvoicePDF(data: InvoiceData, qrDataURL?: string): jsPDF
   const hasNotes = data.notes?.trim();
 
   if (hasTerms || hasNotes) {
-    tY += 8;
-    if (tY > pageHeight - 45) { doc.addPage(); tY = 20; }
+    tY += 6;
+    // Terms/Notes section needs ~20-30mm; only break if less than 25mm remaining
+    if (tY > pageHeight - 25) { doc.addPage(); tY = 20; }
 
     // Separator
     doc.setDrawColor(229, 231, 235);
@@ -328,43 +330,59 @@ export function generateInvoicePDF(data: InvoiceData, qrDataURL?: string): jsPDF
     }
   }
 
-  // ──────────── QR Code ────────────
-  if (qrDataURL) {
-    tY += 10;
-    if (tY > pageHeight - 50) { doc.addPage(); tY = 20; }
-    try {
-      doc.addImage(qrDataURL, "PNG", mL, tY, 28, 28);
-      doc.setFontSize(8);
-      doc.setFont("helvetica", "bold");
-      doc.setTextColor(55, 65, 81);
-      doc.text("Scan to Pay", mL + 32, tY + 10);
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(6.5);
-      doc.setTextColor(107, 114, 128);
-      const qrText = doc.splitTextToSize(data.qrCodeData, contentW - 40);
-      doc.text(qrText, mL + 32, tY + 15);
-      tY += 30;
-    } catch {
-      // skip
-    }
-  }
+  // ──────────── QR Code + Signature (side-by-side row) ────────────
+  // Place QR on left, signature on right to save vertical space and keep everything on 1 page
+  const hasQR = !!qrDataURL;
+  const hasSig = !!data.signature;
 
-  // ──────────── Signature ────────────
-  if (data.signature) {
-    tY += 15;
-    if (tY > pageHeight - 30) { doc.addPage(); tY = 20; }
-    try {
-      doc.addImage(data.signature, "PNG", pageWidth - 60, tY, 40, 15);
-      tY += 16;
-      doc.setDrawColor(156, 163, 175);
-      doc.setLineWidth(0.3);
-      doc.line(pageWidth - 60, tY, pageWidth - mR, tY);
-      doc.setFontSize(7);
-      doc.setTextColor(156, 163, 175);
-      doc.text(L.authorizedSignature, pageWidth - 37.5, tY + 4, { align: "center" });
-    } catch {
-      // skip
+  if (hasQR || hasSig) {
+    // Combined row height: ~30mm (QR is 28mm, signature block is 23mm)
+    const rowHeight = 30;
+    tY += 6;
+    const remainingSpace = pageHeight - tY;
+    if (remainingSpace < rowHeight) {
+      doc.addPage();
+      tY = 20;
     }
+
+    const rowStartY = tY;
+
+    // QR Code (left side)
+    if (hasQR && qrDataURL) {
+      try {
+        doc.addImage(qrDataURL, "PNG", mL, rowStartY, 28, 28);
+        doc.setFontSize(8);
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(55, 65, 81);
+        doc.text("Scan to Pay", mL + 32, rowStartY + 10);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(6.5);
+        doc.setTextColor(107, 114, 128);
+        // Constrain QR text width so it doesn't overlap with signature area on the right
+        const qrText = doc.splitTextToSize(data.qrCodeData, (pageWidth - 70) - (mL + 32));
+        doc.text(qrText, mL + 32, rowStartY + 15);
+      } catch {
+        // skip
+      }
+    }
+
+    // Signature (right side, same row as QR)
+    if (hasSig && data.signature) {
+      try {
+        doc.addImage(data.signature, "PNG", pageWidth - 60, rowStartY, 40, 15);
+        const sigLineY = rowStartY + 16;
+        doc.setDrawColor(156, 163, 175);
+        doc.setLineWidth(0.3);
+        doc.line(pageWidth - 60, sigLineY, pageWidth - mR, sigLineY);
+        doc.setFontSize(7);
+        doc.setTextColor(156, 163, 175);
+        doc.text(L.authorizedSignature, pageWidth - 37.5, sigLineY + 4, { align: "center" });
+      } catch {
+        // skip
+      }
+    }
+
+    tY = rowStartY + rowHeight;
   }
 
   // ──────────── Watermark (drawn last so it overlays everything) ────────────
