@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { SEO_COUNTRIES, SEO_COUNTRY_LIST } from "@/lib/seoCountries";
 import JsonLd from "@/components/JsonLd";
+import AffiliateCard from "@/components/AffiliateCard";
 
 const SITE_URL = "https://freeinvoicegen.org";
 
@@ -166,6 +167,9 @@ export default async function CountryPage({ params }: { params: Promise<{ countr
               </div>
             ))}
           </div>
+
+          {/* Razorpay affiliate — different message for India vs other countries */}
+          <AffiliateCard variant={data.slug === "india" ? "india" : "fast-payment"} />
         </div>
       </section>
 

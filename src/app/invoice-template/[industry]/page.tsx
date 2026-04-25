@@ -5,6 +5,7 @@ import { INDUSTRIES, INDUSTRY_LIST } from "@/lib/industries";
 import { getStaticSampleInvoice, INDUSTRY_TEMPLATE_IDS } from "@/lib/sampleInvoice";
 import TemplatePreviewCard from "@/components/TemplatePreviewCard";
 import JsonLd from "@/components/JsonLd";
+import AffiliateCard from "@/components/AffiliateCard";
 
 const SITE_URL = "https://freeinvoicegen.org";
 
@@ -164,6 +165,13 @@ export default async function IndustryPage({ params }: { params: Promise<{ indus
               </details>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Razorpay affiliate */}
+      <section className="py-8 bg-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <AffiliateCard variant="fast-payment" />
         </div>
       </section>
 

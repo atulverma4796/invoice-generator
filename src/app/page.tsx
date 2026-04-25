@@ -11,6 +11,7 @@ import { detectCurrency, detectTaxLabel, getSampleInvoiceData } from "@/lib/auto
 import InvoiceForm from "@/components/InvoiceForm";
 import InvoicePreview from "@/components/InvoicePreview";
 import PDFDownloadButton from "@/components/PDFDownloadButton";
+import AffiliateCard from "@/components/AffiliateCard";
 import { validateInvoice, hasErrors } from "@/lib/validation";
 import RecurringReminder from "@/components/RecurringReminder";
 import JsonLd from "@/components/JsonLd";
@@ -636,6 +637,9 @@ export default function Home() {
                   Email Invoice
                 </button>
               </div>
+
+              {/* Razorpay affiliate — placed right after PDF/Email buttons */}
+              <AffiliateCard variant="after-download" />
 
               {/* Email Invoice Modal */}
               {showEmailModal && (

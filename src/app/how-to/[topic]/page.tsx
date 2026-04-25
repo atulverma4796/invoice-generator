@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { HOW_TO_GUIDES, HOW_TO_LIST } from "@/lib/howToGuides";
 import JsonLd from "@/components/JsonLd";
+import AffiliateCard from "@/components/AffiliateCard";
 
 const SITE_URL = "https://freeinvoicegen.org";
 
@@ -136,6 +137,9 @@ export default async function HowToPage({ params }: { params: Promise<{ topic: s
               </a>
             </div>
           </section>
+
+          {/* Razorpay affiliate — different message based on topic */}
+          <AffiliateCard variant={data.slug === "send-invoice" ? "fast-payment" : "default"} />
 
           {/* FAQs */}
           <section>
