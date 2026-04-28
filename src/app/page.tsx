@@ -14,6 +14,7 @@ import PDFDownloadButton from "@/components/PDFDownloadButton";
 import AffiliateCard from "@/components/AffiliateCard";
 import { validateInvoice, hasErrors } from "@/lib/validation";
 import RecurringReminder from "@/components/RecurringReminder";
+import { trackInvoiceEvent } from "@/lib/trackEvent";
 import JsonLd from "@/components/JsonLd";
 
 const SITE_URL = "https://freeinvoicegen.org";
@@ -298,6 +299,8 @@ export default function Home() {
       const data = await res.json();
       if (data.success) {
         toast.success(`Invoice sent to ${emailTo}!`);
+        // Silent admin-only analytics — fires after the user got their success toast
+        trackInvoiceEvent("email", invoice, { recipientEmail: emailTo.trim() });
         setShowEmailModal(false);
         setEmailTo("");
       } else {

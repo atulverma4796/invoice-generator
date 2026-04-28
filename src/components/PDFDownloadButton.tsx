@@ -2,45 +2,12 @@
 
 import toast from "react-hot-toast";
 import { InvoiceData } from "@/types/invoice";
-import { getCurrencySymbol } from "@/lib/defaultInvoice";
 import { validateInvoice, hasErrors } from "@/lib/validation";
-import {
-  calculateSubtotal,
-  calculateTax,
-  calculateDiscount,
-  calculateTotal,
-} from "@/lib/calculations";
+import { trackInvoiceEvent } from "@/lib/trackEvent";
 
 interface PDFDownloadButtonProps {
   data: InvoiceData;
   onValidationFail?: () => void;
-}
-
-function getDeviceInfo() {
-  const ua = navigator.userAgent;
-
-  let browser = "Unknown";
-  if (ua.includes("Firefox/")) browser = "Firefox";
-  else if (ua.includes("Edg/")) browser = "Edge";
-  else if (ua.includes("Chrome/")) browser = "Chrome";
-  else if (ua.includes("Safari/")) browser = "Safari";
-  else if (ua.includes("Opera") || ua.includes("OPR/")) browser = "Opera";
-
-  let os = "Unknown";
-  if (ua.includes("Windows")) os = "Windows";
-  else if (ua.includes("Mac OS")) os = "macOS";
-  else if (ua.includes("Linux")) os = "Linux";
-  else if (ua.includes("Android")) os = "Android";
-  else if (ua.includes("iPhone") || ua.includes("iPad")) os = "iOS";
-
-  return {
-    browser,
-    os,
-    platform: navigator.platform || "Unknown",
-    screen: `${screen.width}x${screen.height}`,
-    language: navigator.language || "Unknown",
-    userAgent: ua,
-  };
 }
 
 export default function PDFDownloadButton({ data, onValidationFail }: PDFDownloadButtonProps) {
@@ -69,28 +36,8 @@ export default function PDFDownloadButton({ data, onValidationFail }: PDFDownloa
       return;
     }
 
-    // Analytics beacon
-    try {
-      const subtotal = calculateSubtotal(data.lineItems);
-      const tax = calculateTax(subtotal, data.taxRate);
-      const discount = calculateDiscount(subtotal, data.discountRate);
-      const total = calculateTotal(subtotal, tax, discount) + (data.shippingFee || 0);
-      const symbol = getCurrencySymbol(data.currency);
-
-      const payload = JSON.stringify({
-        invoiceNumber: data.invoiceNumber,
-        clientName: data.clientName,
-        total: `${symbol}${total.toFixed(2)}`,
-        currency: data.currency,
-        device: getDeviceInfo(),
-      });
-
-      if (navigator.sendBeacon) {
-        navigator.sendBeacon("/api/t", new Blob([payload], { type: "application/json" }));
-      }
-    } catch {
-      // silent
-    }
+    // Silent admin-only analytics — fires after the user already has the file
+    trackInvoiceEvent("download", data);
   }
 
   return (
