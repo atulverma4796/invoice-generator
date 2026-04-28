@@ -171,6 +171,7 @@ export default function RootLayout({
                 <a href="/invoice-template" className="hover:text-blue-600 transition-colors">Templates</a>
                 <a href="/invoice-generator" className="hover:text-blue-600 transition-colors">By Country</a>
                 <a href="/how-to" className="hover:text-blue-600 transition-colors">Guides</a>
+                <a href="/blog" className="hover:text-blue-600 transition-colors">Blog</a>
                 <a href="/templates" className="hover:text-amber-600 transition-colors">My Invoices</a>
               </nav>
               <MobileMenu />
@@ -209,6 +210,7 @@ export default function RootLayout({
                   <a href="/invoice-template" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">All Templates</a>
                   <a href="/invoice-generator" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">By Country</a>
                   <a href="/how-to" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">How-To Guides</a>
+                  <a href="/blog" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">Blog</a>
                   <a href="/templates" className="text-sm text-gray-500 hover:text-amber-600 transition-colors">My Invoices</a>
                   <a href="/#features" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">Features</a>
                   <a href="/#faq" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">FAQ</a>

@@ -9,6 +9,7 @@ const NAV_LINKS = [
   { href: "/invoice-template", label: "Templates" },
   { href: "/invoice-generator", label: "By Country" },
   { href: "/how-to", label: "Guides" },
+  { href: "/blog", label: "Blog" },
   { href: "/templates", label: "My Invoices", accent: "amber" },
   { href: "/#faq", label: "FAQ" },
   { href: "/#feedback", label: "Feedback" },
