@@ -292,7 +292,14 @@ export default function TermsPage() {
           <section>
             <h2 className="text-xl font-bold text-gray-900 mb-3">21. Contact</h2>
             <p>
-              Questions about these Terms? Reach us via the{" "}
+              Questions about these Terms? Reach us by email at{" "}
+              <a
+                href="mailto:iimtatul102@gmail.com"
+                className="text-blue-600 hover:underline"
+              >
+                iimtatul102@gmail.com
+              </a>{" "}
+              or via the{" "}
               <Link href="/#feedback" className="text-blue-600 hover:underline">feedback form</Link>.
               We aim to respond within 7 business days.
             </p>

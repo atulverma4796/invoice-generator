@@ -360,11 +360,19 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-xl font-bold text-gray-900 mb-3">14. Contact Us</h2>
             <p>
-              Questions, requests, or complaints about this privacy policy? Reach us through the{" "}
+              Questions, requests, or complaints about this privacy policy? You can reach us by
+              email at{" "}
+              <a
+                href="mailto:iimtatul102@gmail.com"
+                className="text-blue-600 hover:underline"
+              >
+                iimtatul102@gmail.com
+              </a>{" "}
+              or via the{" "}
               <Link href="/#feedback" className="text-blue-600 hover:underline">feedback form</Link>.
-              We aim to respond to all privacy-related inquiries within 7 business days, and to GDPR/
-              CCPA rights requests within the statutory deadlines (30 days for GDPR, 45 days for
-              CCPA).
+              We aim to respond to all privacy-related inquiries within 7 business days, and to
+              GDPR/CCPA rights requests within the statutory deadlines (30 days for GDPR, 45 days
+              for CCPA).
             </p>
           </section>
         </div>

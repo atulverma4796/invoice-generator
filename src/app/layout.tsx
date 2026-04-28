@@ -283,6 +283,8 @@ export default function RootLayout({
                 <a href="/terms" className="hover:text-blue-600 transition-colors">Terms</a>
                 <span className="text-gray-300" aria-hidden="true">·</span>
                 <a href="/#feedback" className="hover:text-blue-600 transition-colors">Contact</a>
+                <span className="text-gray-300" aria-hidden="true">·</span>
+                <a href="mailto:iimtatul102@gmail.com" className="hover:text-blue-600 transition-colors">iimtatul102@gmail.com</a>
               </nav>
 
               {/* Bottom bar */}

@@ -209,11 +209,18 @@ export default function AboutPage() {
               weeks if they fit the mission.
             </p>
             <p className="mt-4">
-              Have an idea or found a bug? Use our{" "}
+              Have an idea or found a bug? Email us at{" "}
+              <a
+                href="mailto:iimtatul102@gmail.com"
+                className="text-blue-600 hover:underline"
+              >
+                iimtatul102@gmail.com
+              </a>{" "}
+              or use our{" "}
               <Link href="/#feedback" className="text-blue-600 hover:underline">
                 feedback form
               </Link>{" "}
-              — it goes straight to the developer.
+              — both go straight to the developer.
             </p>
           </section>
 
@@ -298,7 +305,14 @@ export default function AboutPage() {
               <div>
                 <h3 className="font-semibold text-gray-900 mb-1">How do I report a bug or suggest a feature?</h3>
                 <p>
-                  Use the{" "}
+                  Email{" "}
+                  <a
+                    href="mailto:iimtatul102@gmail.com"
+                    className="text-blue-600 hover:underline"
+                  >
+                    iimtatul102@gmail.com
+                  </a>{" "}
+                  or use the{" "}
                   <Link href="/#feedback" className="text-blue-600 hover:underline">feedback form</Link>{" "}
                   on the homepage. Messages go straight to the developer.
                 </p>
