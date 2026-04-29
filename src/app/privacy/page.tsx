@@ -67,39 +67,7 @@ export default function PrivacyPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-bold text-gray-900 mb-3">2. Information We Do Collect</h2>
-            <p>We collect a limited set of information for legitimate site-operation purposes:</p>
-            <ul className="space-y-2 mt-3 list-disc pl-6">
-              <li>
-                <strong>Server log data</strong> — when you visit the site, our hosting provider
-                (Vercel) automatically records standard request logs including IP address, browser
-                user-agent, referring URL, and request timestamps. This is used to operate the
-                service, prevent abuse, and diagnose issues.
-              </li>
-              <li>
-                <strong>Analytics data</strong> — see Section 3 below.
-              </li>
-              <li>
-                <strong>Feedback messages</strong> — if you submit feedback via our contact form, we
-                receive your message and any name or email you choose to share. We use this only to
-                respond to you or improve the service.
-              </li>
-              <li>
-                <strong>Email-send metadata</strong> — if you use our optional &quot;email this
-                invoice&quot; feature, we transmit the recipient address and the rendered PDF
-                through a third-party email provider. The PDF is not retained beyond delivery.
-              </li>
-              <li>
-                <strong>Anonymous interaction events</strong> — when you download or email an
-                invoice, we record an anonymous event with high-level feature-usage and
-                abuse-detection signals. These events are not linked to your name, email, or
-                invoice content.
-              </li>
-            </ul>
-          </section>
-
-          <section>
-            <h2 className="text-xl font-bold text-gray-900 mb-3">3. Cookies and Analytics</h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-3">2. Cookies and Analytics</h2>
             <p>
               InvoiceGen uses <strong>Google Analytics 4</strong> to understand how visitors use
               the site so we can improve it. Google Analytics may set cookies on your browser to
@@ -128,7 +96,7 @@ export default function PrivacyPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-bold text-gray-900 mb-3">4. Advertising and Google AdSense</h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-3">3. Advertising and Google AdSense</h2>
             <p>
               InvoiceGen displays advertising provided by <strong>Google AdSense</strong>, a
               third-party advertising network operated by Google LLC. AdSense allows us to keep the
@@ -188,73 +156,15 @@ export default function PrivacyPage() {
               the advertised products or services.
             </p>
             <p className="mt-3">
-              <strong>Affiliate links.</strong> Some links on the site (for example, to payment
-              providers like Razorpay or Wise) are affiliate links — if you sign up through them
-              we may receive a small referral commission, at no extra cost to you. These links are
-              clearly labelled as affiliate links and the recommendation is independent of the
-              commission.
+              <strong>Partner links.</strong> Some links on the site (for example, to payment
+              providers like Razorpay or Wise) are partner links that help support InvoiceGen as a
+              free tool, at no extra cost to you. We only recommend providers we have used and
+              trust.
             </p>
           </section>
 
           <section>
-            <h2 className="text-xl font-bold text-gray-900 mb-3">5. Third-Party Services</h2>
-            <p>The following third parties process limited data on our behalf:</p>
-            <ul className="space-y-2 mt-3 list-disc pl-6">
-              <li>
-                <strong>Vercel</strong> — hosting and content delivery. Vercel processes server logs
-                and traffic data. See{" "}
-                <a
-                  href="https://vercel.com/legal/privacy-policy"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 hover:underline"
-                >
-                  Vercel&apos;s privacy policy
-                </a>
-                .
-              </li>
-              <li>
-                <strong>Google LLC</strong> — Google Analytics, Google AdSense, and Google Fonts.
-                See{" "}
-                <a
-                  href="https://policies.google.com/privacy"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 hover:underline"
-                >
-                  Google&apos;s privacy policy
-                </a>
-                .
-              </li>
-              <li>
-                <strong>Resend</strong> — transactional email delivery (only if you use the
-                &quot;email this invoice&quot; feature). Resend processes the recipient email
-                address and the PDF for delivery. See{" "}
-                <a
-                  href="https://resend.com/legal/privacy-policy"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 hover:underline"
-                >
-                  Resend&apos;s privacy policy
-                </a>
-                .
-              </li>
-              <li>
-                <strong>IP geolocation services</strong> (ipapi.co, ip-api.com) — used to detect
-                country and currency for invoice localisation. Your IP address is sent to these
-                services in order to return geographic data. We do not retain the response beyond
-                the active session.
-              </li>
-            </ul>
-            <p className="mt-3">
-              Each third party has its own privacy policy governing how it handles data. We
-              recommend reviewing them if you have specific concerns.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-xl font-bold text-gray-900 mb-3">6. Data Retention</h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-3">4. Data Retention</h2>
             <p>
               Because we do not store your invoice content, there is nothing for us to retain in
               that respect. The limited data we do collect is retained as follows:
@@ -267,14 +177,14 @@ export default function PrivacyPage() {
                 months
               </li>
               <li>
-                Email delivery records: not retained on our end; Resend retains delivery metadata
-                per their policy
+                Email delivery records: not retained on our end; our email provider retains
+                delivery metadata per their policy
               </li>
             </ul>
           </section>
 
           <section>
-            <h2 className="text-xl font-bold text-gray-900 mb-3">7. Your Rights Under GDPR (EU/UK)</h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-3">5. Your Rights Under GDPR (EU/UK)</h2>
             <p>
               If you are located in the European Economic Area, the United Kingdom, or Switzerland,
               you have rights under the General Data Protection Regulation (GDPR) and equivalent
@@ -299,7 +209,7 @@ export default function PrivacyPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-bold text-gray-900 mb-3">8. Your Rights Under CCPA (California)</h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-3">6. Your Rights Under CCPA (California)</h2>
             <p>
               If you are a California resident, the California Consumer Privacy Act (CCPA) and
               California Privacy Rights Act (CPRA) give you specific rights regarding your personal
@@ -319,7 +229,7 @@ export default function PrivacyPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-bold text-gray-900 mb-3">9. International Data Transfers</h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-3">7. International Data Transfers</h2>
             <p>
               Our hosting provider (Vercel) operates globally, and your traffic may be served from
               edge locations in your region. Some third-party services (Google, Resend) are based in
@@ -329,7 +239,7 @@ export default function PrivacyPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-bold text-gray-900 mb-3">10. Children&apos;s Privacy</h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-3">8. Children&apos;s Privacy</h2>
             <p>
               InvoiceGen is not directed at children under the age of 16. We do not knowingly
               collect personal information from children. If you are a parent or guardian and
@@ -339,7 +249,7 @@ export default function PrivacyPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-bold text-gray-900 mb-3">11. Do Not Track</h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-3">9. Do Not Track</h2>
             <p>
               Some browsers send a &quot;Do Not Track&quot; (DNT) signal. There is no industry
               consensus on how to interpret DNT, and our service does not currently respond to DNT
@@ -350,7 +260,7 @@ export default function PrivacyPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-bold text-gray-900 mb-3">12. Security</h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-3">10. Security</h2>
             <p>
               We use industry-standard measures to protect the limited data we do hold. The site is
               served over HTTPS only, with HSTS enabled. However, no method of internet
@@ -361,7 +271,7 @@ export default function PrivacyPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-bold text-gray-900 mb-3">13. Changes to This Policy</h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-3">11. Changes to This Policy</h2>
             <p>
               We may update this privacy policy from time to time to reflect changes in our
               practices, the services we use, or applicable law. Material changes will be reflected
@@ -371,7 +281,7 @@ export default function PrivacyPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-bold text-gray-900 mb-3">14. Contact Us</h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-3">12. Contact Us</h2>
             <p>
               Questions, requests, or complaints about this privacy policy? You can reach us by
               email at{" "}

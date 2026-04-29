@@ -85,7 +85,7 @@ export default function AffiliateCard({ variant = "default" }: AffiliateCardProp
             </svg>
           </a>
           <p className="text-[10px] text-gray-500 mt-2 leading-snug">
-            Affiliate link — we may earn a small commission at no extra cost to you.
+            Partner link — supports InvoiceGen at no extra cost to you.
           </p>
         </div>
       </div>
