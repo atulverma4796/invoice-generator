@@ -240,6 +240,7 @@ export default function InvoiceForm({ data, onChange, showErrors = false }: Invo
                 type="text"
                 value={WATERMARK_PRESETS.includes(data.watermark) ? "" : data.watermark}
                 onChange={(e) => update("watermark", e.target.value.toUpperCase())}
+                onFocus={(e) => e.target.select()}
                 placeholder="Custom..."
                 className="px-3 py-1.5 border border-gray-300 rounded-lg text-xs w-24 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 maxLength={20}
@@ -262,6 +263,7 @@ export default function InvoiceForm({ data, onChange, showErrors = false }: Invo
               type="text"
               value={data.invoiceNumber}
               onChange={(e) => update("invoiceNumber", e.target.value)}
+              onFocus={(e) => e.target.select()}
               className={`w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:border-transparent ${errors.invoiceNumber ? errBorder : okBorder}`}
             />
             <FieldError message={errors.invoiceNumber} />
@@ -272,6 +274,7 @@ export default function InvoiceForm({ data, onChange, showErrors = false }: Invo
               type="text"
               value={data.poNumber}
               onChange={(e) => update("poNumber", e.target.value)}
+              onFocus={(e) => e.target.select()}
               placeholder="Optional"
               className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
@@ -374,13 +377,13 @@ export default function InvoiceForm({ data, onChange, showErrors = false }: Invo
             From (Your Details)
           </h3>
           <div>
-            <input type="text" placeholder="Your name / Business name *" value={data.senderName} onChange={(e) => update("senderName", e.target.value)} className={`w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:border-transparent ${errors.senderName ? errBorder : okBorder}`} />
+            <input type="text" placeholder="Your name / Business name *" value={data.senderName} onChange={(e) => update("senderName", e.target.value)} onFocus={(e) => e.target.select()} className={`w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:border-transparent ${errors.senderName ? errBorder : okBorder}`} />
             <FieldError message={errors.senderName} />
           </div>
-          <input type="email" placeholder="Email (Optional)" value={data.senderEmail} onChange={(e) => update("senderEmail", e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+          <input type="email" placeholder="Email (Optional)" value={data.senderEmail} onChange={(e) => update("senderEmail", e.target.value)} onFocus={(e) => e.target.select()} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
           <div className="grid grid-cols-2 gap-2">
-            <input type="tel" placeholder="Phone (Optional)" value={data.senderPhone} onChange={(e) => update("senderPhone", e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
-            <input type="text" placeholder="Website (Optional)" value={data.senderWebsite} onChange={(e) => update("senderWebsite", e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+            <input type="tel" placeholder="Phone (Optional)" value={data.senderPhone} onChange={(e) => update("senderPhone", e.target.value)} onFocus={(e) => e.target.select()} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+            <input type="text" placeholder="Website (Optional)" value={data.senderWebsite} onChange={(e) => update("senderWebsite", e.target.value)} onFocus={(e) => e.target.select()} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
           </div>
           <div>
             <input
@@ -388,12 +391,13 @@ export default function InvoiceForm({ data, onChange, showErrors = false }: Invo
               placeholder={`${rule.taxIdLabel}${rule.taxIdRequired ? " *" : " (Optional)"}`}
               value={data.senderTaxId}
               onChange={(e) => update("senderTaxId", e.target.value)}
+              onFocus={(e) => e.target.select()}
               className={`w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:border-transparent ${errors.senderTaxId ? errBorder : okBorder}`}
             />
             <FieldError message={errors.senderTaxId} />
           </div>
           <div>
-            <textarea placeholder={`Address${rule.senderAddressRequired ? " *" : " (Optional)"}`} value={data.senderAddress} onChange={(e) => update("senderAddress", e.target.value)} rows={2} className={`w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:border-transparent resize-none ${errors.senderAddress ? errBorder : okBorder}`} />
+            <textarea placeholder={`Address${rule.senderAddressRequired ? " *" : " (Optional)"}`} value={data.senderAddress} onChange={(e) => update("senderAddress", e.target.value)} onFocus={(e) => e.target.select()} rows={2} className={`w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:border-transparent resize-none ${errors.senderAddress ? errBorder : okBorder}`} />
             <FieldError message={errors.senderAddress} />
           </div>
         </div>
@@ -419,12 +423,12 @@ export default function InvoiceForm({ data, onChange, showErrors = false }: Invo
             )}
           </div>
           <div>
-            <input type="text" placeholder="Client name / Business name *" value={data.clientName} onChange={(e) => update("clientName", e.target.value)} className={`w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:border-transparent ${errors.clientName ? errBorder : okBorder}`} />
+            <input type="text" placeholder="Client name / Business name *" value={data.clientName} onChange={(e) => update("clientName", e.target.value)} onFocus={(e) => e.target.select()} className={`w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:border-transparent ${errors.clientName ? errBorder : okBorder}`} />
             <FieldError message={errors.clientName} />
           </div>
-          <input type="email" placeholder="Client email (Optional)" value={data.clientEmail} onChange={(e) => update("clientEmail", e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+          <input type="email" placeholder="Client email (Optional)" value={data.clientEmail} onChange={(e) => update("clientEmail", e.target.value)} onFocus={(e) => e.target.select()} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
           <div>
-            <textarea placeholder={`Client address${rule.clientAddressRequired ? " *" : " (Optional)"}`} value={data.clientAddress} onChange={(e) => update("clientAddress", e.target.value)} rows={2} className={`w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:border-transparent resize-none ${errors.clientAddress ? errBorder : okBorder}`} />
+            <textarea placeholder={`Client address${rule.clientAddressRequired ? " *" : " (Optional)"}`} value={data.clientAddress} onChange={(e) => update("clientAddress", e.target.value)} onFocus={(e) => e.target.select()} rows={2} className={`w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:border-transparent resize-none ${errors.clientAddress ? errBorder : okBorder}`} />
             <FieldError message={errors.clientAddress} />
           </div>
           <input
@@ -432,6 +436,7 @@ export default function InvoiceForm({ data, onChange, showErrors = false }: Invo
             placeholder={`${rule.clientTaxIdLabel}${rule.clientTaxIdRequired ? " *" : " (Optional)"}`}
             value={data.clientTaxId}
             onChange={(e) => update("clientTaxId", e.target.value)}
+            onFocus={(e) => e.target.select()}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
           <div className="flex gap-2">
@@ -565,20 +570,20 @@ export default function InvoiceForm({ data, onChange, showErrors = false }: Invo
           <label className="block text-xs font-medium text-gray-700 mb-1 truncate">
             {data.taxLabel} %{rule.taxRateRequired && <RequiredStar />}
           </label>
-          <input type="number" value={data.taxRate || ""} onChange={(e) => update("taxRate", parseFloat(e.target.value) || 0)} placeholder="0" min="0" max="100" step="0.1" className={`w-full px-2.5 py-2 border rounded-lg text-sm focus:ring-2 focus:border-transparent ${errors.taxRate ? errBorder : okBorder}`} />
+          <input type="number" value={data.taxRate || ""} onChange={(e) => update("taxRate", parseFloat(e.target.value) || 0)} onFocus={(e) => e.target.select()} placeholder="0" min="0" max="100" step="0.1" className={`w-full px-2.5 py-2 border rounded-lg text-sm focus:ring-2 focus:border-transparent ${errors.taxRate ? errBorder : okBorder}`} />
           <FieldError message={errors.taxRate} />
         </div>
         <div>
           <label className="block text-xs font-medium text-gray-700 mb-1 truncate">Discount %</label>
-          <input type="number" value={data.discountRate || ""} onChange={(e) => update("discountRate", parseFloat(e.target.value) || 0)} placeholder="0" min="0" max="100" step="0.1" className="w-full px-2.5 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+          <input type="number" value={data.discountRate || ""} onChange={(e) => update("discountRate", parseFloat(e.target.value) || 0)} onFocus={(e) => e.target.select()} placeholder="0" min="0" max="100" step="0.1" className="w-full px-2.5 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
         </div>
         <div>
           <label className="block text-xs font-medium text-gray-700 mb-1 truncate">Shipping</label>
-          <input type="number" value={data.shippingFee || ""} onChange={(e) => update("shippingFee", parseFloat(e.target.value) || 0)} placeholder="0" min="0" step="0.01" className="w-full px-2.5 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+          <input type="number" value={data.shippingFee || ""} onChange={(e) => update("shippingFee", parseFloat(e.target.value) || 0)} onFocus={(e) => e.target.select()} placeholder="0" min="0" step="0.01" className="w-full px-2.5 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
         </div>
         <div>
           <label className="block text-xs font-medium text-gray-700 mb-1 truncate">Late Fee %/mo</label>
-          <input type="number" value={data.lateFeeRate || ""} onChange={(e) => update("lateFeeRate", parseFloat(e.target.value) || 0)} placeholder="0" min="0" max="25" step="0.5" className="w-full px-2.5 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+          <input type="number" value={data.lateFeeRate || ""} onChange={(e) => update("lateFeeRate", parseFloat(e.target.value) || 0)} onFocus={(e) => e.target.select()} placeholder="0" min="0" max="25" step="0.5" className="w-full px-2.5 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
         </div>
       </div>
 
@@ -630,14 +635,14 @@ export default function InvoiceForm({ data, onChange, showErrors = false }: Invo
             </button>
           ))}
         </div>
-        <textarea value={data.terms} onChange={(e) => update("terms", e.target.value)} rows={3} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none" />
+        <textarea value={data.terms} onChange={(e) => update("terms", e.target.value)} onFocus={(e) => e.target.select()} rows={3} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none" />
         <p className="text-xs text-gray-400 mt-1">Auto-filled when you change the watermark. Pick a preset or write your own.</p>
       </div>
 
       {/* Notes */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Notes</label>
-        <textarea value={data.notes || "Thank you for your business!"} onChange={(e) => update("notes", e.target.value)} rows={2} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none" />
+        <textarea value={data.notes || "Thank you for your business!"} onChange={(e) => update("notes", e.target.value)} onFocus={(e) => e.target.select()} rows={2} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none" />
       </div>
 
       {/* Signature */}

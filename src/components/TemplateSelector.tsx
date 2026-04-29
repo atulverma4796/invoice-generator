@@ -128,6 +128,7 @@ export default function TemplateSelector({
                 onChange={(e) =>
                   onCustomStyleChange({ ...customStyle, primaryColor: e.target.value })
                 }
+                onFocus={(e) => e.target.select()}
                 className="flex-1 px-2.5 py-1.5 border border-gray-300 rounded-lg text-xs font-mono focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 maxLength={7}
               />
@@ -152,6 +153,7 @@ export default function TemplateSelector({
                 onChange={(e) =>
                   onCustomStyleChange({ ...customStyle, accentColor: e.target.value })
                 }
+                onFocus={(e) => e.target.select()}
                 className="flex-1 px-2.5 py-1.5 border border-gray-300 rounded-lg text-xs font-mono focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 maxLength={7}
               />

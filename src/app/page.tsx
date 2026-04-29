@@ -654,6 +654,7 @@ export default function Home() {
                       type="email"
                       value={emailTo}
                       onChange={(e) => setEmailTo(e.target.value)}
+                      onFocus={(e) => e.target.select()}
                       placeholder="client@example.com"
                       className="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent"
                       autoFocus
@@ -694,6 +695,7 @@ export default function Home() {
                       type="text"
                       value={saveTemplateName}
                       onChange={(e) => setSaveTemplateName(e.target.value)}
+                      onFocus={(e) => e.target.select()}
                       placeholder="e.g. Monthly Client Invoice"
                       maxLength={30}
                       className="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-amber-500 focus:border-transparent"

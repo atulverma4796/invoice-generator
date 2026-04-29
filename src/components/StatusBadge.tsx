@@ -71,6 +71,7 @@ export default function StatusBadge({ status, onChange }: StatusBadgeProps) {
               type="text"
               value={customInput}
               onChange={(e) => setCustomInput(e.target.value)}
+              onFocus={(e) => e.target.select()}
               onKeyDown={(e) => {
                 if (e.key === "Enter" && customInput.trim()) {
                   onChange(customInput.trim().toLowerCase());
