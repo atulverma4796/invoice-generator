@@ -116,27 +116,6 @@ export default function AboutPage() {
           </section>
 
           <section>
-            <h2 className="text-2xl font-bold text-gray-900 mb-3">How We Stay Free</h2>
-            <p>
-              InvoiceGen is supported by <strong>Google AdSense</strong> advertisements that may
-              appear on the site. We never sell your data — your invoice content stays in your
-              browser and is never transmitted to our servers. The ads pay for hosting (Vercel),
-              email delivery (Resend), and the time it takes to build and maintain the tool. They
-              let us keep InvoiceGen free for everyone, forever.
-            </p>
-            <p className="mt-4">
-              We may also receive small commissions from referrals to payment providers (such as
-              Razorpay or Wise). These referrals never change the experience for you, and we only
-              recommend providers we have used and trust.
-            </p>
-            <p className="mt-4">
-              We will never introduce a premium tier, hide features behind paywalls, or limit how
-              many invoices you can create. If we ever find we cannot sustain the tool with ads
-              alone, we will be transparent about it before changing anything.
-            </p>
-          </section>
-
-          <section>
             <h2 className="text-2xl font-bold text-gray-900 mb-3">Privacy by Design</h2>
             <p>
               <strong>Your invoice content stays in your browser.</strong> Sender details, client

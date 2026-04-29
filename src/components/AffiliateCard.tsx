@@ -84,6 +84,9 @@ export default function AffiliateCard({ variant = "default" }: AffiliateCardProp
               <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
             </svg>
           </a>
+          <p className="text-[10px] text-gray-500 mt-2 leading-snug">
+            Affiliate link — we may earn a small commission at no extra cost to you.
+          </p>
         </div>
       </div>
     </div>

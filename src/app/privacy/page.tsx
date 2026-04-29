@@ -187,6 +187,13 @@ export default function PrivacyPage() {
               collects through them. Inclusion of third-party advertising is not an endorsement of
               the advertised products or services.
             </p>
+            <p className="mt-3">
+              <strong>Affiliate links.</strong> Some links on the site (for example, to payment
+              providers like Razorpay or Wise) are affiliate links — if you sign up through them
+              we may receive a small referral commission, at no extra cost to you. These links are
+              clearly labelled as affiliate links and the recommendation is independent of the
+              commission.
+            </p>
           </section>
 
           <section>
