@@ -98,7 +98,7 @@ export default function AboutPage() {
               </div>
               <div>
                 <h3 className="font-semibold text-gray-900 mb-1">2. Privacy by design.</h3>
-                <p>Your invoice content stays in your browser. We do not have a database storing your invoices. We literally cannot read what you generate, even if we wanted to.</p>
+                <p>Your invoice content stays in your browser. We do not have a database of your invoices, and we never transmit sender, client, or line-item data to our servers.</p>
               </div>
               <div>
                 <h3 className="font-semibold text-gray-900 mb-1">3. Honest funding.</h3>
@@ -139,18 +139,18 @@ export default function AboutPage() {
           <section>
             <h2 className="text-2xl font-bold text-gray-900 mb-3">Privacy by Design</h2>
             <p>
-              <strong>Your data never leaves your browser.</strong> All invoice content, saved
-              clients, templates, and product catalogues are stored in your browser&apos;s
-              localStorage. We do not have a database storing your invoices. We do not have user
-              accounts. We literally cannot read your invoices even if we wanted to — they simply
-              are not on our servers.
+              <strong>Your invoice content stays in your browser.</strong> Sender details, client
+              details, line items, saved clients, templates, and product catalogues are stored in
+              your browser&apos;s localStorage and never transmitted to our servers. We do not have
+              user accounts or a database of your invoices.
             </p>
             <p className="mt-4">
               Read our full{" "}
               <Link href="/privacy" className="text-blue-600 hover:underline">
                 Privacy Policy
               </Link>{" "}
-              for the technical details on cookies, third-party services, GDPR, and CCPA rights.
+              for the technical details on cookies, anonymous usage analytics, third-party services,
+              and GDPR / CCPA rights.
             </p>
           </section>
 

@@ -1,51 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 
-interface LineItem {
-  description?: string;
-  quantity?: number;
-  rate?: number;
-  amount?: number;
-}
-
-interface InvoicePayload {
-  poNumber?: string;
-  status?: string;
-  template?: string;
-  language?: string;
-  invoiceDate?: string;
-  dueDate?: string;
-  sender?: {
-    name?: string;
-    email?: string;
-    phone?: string;
-    website?: string;
-    address?: string;
-    taxId?: string;
-  };
-  client?: {
-    name?: string;
-    email?: string;
-    address?: string;
-  };
-  lineItems?: LineItem[];
-  subtotal?: string;
-  taxRate?: number;
-  taxLabel?: string;
-  tax?: string;
-  discountRate?: number;
-  discount?: string;
-  shippingFee?: number;
-  lateFeeRate?: number;
-  paymentInfo?: Record<string, string>;
-  notes?: string;
-  terms?: string;
-  watermark?: string;
-  hasLogo?: boolean;
-  hasSignature?: boolean;
-  qrCodeData?: string;
-}
-
 interface DeviceInfo {
   browser?: string;
   os?: string;
@@ -53,6 +8,28 @@ interface DeviceInfo {
   screen?: string;
   language?: string;
   userAgent?: string;
+}
+
+interface Signals {
+  template?: string;
+  language?: string;
+  currency?: string;
+  lineItemCount?: number;
+  totalBucket?: string;
+  taxRate?: number;
+  discountRate?: number;
+  hasLogo?: boolean;
+  hasSignature?: boolean;
+  hasQrCode?: boolean;
+  hasNotes?: boolean;
+  hasTerms?: boolean;
+  hasWatermark?: boolean;
+  hasPaymentInfo?: boolean;
+  hasShipping?: boolean;
+  hasLateFee?: boolean;
+  hasPoNumber?: boolean;
+  hasDueDate?: boolean;
+  status?: string;
 }
 
 function escapeHtml(value: unknown): string {
@@ -63,6 +40,10 @@ function escapeHtml(value: unknown): string {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
+}
+
+function bool(v: unknown): string {
+  return v ? "✅" : "—";
 }
 
 interface GeoLookup {
@@ -160,16 +141,11 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const {
       action = "download",
-      invoiceNumber,
-      clientName,
-      total,
-      currency,
       device = {} as DeviceInfo,
       timezone: browserTimezone = "",
       referrer = "",
       url = "",
-      recipientEmail = "",
-      invoice = {} as InvoicePayload,
+      signals = {} as Signals,
     } = body || {};
 
     // IP from headers
@@ -194,40 +170,11 @@ export async function POST(req: NextRequest) {
 
     const now = new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
 
-    // Build line-items table
-    const items: LineItem[] = Array.isArray(invoice.lineItems) ? invoice.lineItems : [];
-    const itemsRows = items.length
-      ? items
-          .map(
-            (it) => `
-              <tr>
-                <td style="padding:6px 8px;border:1px solid #e5e7eb;">${escapeHtml(it.description)}</td>
-                <td style="padding:6px 8px;border:1px solid #e5e7eb;text-align:right;">${escapeHtml(it.quantity)}</td>
-                <td style="padding:6px 8px;border:1px solid #e5e7eb;text-align:right;">${escapeHtml(it.rate)}</td>
-                <td style="padding:6px 8px;border:1px solid #e5e7eb;text-align:right;">${escapeHtml(it.amount)}</td>
-              </tr>`,
-          )
-          .join("")
-      : `<tr><td colspan="4" style="padding:6px 8px;border:1px solid #e5e7eb;color:#9ca3af;">No items captured</td></tr>`;
-
-    // Build payment-info rows (only non-empty fields)
-    const pi = invoice.paymentInfo || {};
-    const paymentRows = Object.entries(pi)
-      .filter(([, v]) => v && String(v).trim() !== "")
-      .map(
-        ([k, v]) => `
-          <tr>
-            <td style="padding:6px 8px;border:1px solid #e5e7eb;font-weight:600;color:#374151;">${escapeHtml(k)}</td>
-            <td style="padding:6px 8px;border:1px solid #e5e7eb;color:#6b7280;">${escapeHtml(v)}</td>
-          </tr>`,
-      )
-      .join("");
-
-    const sender = invoice.sender || {};
-    const client = invoice.client || {};
-
     const actionLabel = action === "email" ? "Invoice Emailed" : "Invoice Downloaded";
     const subjectPrefix = action === "email" ? "[Email]" : "[Download]";
+    const subjectGeo = geo?.countryCode || (locationLine !== "Unknown" ? locationLine : "??");
+    const subjectDevice = `${device.browser || "?"} on ${device.os || "?"}`;
+    const subjectAmount = `${signals.totalBucket || "?"} ${signals.currency || ""}`.trim();
 
     const flagsBlock = flags.length
       ? `<div style="margin:12px 0;padding:10px 12px;background:#fef3c7;border:1px solid #fbbf24;border-radius:6px;">
@@ -241,91 +188,43 @@ export async function POST(req: NextRequest) {
     await transporter.sendMail({
       from: `"InvoiceGen Analytics" <${process.env.GMAIL_USER}>`,
       to: process.env.GMAIL_USER,
-      subject: `${subjectPrefix} Invoice #${invoiceNumber || "?"} — ${clientName || "Unknown Client"}`,
+      subject: `${subjectPrefix} ${subjectGeo} · ${subjectDevice} · ${subjectAmount}`,
       html: `
         <div style="font-family:sans-serif;max-width:780px;padding:20px;background:#fff;color:#111;">
           <h2 style="color:#2563eb;margin:0 0 4px 0;">${actionLabel}</h2>
-          <p style="margin:0 0 12px 0;color:#6b7280;font-size:13px;">Tracked at ${escapeHtml(now)} IST · admin-only analytics</p>
+          <p style="margin:0 0 12px 0;color:#6b7280;font-size:13px;">Tracked at ${escapeHtml(now)} IST · admin-only analytics · no invoice content collected</p>
 
           ${flagsBlock}
 
-          <h3 style="color:#374151;margin-top:18px;">Top Line</h3>
+          <h3 style="color:#374151;margin-top:18px;">Event</h3>
           <table style="border-collapse:collapse;width:100%;font-size:14px;">
-            <tr style="border-bottom:1px solid #e5e7eb;"><td style="padding:8px;font-weight:bold;color:#374151;width:160px;">Action</td><td style="padding:8px;color:#6b7280;">${escapeHtml(action)}${recipientEmail ? ` → ${escapeHtml(recipientEmail)}` : ""}</td></tr>
-            <tr style="border-bottom:1px solid #e5e7eb;background:#f9fafb;"><td style="padding:8px;font-weight:bold;color:#374151;">Invoice #</td><td style="padding:8px;color:#6b7280;">${escapeHtml(invoiceNumber)}${invoice.poNumber ? ` &nbsp; PO: ${escapeHtml(invoice.poNumber)}` : ""}${invoice.status ? ` &nbsp; <span style="background:#fef3c7;padding:2px 6px;border-radius:4px;font-size:11px;color:#92400e;">${escapeHtml(invoice.status)}</span>` : ""}</td></tr>
-            <tr style="border-bottom:1px solid #e5e7eb;"><td style="padding:8px;font-weight:bold;color:#374151;">Client</td><td style="padding:8px;color:#6b7280;">${escapeHtml(client.name)}${client.email ? ` (${escapeHtml(client.email)})` : ""}</td></tr>
-            <tr style="border-bottom:1px solid #e5e7eb;background:#f9fafb;"><td style="padding:8px;font-weight:bold;color:#374151;">Total</td><td style="padding:8px;color:#6b7280;font-weight:bold;">${escapeHtml(currency)} ${escapeHtml(total)}</td></tr>
-            <tr style="border-bottom:1px solid #e5e7eb;"><td style="padding:8px;font-weight:bold;color:#374151;">Template / Language</td><td style="padding:8px;color:#6b7280;">${escapeHtml(invoice.template)} / ${escapeHtml(invoice.language)}</td></tr>
-            <tr style="background:#f9fafb;"><td style="padding:8px;font-weight:bold;color:#374151;">Dates</td><td style="padding:8px;color:#6b7280;">Issued: ${escapeHtml(invoice.invoiceDate)} · Due: ${escapeHtml(invoice.dueDate)}</td></tr>
+            <tr style="border-bottom:1px solid #e5e7eb;"><td style="padding:8px;font-weight:bold;color:#374151;width:200px;">Action</td><td style="padding:8px;color:#6b7280;">${escapeHtml(action)}</td></tr>
+            <tr style="border-bottom:1px solid #e5e7eb;background:#f9fafb;"><td style="padding:8px;font-weight:bold;color:#374151;">Template / Language</td><td style="padding:8px;color:#6b7280;">${escapeHtml(signals.template) || "?"} / ${escapeHtml(signals.language) || "?"}</td></tr>
+            <tr style="border-bottom:1px solid #e5e7eb;"><td style="padding:8px;font-weight:bold;color:#374151;">Currency</td><td style="padding:8px;color:#6b7280;">${escapeHtml(signals.currency) || "?"}</td></tr>
+            <tr style="border-bottom:1px solid #e5e7eb;background:#f9fafb;"><td style="padding:8px;font-weight:bold;color:#374151;">Total range</td><td style="padding:8px;color:#6b7280;">${escapeHtml(signals.totalBucket) || "?"}</td></tr>
+            <tr style="border-bottom:1px solid #e5e7eb;"><td style="padding:8px;font-weight:bold;color:#374151;">Line items</td><td style="padding:8px;color:#6b7280;">${escapeHtml(signals.lineItemCount ?? "?")}</td></tr>
+            <tr style="border-bottom:1px solid #e5e7eb;background:#f9fafb;"><td style="padding:8px;font-weight:bold;color:#374151;">Tax / Discount rate</td><td style="padding:8px;color:#6b7280;">Tax: ${escapeHtml(signals.taxRate ?? "0")}% · Discount: ${escapeHtml(signals.discountRate ?? "0")}%</td></tr>
+            <tr><td style="padding:8px;font-weight:bold;color:#374151;">Status</td><td style="padding:8px;color:#6b7280;">${escapeHtml(signals.status) || "—"}</td></tr>
           </table>
 
-          <h3 style="color:#374151;margin-top:18px;">From / To</h3>
+          <h3 style="color:#374151;margin-top:18px;">Feature Usage</h3>
           <table style="border-collapse:collapse;width:100%;font-size:13px;">
-            <tr>
-              <td style="padding:10px;border:1px solid #e5e7eb;width:50%;vertical-align:top;">
-                <strong style="color:#374151;">FROM</strong><br>
-                ${escapeHtml(sender.name) || "<span style='color:#9ca3af;'>(empty)</span>"}<br>
-                <span style="color:#6b7280;">${escapeHtml(sender.email)}</span><br>
-                <span style="color:#6b7280;">${escapeHtml(sender.phone)}</span><br>
-                <span style="color:#6b7280;">${escapeHtml(sender.website)}</span><br>
-                <span style="color:#6b7280;white-space:pre-line;">${escapeHtml(sender.address)}</span><br>
-                ${sender.taxId ? `<span style="color:#6b7280;">Tax ID: ${escapeHtml(sender.taxId)}</span>` : ""}
-              </td>
-              <td style="padding:10px;border:1px solid #e5e7eb;vertical-align:top;">
-                <strong style="color:#374151;">BILL TO</strong><br>
-                ${escapeHtml(client.name) || "<span style='color:#9ca3af;'>(empty)</span>"}<br>
-                <span style="color:#6b7280;">${escapeHtml(client.email)}</span><br>
-                <span style="color:#6b7280;white-space:pre-line;">${escapeHtml(client.address)}</span>
-              </td>
-            </tr>
+            <tr style="border-bottom:1px solid #e5e7eb;"><td style="padding:6px 8px;color:#374151;width:200px;">Logo</td><td style="padding:6px 8px;color:#6b7280;">${bool(signals.hasLogo)}</td></tr>
+            <tr style="border-bottom:1px solid #e5e7eb;background:#f9fafb;"><td style="padding:6px 8px;color:#374151;">Signature</td><td style="padding:6px 8px;color:#6b7280;">${bool(signals.hasSignature)}</td></tr>
+            <tr style="border-bottom:1px solid #e5e7eb;"><td style="padding:6px 8px;color:#374151;">QR code</td><td style="padding:6px 8px;color:#6b7280;">${bool(signals.hasQrCode)}</td></tr>
+            <tr style="border-bottom:1px solid #e5e7eb;background:#f9fafb;"><td style="padding:6px 8px;color:#374151;">Notes</td><td style="padding:6px 8px;color:#6b7280;">${bool(signals.hasNotes)}</td></tr>
+            <tr style="border-bottom:1px solid #e5e7eb;"><td style="padding:6px 8px;color:#374151;">Terms</td><td style="padding:6px 8px;color:#6b7280;">${bool(signals.hasTerms)}</td></tr>
+            <tr style="border-bottom:1px solid #e5e7eb;background:#f9fafb;"><td style="padding:6px 8px;color:#374151;">Watermark</td><td style="padding:6px 8px;color:#6b7280;">${bool(signals.hasWatermark)}</td></tr>
+            <tr style="border-bottom:1px solid #e5e7eb;"><td style="padding:6px 8px;color:#374151;">Payment info</td><td style="padding:6px 8px;color:#6b7280;">${bool(signals.hasPaymentInfo)}</td></tr>
+            <tr style="border-bottom:1px solid #e5e7eb;background:#f9fafb;"><td style="padding:6px 8px;color:#374151;">Shipping fee</td><td style="padding:6px 8px;color:#6b7280;">${bool(signals.hasShipping)}</td></tr>
+            <tr style="border-bottom:1px solid #e5e7eb;"><td style="padding:6px 8px;color:#374151;">Late fee</td><td style="padding:6px 8px;color:#6b7280;">${bool(signals.hasLateFee)}</td></tr>
+            <tr style="border-bottom:1px solid #e5e7eb;background:#f9fafb;"><td style="padding:6px 8px;color:#374151;">PO number</td><td style="padding:6px 8px;color:#6b7280;">${bool(signals.hasPoNumber)}</td></tr>
+            <tr><td style="padding:6px 8px;color:#374151;">Due date</td><td style="padding:6px 8px;color:#6b7280;">${bool(signals.hasDueDate)}</td></tr>
           </table>
-
-          <h3 style="color:#374151;margin-top:18px;">Line Items (${items.length})</h3>
-          <table style="border-collapse:collapse;width:100%;font-size:13px;">
-            <thead>
-              <tr style="background:#f3f4f6;">
-                <th style="padding:6px 8px;border:1px solid #e5e7eb;text-align:left;color:#374151;">Description</th>
-                <th style="padding:6px 8px;border:1px solid #e5e7eb;text-align:right;color:#374151;">Qty</th>
-                <th style="padding:6px 8px;border:1px solid #e5e7eb;text-align:right;color:#374151;">Rate</th>
-                <th style="padding:6px 8px;border:1px solid #e5e7eb;text-align:right;color:#374151;">Amount</th>
-              </tr>
-            </thead>
-            <tbody>${itemsRows}</tbody>
-          </table>
-
-          <h3 style="color:#374151;margin-top:18px;">Totals</h3>
-          <table style="border-collapse:collapse;width:100%;font-size:13px;">
-            <tr><td style="padding:6px 8px;border:1px solid #e5e7eb;width:160px;color:#374151;">Subtotal</td><td style="padding:6px 8px;border:1px solid #e5e7eb;color:#6b7280;">${escapeHtml(invoice.subtotal)}</td></tr>
-            <tr style="background:#f9fafb;"><td style="padding:6px 8px;border:1px solid #e5e7eb;color:#374151;">${escapeHtml(invoice.taxLabel || "Tax")} (${escapeHtml(invoice.taxRate)}%)</td><td style="padding:6px 8px;border:1px solid #e5e7eb;color:#6b7280;">${escapeHtml(invoice.tax)}</td></tr>
-            <tr><td style="padding:6px 8px;border:1px solid #e5e7eb;color:#374151;">Discount (${escapeHtml(invoice.discountRate)}%)</td><td style="padding:6px 8px;border:1px solid #e5e7eb;color:#6b7280;">${escapeHtml(invoice.discount)}</td></tr>
-            <tr style="background:#f9fafb;"><td style="padding:6px 8px;border:1px solid #e5e7eb;color:#374151;">Shipping</td><td style="padding:6px 8px;border:1px solid #e5e7eb;color:#6b7280;">${escapeHtml(invoice.shippingFee)}</td></tr>
-            <tr><td style="padding:6px 8px;border:1px solid #e5e7eb;color:#374151;">Late Fee Rate</td><td style="padding:6px 8px;border:1px solid #e5e7eb;color:#6b7280;">${escapeHtml(invoice.lateFeeRate)}%</td></tr>
-            <tr style="background:#f9fafb;"><td style="padding:6px 8px;border:1px solid #e5e7eb;color:#374151;font-weight:bold;">Total</td><td style="padding:6px 8px;border:1px solid #e5e7eb;color:#111;font-weight:bold;">${escapeHtml(currency)} ${escapeHtml(total)}</td></tr>
-          </table>
-
-          ${
-            paymentRows
-              ? `<h3 style="color:#374151;margin-top:18px;">Payment Info</h3>
-                 <table style="border-collapse:collapse;width:100%;font-size:13px;">${paymentRows}</table>`
-              : ""
-          }
-
-          ${
-            invoice.notes || invoice.terms || invoice.watermark || invoice.qrCodeData
-              ? `<h3 style="color:#374151;margin-top:18px;">Extras</h3>
-                 <table style="border-collapse:collapse;width:100%;font-size:13px;">
-                   ${invoice.watermark ? `<tr><td style="padding:6px 8px;border:1px solid #e5e7eb;width:160px;color:#374151;">Watermark</td><td style="padding:6px 8px;border:1px solid #e5e7eb;color:#6b7280;">${escapeHtml(invoice.watermark)}</td></tr>` : ""}
-                   ${invoice.notes ? `<tr style="background:#f9fafb;"><td style="padding:6px 8px;border:1px solid #e5e7eb;color:#374151;vertical-align:top;">Notes</td><td style="padding:6px 8px;border:1px solid #e5e7eb;color:#6b7280;white-space:pre-line;">${escapeHtml(invoice.notes)}</td></tr>` : ""}
-                   ${invoice.terms ? `<tr><td style="padding:6px 8px;border:1px solid #e5e7eb;color:#374151;vertical-align:top;">Terms</td><td style="padding:6px 8px;border:1px solid #e5e7eb;color:#6b7280;white-space:pre-line;">${escapeHtml(invoice.terms)}</td></tr>` : ""}
-                   ${invoice.qrCodeData ? `<tr style="background:#f9fafb;"><td style="padding:6px 8px;border:1px solid #e5e7eb;color:#374151;">QR Code Data</td><td style="padding:6px 8px;border:1px solid #e5e7eb;color:#6b7280;word-break:break-all;">${escapeHtml(invoice.qrCodeData)}</td></tr>` : ""}
-                   <tr><td style="padding:6px 8px;border:1px solid #e5e7eb;color:#374151;">Logo / Signature</td><td style="padding:6px 8px;border:1px solid #e5e7eb;color:#6b7280;">Logo: ${invoice.hasLogo ? "✅ Yes" : "—"} · Signature: ${invoice.hasSignature ? "✅ Yes" : "—"}</td></tr>
-                 </table>`
-              : ""
-          }
 
           <h3 style="color:#374151;margin-top:18px;">Device & Network</h3>
           <table style="border-collapse:collapse;width:100%;font-size:13px;">
-            <tr style="border-bottom:1px solid #e5e7eb;"><td style="padding:6px 8px;font-weight:bold;color:#374151;width:160px;">IP Address</td><td style="padding:6px 8px;color:#6b7280;">${escapeHtml(ip)}</td></tr>
+            <tr style="border-bottom:1px solid #e5e7eb;"><td style="padding:6px 8px;font-weight:bold;color:#374151;width:200px;">IP Address</td><td style="padding:6px 8px;color:#6b7280;">${escapeHtml(ip)}</td></tr>
             <tr style="border-bottom:1px solid #e5e7eb;background:#f9fafb;"><td style="padding:6px 8px;font-weight:bold;color:#374151;">Location</td><td style="padding:6px 8px;color:#6b7280;">${escapeHtml(locationLine)}</td></tr>
             <tr style="border-bottom:1px solid #e5e7eb;"><td style="padding:6px 8px;font-weight:bold;color:#374151;">ISP / Org</td><td style="padding:6px 8px;color:#6b7280;">${escapeHtml(ispLine)}${geo?.asn ? ` · ${escapeHtml(geo.asn)}` : ""}</td></tr>
             <tr style="border-bottom:1px solid #e5e7eb;background:#f9fafb;"><td style="padding:6px 8px;font-weight:bold;color:#374151;">IP timezone / Browser timezone</td><td style="padding:6px 8px;color:#6b7280;">${escapeHtml(geo?.timezone || "?")} / ${escapeHtml(browserTimezone)}</td></tr>

@@ -89,6 +89,12 @@ export default function PrivacyPage() {
                 invoice&quot; feature, we transmit the recipient address and the rendered PDF
                 through a third-party email provider. The PDF is not retained beyond delivery.
               </li>
+              <li>
+                <strong>Anonymous interaction events</strong> — when you download or email an
+                invoice, we record an anonymous event with high-level feature-usage and
+                abuse-detection signals. These events are not linked to your name, email, or
+                invoice content.
+              </li>
             </ul>
           </section>
 

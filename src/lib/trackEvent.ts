@@ -1,7 +1,9 @@
 // Internal analytics — admin-only, silent, never shown to users.
-// Captures full invoice context to detect bots vs real users in early days.
+// Captures abuse/bot signals + high-level feature-usage signals only.
+// Does NOT transmit invoice content, sender/client identities, or line-item details.
+// Does NOT create or transmit a persistent user identifier — returning-user
+// patterns are tracked via Google Analytics 4 (already wired and disclosed).
 import { InvoiceData } from "@/types/invoice";
-import { getCurrencySymbol } from "@/lib/defaultInvoice";
 import {
   calculateSubtotal,
   calculateTax,
@@ -53,22 +55,40 @@ function getDeviceInfo(): DeviceInfo {
   };
 }
 
+function totalBucket(total: number): string {
+  if (!isFinite(total) || total <= 0) return "0";
+  if (total < 100) return "<100";
+  if (total < 1000) return "100-1k";
+  if (total < 10000) return "1k-10k";
+  if (total < 100000) return "10k-100k";
+  return "100k+";
+}
+
 /**
- * Sends a silent analytics beacon to /api/t with full invoice + device context.
- * Used internally to detect bots vs real users. Email goes only to admin.
- * Failures never block the user flow.
+ * Sends a silent analytics beacon to /api/t.
+ * Captures: feature-usage flags, totals bucket, device/browser/timezone/referrer/url,
+ * and bot-detection inputs.
+ * Does NOT capture: invoice number, sender/client name/email/address,
+ * line item descriptions, exact totals, notes, terms, payment info, QR data,
+ * recipient email, or any persistent user identifier.
  */
 export function trackInvoiceEvent(
   action: "download" | "email",
   data: InvoiceData,
-  extra: { recipientEmail?: string } = {},
+  _extra: { recipientEmail?: string } = {},
 ) {
+  // _extra is intentionally unused — recipient email is no longer transmitted to
+  // keep the silent analytics PII-free. Signature kept stable for callers.
+  void _extra;
   try {
     const subtotal = calculateSubtotal(data.lineItems);
     const tax = calculateTax(subtotal, data.taxRate);
     const discount = calculateDiscount(subtotal, data.discountRate);
     const total = calculateTotal(subtotal, tax, discount) + (data.shippingFee || 0);
-    const symbol = getCurrencySymbol(data.currency);
+
+    const items = data.lineItems.filter(
+      (it) => it.description?.trim() || it.amount > 0,
+    );
 
     let timezone = "";
     let referrer = "";
@@ -83,58 +103,33 @@ export function trackInvoiceEvent(
 
     const payload = JSON.stringify({
       action,
-      invoiceNumber: data.invoiceNumber,
-      clientName: data.clientName,
-      total: `${symbol}${total.toFixed(2)}`,
-      currency: data.currency,
       device: getDeviceInfo(),
       timezone,
       referrer,
       url,
-      recipientEmail: extra.recipientEmail || "",
-      invoice: {
-        poNumber: data.poNumber,
-        status: data.status,
+      // High-level invoice signals — no PII, no content.
+      signals: {
         template: data.template,
         language: data.language,
-        invoiceDate: data.invoiceDate,
-        dueDate: data.dueDate,
-        sender: {
-          name: data.senderName,
-          email: data.senderEmail,
-          phone: data.senderPhone,
-          website: data.senderWebsite,
-          address: data.senderAddress,
-          taxId: data.senderTaxId,
-        },
-        client: {
-          name: data.clientName,
-          email: data.clientEmail,
-          address: data.clientAddress,
-        },
-        lineItems: data.lineItems
-          .filter((it) => it.description?.trim() || it.amount > 0)
-          .map((it) => ({
-            description: it.description,
-            quantity: it.quantity,
-            rate: it.rate,
-            amount: it.amount,
-          })),
-        subtotal: subtotal.toFixed(2),
+        currency: data.currency,
+        lineItemCount: items.length,
+        totalBucket: totalBucket(total),
         taxRate: data.taxRate,
-        taxLabel: data.taxLabel,
-        tax: tax.toFixed(2),
         discountRate: data.discountRate,
-        discount: discount.toFixed(2),
-        shippingFee: data.shippingFee || 0,
-        lateFeeRate: data.lateFeeRate,
-        paymentInfo: data.paymentInfo,
-        notes: data.notes,
-        terms: data.terms,
-        watermark: data.watermark,
         hasLogo: !!data.logo,
         hasSignature: !!data.signature,
-        qrCodeData: data.qrCodeData,
+        hasQrCode: !!data.qrCodeData,
+        hasNotes: !!(data.notes && data.notes.trim()),
+        hasTerms: !!(data.terms && data.terms.trim()),
+        hasWatermark: !!(data.watermark && data.watermark.trim()),
+        hasPaymentInfo:
+          !!data.paymentInfo &&
+          Object.values(data.paymentInfo).some((v) => v && String(v).trim() !== ""),
+        hasShipping: (data.shippingFee || 0) > 0,
+        hasLateFee: !!(data.lateFeeRate && data.lateFeeRate > 0),
+        hasPoNumber: !!(data.poNumber && data.poNumber.trim()),
+        hasDueDate: !!data.dueDate,
+        status: data.status,
       },
     });
 
