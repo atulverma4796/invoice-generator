@@ -6,6 +6,13 @@ import { getStaticSampleInvoice, INDUSTRY_TEMPLATE_IDS } from "@/lib/sampleInvoi
 import TemplatePreviewCard from "@/components/TemplatePreviewCard";
 import JsonLd from "@/components/JsonLd";
 import AffiliateCard from "@/components/AffiliateCard";
+import RelatedBlogPosts from "@/components/RelatedBlogPosts";
+
+const INDUSTRY_BLOG_SLUGS = [
+  "professional-invoice-complete-guide-2026",
+  "invoice-mistakes-freelancers-make",
+  "send-invoices-get-paid-on-time",
+];
 
 const SITE_URL = "https://freeinvoicegen.org";
 
@@ -174,6 +181,12 @@ export default async function IndustryPage({ params }: { params: Promise<{ indus
           <AffiliateCard variant="fast-payment" />
         </div>
       </section>
+
+      {/* Further reading from the blog */}
+      <RelatedBlogPosts
+        slugs={INDUSTRY_BLOG_SLUGS}
+        heading="Further Reading from the Blog"
+      />
 
       {/* Related Templates */}
       <section className="py-12 bg-gray-50">

@@ -4,6 +4,36 @@ import Link from "next/link";
 import { HOW_TO_GUIDES, HOW_TO_LIST } from "@/lib/howToGuides";
 import JsonLd from "@/components/JsonLd";
 import AffiliateCard from "@/components/AffiliateCard";
+import RelatedBlogPosts from "@/components/RelatedBlogPosts";
+
+function blogSlugsForHowTo(topic: string): string[] {
+  switch (topic) {
+    case "send-invoice":
+      return [
+        "send-invoices-get-paid-on-time",
+        "invoice-mistakes-freelancers-make",
+        "professional-invoice-complete-guide-2026",
+      ];
+    case "add-tax-to-invoice":
+      return [
+        "tax-invoice-requirements-by-country",
+        "gst-invoice-india-compliance",
+        "vat-invoice-uk-freelancers",
+      ];
+    case "create-invoice-freelancer":
+      return [
+        "invoice-mistakes-freelancers-make",
+        "send-invoices-get-paid-on-time",
+        "professional-invoice-complete-guide-2026",
+      ];
+    default:
+      return [
+        "professional-invoice-complete-guide-2026",
+        "invoice-numbering-best-practices",
+        "invoice-vs-receipt-vs-quotation",
+      ];
+  }
+}
 
 const SITE_URL = "https://freeinvoicegen.org";
 
@@ -160,6 +190,12 @@ export default async function HowToPage({ params }: { params: Promise<{ topic: s
           </section>
         </div>
       </article>
+
+      {/* Further reading from the blog */}
+      <RelatedBlogPosts
+        slugs={blogSlugsForHowTo(data.slug)}
+        heading="Further Reading from the Blog"
+      />
 
       {/* Related Guides */}
       <section className="py-12 bg-gray-50">

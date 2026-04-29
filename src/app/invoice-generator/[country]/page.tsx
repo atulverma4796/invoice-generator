@@ -4,6 +4,31 @@ import Link from "next/link";
 import { SEO_COUNTRIES, SEO_COUNTRY_LIST } from "@/lib/seoCountries";
 import JsonLd from "@/components/JsonLd";
 import AffiliateCard from "@/components/AffiliateCard";
+import RelatedBlogPosts from "@/components/RelatedBlogPosts";
+
+function blogSlugsForCountry(slug: string): string[] {
+  const universal = [
+    "professional-invoice-complete-guide-2026",
+    "send-invoices-get-paid-on-time",
+    "invoice-mistakes-freelancers-make",
+    "tax-invoice-requirements-by-country",
+  ];
+  if (slug === "india") {
+    return [
+      "gst-invoice-india-compliance",
+      "tax-invoice-requirements-by-country",
+      "professional-invoice-complete-guide-2026",
+    ];
+  }
+  if (slug === "uk") {
+    return [
+      "vat-invoice-uk-freelancers",
+      "tax-invoice-requirements-by-country",
+      "professional-invoice-complete-guide-2026",
+    ];
+  }
+  return universal.slice(0, 3);
+}
 
 const SITE_URL = "https://freeinvoicegen.org";
 
@@ -192,6 +217,13 @@ export default async function CountryPage({ params }: { params: Promise<{ countr
           </div>
         </div>
       </section>
+
+      {/* Further reading from the blog */}
+      <RelatedBlogPosts
+        slugs={blogSlugsForCountry(data.slug)}
+        heading={`Further Reading for ${data.name} Businesses`}
+        className="bg-white"
+      />
 
       {/* Related Countries */}
       <section className="py-12 bg-white">
