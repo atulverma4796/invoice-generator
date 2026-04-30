@@ -10,6 +10,7 @@ const NAV_LINKS = [
   { href: "/invoice-generator", label: "By Country" },
   { href: "/how-to", label: "Guides" },
   { href: "/blog", label: "Blog" },
+  { href: "/rent-receipt", label: "Rent Receipt" },
   { href: "/templates", label: "My Invoices", accent: "amber" },
   { href: "/#faq", label: "FAQ" },
   { href: "/#feedback", label: "Feedback" },
