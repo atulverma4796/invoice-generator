@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import toast from "react-hot-toast";
 
 export interface QuoteLineItem {
@@ -112,6 +112,17 @@ export default function QuotationForm({ data, setData, onGenerate, generating }:
   const [savedToast, setSavedToast] = useState(false);
   void savedToast; // reserved for future "saved" UI state
 
+  const senderRef = useRef<HTMLInputElement>(null);
+  const clientRef = useRef<HTMLInputElement>(null);
+  const quoteNumberRef = useRef<HTMLInputElement>(null);
+  const firstItemRef = useRef<HTMLInputElement>(null);
+
+  const focusAndScroll = (el: HTMLInputElement | null) => {
+    if (!el) return;
+    el.focus();
+    el.scrollIntoView({ behavior: "smooth", block: "center" });
+  };
+
   const totals = useMemo(() => {
     const subtotal = data.lineItems.reduce((sum, it) => sum + it.quantity * it.rate, 0);
     const discount = (subtotal * (data.discountRate || 0)) / 100;
@@ -144,13 +155,29 @@ export default function QuotationForm({ data, setData, onGenerate, generating }:
   const removeItem = (id: string) =>
     setData({ ...data, lineItems: data.lineItems.filter((it) => it.id !== id) });
 
-  const validate = (): string | null => {
-    if (!data.senderName.trim()) return "Your name / business name is required.";
-    if (!data.clientName.trim()) return "Client name is required.";
-    if (!data.quoteNumber.trim()) return "Quotation number is required.";
-    if (!data.lineItems.some((it) => it.description.trim()))
-      return "Add at least one line item with a description.";
-    return null;
+  // Validate and surface the first error. Returns true if valid.
+  const validateAndFocus = (): boolean => {
+    if (!data.senderName.trim()) {
+      toast.error("Please enter your name or business name.");
+      focusAndScroll(senderRef.current);
+      return false;
+    }
+    if (!data.clientName.trim()) {
+      toast.error("Please enter the client name.");
+      focusAndScroll(clientRef.current);
+      return false;
+    }
+    if (!data.quoteNumber.trim()) {
+      toast.error("Please enter a quotation number.");
+      focusAndScroll(quoteNumberRef.current);
+      return false;
+    }
+    if (!data.lineItems.some((it) => it.description.trim())) {
+      toast.error("Please add at least one line item with a description.");
+      focusAndScroll(firstItemRef.current);
+      return false;
+    }
+    return true;
   };
 
   return (
@@ -179,6 +206,7 @@ export default function QuotationForm({ data, setData, onGenerate, generating }:
         <div>
           <label className="block text-xs font-medium text-gray-600 mb-1">Quote #</label>
           <input
+            ref={quoteNumberRef}
             type="text"
             value={data.quoteNumber}
             onChange={(e) => update("quoteNumber", e.target.value)}
@@ -211,6 +239,7 @@ export default function QuotationForm({ data, setData, onGenerate, generating }:
         <div className="space-y-3">
           <h3 className="text-sm font-bold text-gray-800 uppercase tracking-wide">From</h3>
           <input
+            ref={senderRef}
             type="text"
             placeholder="Your name / Business name *"
             value={data.senderName}
@@ -254,6 +283,7 @@ export default function QuotationForm({ data, setData, onGenerate, generating }:
         <div className="space-y-3">
           <h3 className="text-sm font-bold text-gray-800 uppercase tracking-wide">To (Client)</h3>
           <input
+            ref={clientRef}
             type="text"
             placeholder="Client / Company name *"
             value={data.clientName}
@@ -299,11 +329,12 @@ export default function QuotationForm({ data, setData, onGenerate, generating }:
             <div className="col-span-2 text-right">Rate</div>
             <div className="col-span-2 text-right">Amount</div>
           </div>
-          {data.lineItems.map((it) => {
+          {data.lineItems.map((it, idx) => {
             const amount = it.quantity * it.rate;
             return (
               <div key={it.id} className="grid grid-cols-12 gap-2 items-center">
                 <input
+                  ref={idx === 0 ? firstItemRef : undefined}
                   type="text"
                   value={it.description}
                   onChange={(e) => updateItem(it.id, "description", e.target.value)}
@@ -443,11 +474,7 @@ export default function QuotationForm({ data, setData, onGenerate, generating }:
       <button
         type="button"
         onClick={() => {
-          const err = validate();
-          if (err) {
-            toast.error(err);
-            return;
-          }
+          if (!validateAndFocus()) return;
           onGenerate();
         }}
         disabled={generating}

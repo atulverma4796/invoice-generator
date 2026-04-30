@@ -5,6 +5,7 @@ import JsonLd from "@/components/JsonLd";
 import MobileMenu from "@/components/MobileMenu";
 import Analytics from "@/components/Analytics";
 import CookieConsent from "@/components/CookieConsent";
+import AppToaster from "@/components/AppToaster";
 import { INDUSTRY_LIST } from "@/lib/industries";
 import { SEO_COUNTRY_LIST } from "@/lib/seoCountries";
 import { HOW_TO_LIST } from "@/lib/howToGuides";
@@ -183,6 +184,7 @@ export default function RootLayout({
 
         <main className="flex-1">{children}</main>
         <CookieConsent />
+        <AppToaster />
 
         {/* Footer */}
         <footer className="border-t border-gray-200 bg-gradient-to-b from-white to-gray-50 mt-16">
@@ -213,6 +215,8 @@ export default function RootLayout({
                   <a href="/invoice-generator" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">By Country</a>
                   <a href="/how-to" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">How-To Guides</a>
                   <a href="/blog" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">Blog</a>
+                  <a href="/quotation" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">Quotation Generator</a>
+                  <a href="/rent-receipt" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">Rent Receipt Generator</a>
                   <a href="/templates" className="text-sm text-gray-500 hover:text-amber-600 transition-colors">My Invoices</a>
                   <a href="/#features" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">Features</a>
                   <a href="/#faq" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">FAQ</a>

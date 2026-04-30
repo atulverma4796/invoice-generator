@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { InvoiceData } from "@/types/invoice";
 import {
   createDefaultInvoice,
@@ -437,7 +437,6 @@ export default function Home() {
     <div>
       <JsonLd data={homeFaqSchema} />
       <JsonLd data={homeHowToSchema} />
-      <Toaster position="top-right" toastOptions={{ duration: 3000 }} />
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50" />

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { InvoiceData } from "@/types/invoice";
 import { getCurrencySymbol } from "@/lib/defaultInvoice";
 import { getStatusColors } from "@/components/StatusBadge";
@@ -207,8 +207,6 @@ export default function TemplatesPage() {
 
   return (
     <div>
-      <Toaster position="top-right" toastOptions={{ duration: 3000 }} />
-
       {/* Hero */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50" />

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import toast from "react-hot-toast";
 import { numberToIndianWords } from "@/lib/numberToWords";
 
@@ -83,8 +83,22 @@ export default function RentReceiptForm({ data, setData, onGenerate, generating 
   const totalReceipts = months.length;
   const totalAmount = totalReceipts * (data.monthlyRent || 0);
 
+  const tenantRef = useRef<HTMLInputElement>(null);
+  const landlordRef = useRef<HTMLInputElement>(null);
+  const panRef = useRef<HTMLInputElement>(null);
+  const addressRef = useRef<HTMLTextAreaElement>(null);
+  const rentRef = useRef<HTMLInputElement>(null);
+
   const update = <K extends keyof RentReceiptData>(field: K, value: RentReceiptData[K]) => {
     setData({ ...data, [field]: value });
+  };
+
+  const focusAndScroll = (
+    el: HTMLInputElement | HTMLTextAreaElement | null,
+  ) => {
+    if (!el) return;
+    el.focus();
+    el.scrollIntoView({ behavior: "smooth", block: "center" });
   };
 
   return (
@@ -98,6 +112,7 @@ export default function RentReceiptForm({ data, setData, onGenerate, generating 
         <div>
           <label className="block text-xs font-medium text-gray-600 mb-1">Tenant Name *</label>
           <input
+            ref={tenantRef}
             type="text"
             value={data.tenantName}
             onChange={(e) => update("tenantName", e.target.value)}
@@ -109,6 +124,7 @@ export default function RentReceiptForm({ data, setData, onGenerate, generating 
         <div>
           <label className="block text-xs font-medium text-gray-600 mb-1">Landlord Name *</label>
           <input
+            ref={landlordRef}
             type="text"
             value={data.landlordName}
             onChange={(e) => update("landlordName", e.target.value)}
@@ -124,6 +140,7 @@ export default function RentReceiptForm({ data, setData, onGenerate, generating 
           Landlord PAN <span className="text-gray-400 font-normal">(required if annual rent &gt; ₹1 lakh)</span>
         </label>
         <input
+          ref={panRef}
           type="text"
           value={data.landlordPan}
           onChange={(e) => update("landlordPan", e.target.value.toUpperCase())}
@@ -137,6 +154,7 @@ export default function RentReceiptForm({ data, setData, onGenerate, generating 
       <div>
         <label className="block text-xs font-medium text-gray-600 mb-1">Property Address *</label>
         <textarea
+          ref={addressRef}
           value={data.propertyAddress}
           onChange={(e) => update("propertyAddress", e.target.value)}
           onFocus={(e) => e.target.select()}
@@ -151,6 +169,7 @@ export default function RentReceiptForm({ data, setData, onGenerate, generating 
         <div>
           <label className="block text-xs font-medium text-gray-600 mb-1">Monthly Rent (₹) *</label>
           <input
+            ref={rentRef}
             type="number"
             value={data.monthlyRent || ""}
             onChange={(e) => update("monthlyRent", Number(e.target.value) || 0)}
@@ -248,20 +267,33 @@ export default function RentReceiptForm({ data, setData, onGenerate, generating 
       <button
         type="button"
         onClick={() => {
-          if (!data.tenantName.trim() || !data.landlordName.trim() || !data.propertyAddress.trim()) {
-            toast.error("Tenant name, landlord name, and property address are required.");
+          if (!data.tenantName.trim()) {
+            toast.error("Please enter the tenant name.");
+            focusAndScroll(tenantRef.current);
             return;
           }
-          if (totalAmount >= 100000 && !data.landlordPan.trim()) {
-            toast.error("Landlord PAN is required when annual rent ≥ ₹1 lakh.");
+          if (!data.landlordName.trim()) {
+            toast.error("Please enter the landlord name.");
+            focusAndScroll(landlordRef.current);
             return;
           }
-          if (totalReceipts === 0) {
-            toast.error("Please pick a valid From/To month range.");
+          if (!data.propertyAddress.trim()) {
+            toast.error("Please enter the property address.");
+            focusAndScroll(addressRef.current);
             return;
           }
           if (!data.monthlyRent || data.monthlyRent <= 0) {
             toast.error("Enter a valid monthly rent amount.");
+            focusAndScroll(rentRef.current);
+            return;
+          }
+          if (totalAmount >= 100000 && !data.landlordPan.trim()) {
+            toast.error("Landlord PAN is required when annual rent ≥ ₹1 lakh.");
+            focusAndScroll(panRef.current);
+            return;
+          }
+          if (totalReceipts === 0) {
+            toast.error("Please pick a valid From/To month range.");
             return;
           }
           onGenerate();
