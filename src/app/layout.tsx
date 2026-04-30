@@ -172,6 +172,7 @@ export default function RootLayout({
                 <a href="/invoice-generator" className="hover:text-blue-600 transition-colors">By Country</a>
                 <a href="/how-to" className="hover:text-blue-600 transition-colors">Guides</a>
                 <a href="/blog" className="hover:text-blue-600 transition-colors">Blog</a>
+                <a href="/quotation" className="hover:text-blue-600 transition-colors">Quotation</a>
                 <a href="/rent-receipt" className="hover:text-blue-600 transition-colors">Rent Receipt</a>
                 <a href="/templates" className="hover:text-amber-600 transition-colors">My Invoices</a>
               </nav>
