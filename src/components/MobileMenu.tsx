@@ -12,6 +12,7 @@ const NAV_LINKS = [
   { href: "/blog", label: "Blog" },
   { href: "/quotation", label: "Quotation" },
   { href: "/purchase-order", label: "Purchase Order" },
+  { href: "/delivery-note", label: "Delivery Note" },
   { href: "/rent-receipt", label: "Rent Receipt" },
   { href: "/templates", label: "My Invoices", accent: "amber" },
   { href: "/#faq", label: "FAQ" },
