@@ -174,6 +174,7 @@ export default function RootLayout({
                 <a href="/how-to" className="hover:text-blue-600 transition-colors">Guides</a>
                 <a href="/blog" className="hover:text-blue-600 transition-colors">Blog</a>
                 <a href="/quotation" className="hover:text-blue-600 transition-colors">Quotation</a>
+                <a href="/purchase-order" className="hover:text-blue-600 transition-colors">PO</a>
                 <a href="/rent-receipt" className="hover:text-blue-600 transition-colors">Rent Receipt</a>
                 <a href="/templates" className="hover:text-amber-600 transition-colors">My Invoices</a>
               </nav>
@@ -216,6 +217,7 @@ export default function RootLayout({
                   <a href="/how-to" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">How-To Guides</a>
                   <a href="/blog" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">Blog</a>
                   <a href="/quotation" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">Quotation Generator</a>
+                  <a href="/purchase-order" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">Purchase Order Generator</a>
                   <a href="/rent-receipt" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">Rent Receipt Generator</a>
                   <a href="/templates" className="text-sm text-gray-500 hover:text-amber-600 transition-colors">My Invoices</a>
                   <a href="/#features" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">Features</a>
