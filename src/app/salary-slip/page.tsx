@@ -104,6 +104,150 @@ export default function SalarySlipPage() {
         </div>
       </section>
 
+      <section className="py-12 sm:py-16 border-b border-gray-100">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 prose prose-gray max-w-none">
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
+            What is a salary slip, and why employees actually need one
+          </h2>
+          <p className="text-gray-700 leading-relaxed">
+            A salary slip — also called a payslip or pay stub — is a monthly document an employer
+            issues to an employee showing earnings, deductions, taxes, and net pay for that period.
+            On paper it looks routine, but a salary slip is one of the most-used documents in a
+            working person&apos;s life. It&apos;s required when applying for a home loan, a personal
+            loan, a credit card, a visa, or rented housing. It&apos;s the proof banks and immigration
+            officers want to see that you have steady income. Without 3-6 months of salary slips,
+            most loan applications stall at the verification step.
+          </p>
+          <p className="text-gray-700 leading-relaxed mt-4">
+            For employers, issuing a proper salary slip every month is not optional. The Payment of
+            Wages Act, the Shops &amp; Establishments Act, and various state-level labour laws in
+            India require it. Failure to give a written wage slip can lead to fines and disputes
+            during termination. For small businesses paying just 2-3 employees, a clean PDF payslip
+            generated each month is the simplest way to stay compliant without paying for a full
+            HRMS subscription.
+          </p>
+
+          <h3 className="text-xl font-bold text-gray-900 mt-10 mb-3">When and why a salary slip is requested</h3>
+          <ul className="text-gray-700 leading-relaxed space-y-2 mt-3 list-disc pl-6">
+            <li>
+              <strong>Home loan or car loan applications.</strong> Banks ask for 3-6 months of
+              recent salary slips to verify your income and calculate eligibility.
+            </li>
+            <li>
+              <strong>Visa applications.</strong> Embassies often require 3 months of payslips as
+              proof of employment and financial stability, especially for tourist and student visas.
+            </li>
+            <li>
+              <strong>Renting a flat in a metro.</strong> Landlords increasingly ask for salary
+              slips to confirm you can afford the rent.
+            </li>
+            <li>
+              <strong>Credit card upgrades.</strong> Banks use payslips to assess your eligibility
+              for higher-limit or premium cards.
+            </li>
+            <li>
+              <strong>Personal loan applications.</strong> Both banks and NBFCs use payslips to
+              determine the loan amount they&apos;ll sanction.
+            </li>
+            <li>
+              <strong>Income tax filing.</strong> Salary slips help you reconcile your annual income,
+              Form 16, and tax deductions when filing your ITR.
+            </li>
+            <li>
+              <strong>Background verification.</strong> When you switch jobs, the new employer&apos;s
+              HR team may ask for previous payslips to verify your last drawn CTC.
+            </li>
+          </ul>
+
+          <h3 className="text-xl font-bold text-gray-900 mt-10 mb-3">What must be on a salary slip</h3>
+          <p className="text-gray-700 leading-relaxed">
+            A compliant salary slip in India typically has these sections:
+          </p>
+          <ol className="text-gray-700 leading-relaxed space-y-2 mt-3 list-decimal pl-6">
+            <li>
+              <strong>Company details</strong> — legal name, registered address, logo (optional but
+              recommended for credibility)
+            </li>
+            <li>
+              <strong>Employee details</strong> — name, employee ID, designation, department, date
+              of joining, PAN, bank account number
+            </li>
+            <li>
+              <strong>Pay period and pay date</strong> — &quot;Salary for May 2026, paid on
+              01-Jun-2026&quot;
+            </li>
+            <li>
+              <strong>Working days breakdown</strong> — total working days in the month, days worked,
+              leaves taken (paid &amp; unpaid)
+            </li>
+            <li>
+              <strong>Earnings block</strong> — Basic, HRA, Conveyance, Special Allowance, Bonus,
+              Overtime, any reimbursements (LTA, medical) — shown line-by-line
+            </li>
+            <li>
+              <strong>Deductions block</strong> — Provident Fund (PF), Professional Tax,
+              Income Tax (TDS), ESI (if applicable), Loan EMI deductions, other voluntary deductions
+            </li>
+            <li>
+              <strong>Net pay</strong> — earnings minus deductions, the amount actually credited
+            </li>
+            <li>
+              <strong>Net pay in words</strong> — required for cheque processing and dispute
+              resolution
+            </li>
+            <li>
+              <strong>YTD figures</strong> (optional) — year-to-date gross, tax deducted, useful at
+              year-end
+            </li>
+            <li>
+              <strong>Authorized signature</strong> — HR or finance signature/stamp (or
+              &quot;System generated&quot; note for digital slips)
+            </li>
+          </ol>
+
+          <h3 className="text-xl font-bold text-gray-900 mt-10 mb-3">Common salary slip mistakes</h3>
+          <ul className="text-gray-700 leading-relaxed space-y-3 mt-3 list-disc pl-6">
+            <li>
+              <strong>Missing PF / ESI numbers.</strong> If your company is registered for PF or
+              ESI, the slip must show the employee&apos;s UAN/PF number and ESI number. Loan
+              processors check these.
+            </li>
+            <li>
+              <strong>HRA shown without supporting receipts.</strong> If you&apos;re claiming HRA
+              exemption above ₹1 lakh annually, you need actual rent receipts with landlord PAN. Use
+              our <Link href="/rent-receipt" className="text-blue-600 hover:underline font-medium">free
+              rent receipt generator</Link> to create compliant ones.
+            </li>
+            <li>
+              <strong>Inconsistent month-to-month.</strong> Banks compare 6 months of slips. If
+              earnings jump around without explanation, they&apos;ll ask questions. Use a
+              standardized format every month.
+            </li>
+            <li>
+              <strong>Net pay doesn&apos;t match bank credit.</strong> The amount on the slip must
+              equal what hit the bank account. Discrepancies kill loan applications instantly.
+            </li>
+            <li>
+              <strong>No company stamp or sign.</strong> For employer-issued slips, unsigned PDFs
+              are sometimes rejected by stricter banks and embassies. Always sign and stamp before
+              giving it to the employee.
+            </li>
+          </ul>
+
+          <h3 className="text-xl font-bold text-gray-900 mt-10 mb-3">Salary slip for self-employed and freelancers</h3>
+          <p className="text-gray-700 leading-relaxed">
+            If you&apos;re a freelancer or consultant who pays yourself a regular monthly draw from
+            your business, you can still generate a payslip for the amount. This helps when applying
+            for loans (banks accept self-issued payslips combined with bank statements) and for
+            visa purposes. Pair it with your{" "}
+            <Link href="/" className="text-blue-600 hover:underline font-medium">
+              invoice generator
+            </Link>{" "}
+            output and bank statements to build a clean income profile.
+          </p>
+        </div>
+      </section>
+
       <section className="py-10 sm:py-14">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <SalarySlipClient />
@@ -127,6 +271,68 @@ export default function SalarySlipPage() {
                 </div>
               </details>
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-12 border-t border-gray-100">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">
+            Learn more about salary, payroll, and tax
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <Link
+              href="/blog/self-employed-tax-tracking-invoices"
+              className="group block bg-white border border-gray-200 rounded-xl p-5 hover:border-blue-300 hover:shadow-md transition-all"
+            >
+              <span className="text-xs font-bold text-blue-600 uppercase tracking-wider">Tax</span>
+              <h3 className="text-base font-bold text-gray-900 mt-2 group-hover:text-blue-600">
+                Managing Income Across Salary and Freelance Work
+              </h3>
+              <p className="text-sm text-gray-600 mt-2 leading-relaxed">
+                How to track salary, freelance, and consulting receipts in the same year — and how
+                payslips fit into your tax return.
+              </p>
+            </Link>
+            <Link
+              href="/blog/tax-invoice-requirements-by-country"
+              className="group block bg-white border border-gray-200 rounded-xl p-5 hover:border-blue-300 hover:shadow-md transition-all"
+            >
+              <span className="text-xs font-bold text-blue-600 uppercase tracking-wider">Global</span>
+              <h3 className="text-base font-bold text-gray-900 mt-2 group-hover:text-blue-600">
+                Payslip &amp; Tax Document Requirements by Country
+              </h3>
+              <p className="text-sm text-gray-600 mt-2 leading-relaxed">
+                What payroll documents and tax slips are mandatory across India, UK, US, EU,
+                and beyond.
+              </p>
+            </Link>
+            <Link
+              href="/blog/professional-invoice-complete-guide-2026"
+              className="group block bg-white border border-gray-200 rounded-xl p-5 hover:border-blue-300 hover:shadow-md transition-all"
+            >
+              <span className="text-xs font-bold text-blue-600 uppercase tracking-wider">Guide</span>
+              <h3 className="text-base font-bold text-gray-900 mt-2 group-hover:text-blue-600">
+                Self-Issued Payslip for Freelancers and Consultants
+              </h3>
+              <p className="text-sm text-gray-600 mt-2 leading-relaxed">
+                How freelancers can generate self-payslips for loan applications and visas without
+                a formal employer.
+              </p>
+            </Link>
+            <Link
+              href="/blog/invoice-numbering-best-practices"
+              className="group block bg-white border border-gray-200 rounded-xl p-5 hover:border-blue-300 hover:shadow-md transition-all"
+            >
+              <span className="text-xs font-bold text-blue-600 uppercase tracking-wider">Best Practices</span>
+              <h3 className="text-base font-bold text-gray-900 mt-2 group-hover:text-blue-600">
+                Payslip Numbering and Record-Keeping Best Practices
+              </h3>
+              <p className="text-sm text-gray-600 mt-2 leading-relaxed">
+                How to organize payslips month-over-month so they hold up under HR scrutiny and
+                bank loan verification.
+              </p>
+            </Link>
           </div>
         </div>
       </section>

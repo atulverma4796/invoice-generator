@@ -104,6 +104,145 @@ export default function PurchaseOrderPage() {
         </div>
       </section>
 
+      <section className="py-12 sm:py-16 border-b border-gray-100">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 prose prose-gray max-w-none">
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
+            What is a purchase order, and why does it matter?
+          </h2>
+          <p className="text-gray-700 leading-relaxed">
+            A purchase order (PO) is a formal document a buyer sends to a seller to authorize a
+            specific purchase. It locks in the items, quantities, prices, ship-to address, and
+            expected delivery date — all before money or goods change hands. When the seller accepts
+            the PO, both sides have a legally binding contract for that order. For procurement teams,
+            small businesses buying inventory, and freelancers buying equipment, the PO is the single
+            cleanest way to make sure what you ordered is exactly what you receive (and exactly what
+            you&apos;re billed for).
+          </p>
+          <p className="text-gray-700 leading-relaxed mt-4">
+            Most disputes between buyers and suppliers come from informal orders — a phone call, a
+            WhatsApp message, a vague email. With a written PO, you have a reference number for
+            every conversation about that order. Invoice doesn&apos;t match? You compare it to the
+            PO. Wrong quantity delivered? You point at the PO. Late delivery? The PO has the
+            expected date in writing. It&apos;s the buyer&apos;s equivalent of the seller&apos;s
+            quotation, and the two together create an unambiguous record of what was agreed.
+          </p>
+
+          <h3 className="text-xl font-bold text-gray-900 mt-10 mb-3">When you should issue a PO</h3>
+          <p className="text-gray-700 leading-relaxed">
+            Any purchase above a small threshold (typically ₹5,000 or $100 — set your own) should go
+            through a PO. Use one when:
+          </p>
+          <ul className="text-gray-700 leading-relaxed space-y-2 mt-3 list-disc pl-6">
+            <li>
+              Buying inventory or raw materials from a regular supplier
+            </li>
+            <li>
+              Ordering equipment, hardware, or software licenses for the business
+            </li>
+            <li>
+              Engaging a vendor for services with defined deliverables (e.g., translation, printing)
+            </li>
+            <li>
+              Procuring goods that need to be shipped to a separate address (warehouse, project site)
+            </li>
+            <li>
+              Booking subcontractor work as part of a larger project you&apos;re running
+            </li>
+            <li>
+              Any purchase that needs internal approval (finance team, manager sign-off)
+            </li>
+          </ul>
+          <p className="text-gray-700 leading-relaxed mt-4">
+            For tiny purchases — a courier charge, a one-off office supply — skipping the PO is
+            fine. But for anything that will appear on an expense audit, a vendor invoice, or a tax
+            return, having a matching PO makes the paperwork bulletproof.
+          </p>
+
+          <h3 className="text-xl font-bold text-gray-900 mt-10 mb-3">What to include on a purchase order</h3>
+          <p className="text-gray-700 leading-relaxed">
+            A complete PO has these fields:
+          </p>
+          <ol className="text-gray-700 leading-relaxed space-y-2 mt-3 list-decimal pl-6">
+            <li>
+              <strong>PO number</strong> — unique reference (e.g., PO-2026-0042) used on all
+              follow-up emails and on the supplier&apos;s invoice
+            </li>
+            <li>
+              <strong>Issue date and expected delivery date</strong> — sets the timeline. If the
+              delivery window matters, use a date range or &quot;on or before&quot; phrasing
+            </li>
+            <li>
+              <strong>Buyer details</strong> — your legal entity name, billing address, GSTIN/VAT
+              number, contact person
+            </li>
+            <li>
+              <strong>Vendor details</strong> — supplier&apos;s name, address, tax ID, contact email
+            </li>
+            <li>
+              <strong>Ship-to address</strong> — only if different from billing address (warehouse,
+              site, branch office). This is the #1 field people forget
+            </li>
+            <li>
+              <strong>Itemized order</strong> — SKU or item code, description, unit, quantity, unit
+              price, line total. Be specific: &quot;A4 printer paper, 80gsm, 500-sheet ream&quot; not
+              just &quot;paper&quot;
+            </li>
+            <li>
+              <strong>Subtotal, tax breakdown, total</strong> — show CGST/SGST/IGST for India,
+              VAT for UK/EU, sales tax for US
+            </li>
+            <li>
+              <strong>Payment terms</strong> — net 30, net 45, or advance — and currency if doing
+              international procurement
+            </li>
+            <li>
+              <strong>Special instructions</strong> — packaging, labeling, delivery window, contact
+              person on receipt, any quality specs
+            </li>
+          </ol>
+
+          <h3 className="text-xl font-bold text-gray-900 mt-10 mb-3">Common PO mistakes</h3>
+          <ul className="text-gray-700 leading-relaxed space-y-3 mt-3 list-disc pl-6">
+            <li>
+              <strong>No PO number on the invoice.</strong> Always require the supplier to put your
+              PO number on their invoice. Without it, your finance team can&apos;t match invoice to
+              order and payment gets delayed.
+            </li>
+            <li>
+              <strong>Vague item descriptions.</strong> &quot;Office furniture&quot; is useless if
+              you receive plastic chairs instead of ergonomic ones. Specify model, dimensions, color,
+              spec sheet.
+            </li>
+            <li>
+              <strong>Missing ship-to address.</strong> If your bill-to and ship-to differ, write
+              both explicitly. Tax also depends on this: inter-state vs. intra-state for GST.
+            </li>
+            <li>
+              <strong>No expected delivery date.</strong> &quot;ASAP&quot; means different things to
+              different people. Pick a date, even if approximate, so you can enforce it later.
+            </li>
+            <li>
+              <strong>Forgetting tax treatment.</strong> For India procurement, missing the GSTIN
+              field on the vendor side means you can&apos;t claim input tax credit. Always capture
+              it.
+            </li>
+          </ul>
+
+          <h3 className="text-xl font-bold text-gray-900 mt-10 mb-3">PO vs. invoice — who issues what</h3>
+          <p className="text-gray-700 leading-relaxed">
+            The PO is from the <strong>buyer to the seller</strong>. The invoice flows back the
+            other way — <strong>seller to buyer</strong>, after the goods or services are delivered.
+            Both reference the same PO number. The buyer&apos;s accounting system marks the PO as
+            &quot;received&quot; when goods arrive, and as &quot;paid&quot; when the invoice is
+            settled. Need an invoice generator after receiving a vendor&apos;s goods? Use our{" "}
+            <Link href="/" className="text-blue-600 hover:underline font-medium">
+              free invoice generator
+            </Link>{" "}
+            to issue one to your own clients, or use this PO generator to source your inputs.
+          </p>
+        </div>
+      </section>
+
       <section className="py-10 sm:py-14">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <PurchaseOrderClient />
@@ -127,6 +266,68 @@ export default function PurchaseOrderPage() {
                 </div>
               </details>
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-12 border-t border-gray-100">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">
+            Learn more about procurement and invoicing
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <Link
+              href="/blog/invoice-vs-receipt-vs-quotation"
+              className="group block bg-white border border-gray-200 rounded-xl p-5 hover:border-blue-300 hover:shadow-md transition-all"
+            >
+              <span className="text-xs font-bold text-blue-600 uppercase tracking-wider">Guide</span>
+              <h3 className="text-base font-bold text-gray-900 mt-2 group-hover:text-blue-600">
+                PO, Invoice, Receipt &amp; Quotation: The Full B2B Paper Trail
+              </h3>
+              <p className="text-sm text-gray-600 mt-2 leading-relaxed">
+                Understand exactly which document goes where in a typical B2B order — and why
+                missing one breaks the audit trail.
+              </p>
+            </Link>
+            <Link
+              href="/blog/gst-invoice-india-compliance"
+              className="group block bg-white border border-gray-200 rounded-xl p-5 hover:border-blue-300 hover:shadow-md transition-all"
+            >
+              <span className="text-xs font-bold text-blue-600 uppercase tracking-wider">India</span>
+              <h3 className="text-base font-bold text-gray-900 mt-2 group-hover:text-blue-600">
+                GST Invoice India — Full Compliance Guide
+              </h3>
+              <p className="text-sm text-gray-600 mt-2 leading-relaxed">
+                CGST/SGST/IGST split, HSN/SAC codes, place of supply, and the rules for claiming
+                input tax credit on procurement.
+              </p>
+            </Link>
+            <Link
+              href="/blog/invoice-numbering-best-practices"
+              className="group block bg-white border border-gray-200 rounded-xl p-5 hover:border-blue-300 hover:shadow-md transition-all"
+            >
+              <span className="text-xs font-bold text-blue-600 uppercase tracking-wider">Best Practices</span>
+              <h3 className="text-base font-bold text-gray-900 mt-2 group-hover:text-blue-600">
+                Invoice and PO Numbering Best Practices
+              </h3>
+              <p className="text-sm text-gray-600 mt-2 leading-relaxed">
+                How to design a numbering scheme that keeps your finance team happy and survives
+                audits years later.
+              </p>
+            </Link>
+            <Link
+              href="/blog/tax-invoice-requirements-by-country"
+              className="group block bg-white border border-gray-200 rounded-xl p-5 hover:border-blue-300 hover:shadow-md transition-all"
+            >
+              <span className="text-xs font-bold text-blue-600 uppercase tracking-wider">Global</span>
+              <h3 className="text-base font-bold text-gray-900 mt-2 group-hover:text-blue-600">
+                Tax Invoice Requirements by Country
+              </h3>
+              <p className="text-sm text-gray-600 mt-2 leading-relaxed">
+                What fields each tax authority wants on invoices and POs across India, UK, US, EU,
+                Australia, and more.
+              </p>
+            </Link>
           </div>
         </div>
       </section>

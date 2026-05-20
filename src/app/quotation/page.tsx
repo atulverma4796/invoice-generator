@@ -104,6 +104,143 @@ export default function QuotationPage() {
         </div>
       </section>
 
+      <section className="py-12 sm:py-16 border-b border-gray-100">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 prose prose-gray max-w-none">
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
+            What is a quotation, and why does it matter?
+          </h2>
+          <p className="text-gray-700 leading-relaxed">
+            A quotation is a formal price proposal you send to a client before any work begins. It
+            spells out the scope, line items, total cost, taxes, and how long the prices stay valid.
+            Unlike an invoice, a quotation creates no payment obligation — it&apos;s an offer the
+            client can accept, negotiate, or reject. For freelancers, consultants, agencies, and
+            small businesses, sending a quotation before starting work is the single most effective
+            way to prevent scope creep, payment disputes, and awkward conversations about price down
+            the line.
+          </p>
+          <p className="text-gray-700 leading-relaxed mt-4">
+            Treat the quotation as your contract before the contract. When the client says &quot;yes&quot;
+            in writing — by email, signature, or even a thumbs-up reply that references the
+            quotation number — you have something to point to if expectations drift. Most disputes
+            between freelancers and clients trace back to a missing or vague quotation. Spending 5
+            minutes on a clear quotation saves hours of follow-up later.
+          </p>
+
+          <h3 className="text-xl font-bold text-gray-900 mt-10 mb-3">When to send a quotation</h3>
+          <p className="text-gray-700 leading-relaxed">
+            Send a quotation any time the cost of work is not fixed at first contact. Examples:
+          </p>
+          <ul className="text-gray-700 leading-relaxed space-y-2 mt-3 list-disc pl-6">
+            <li>
+              A freelance designer quoting a website redesign with deliverables across 6 weeks
+            </li>
+            <li>
+              A consultant proposing a 3-month retainer with monthly hours and deliverables
+            </li>
+            <li>
+              A manufacturer pricing a bulk order with quantity tiers and delivery dates
+            </li>
+            <li>
+              An IT services firm scoping a cloud migration with optional add-ons
+            </li>
+            <li>
+              An event planner pricing a wedding package with optional upgrades (catering, decor)
+            </li>
+          </ul>
+          <p className="text-gray-700 leading-relaxed mt-4">
+            For repeat clients on standard work — say, your tenth logo design for the same agency —
+            you might skip the quotation and go straight to an invoice. But for new clients, large
+            jobs, or anything with variable scope, always send a quotation first.
+          </p>
+
+          <h3 className="text-xl font-bold text-gray-900 mt-10 mb-3">What to include on a quotation</h3>
+          <p className="text-gray-700 leading-relaxed">
+            A complete, professional quotation has these elements:
+          </p>
+          <ol className="text-gray-700 leading-relaxed space-y-2 mt-3 list-decimal pl-6">
+            <li>
+              <strong>Quotation number</strong> — a unique reference (e.g., Q-2026-0042) so you and
+              the client can refer to it later
+            </li>
+            <li>
+              <strong>Issue date and validity date</strong> — usually 30 days, but use 7-14 days if
+              your prices fluctuate (commodities, hardware, FX)
+            </li>
+            <li>
+              <strong>Your business details</strong> — legal name, address, GSTIN/VAT number (if
+              applicable), contact email and phone
+            </li>
+            <li>
+              <strong>Client details</strong> — company name, billing address, contact person
+            </li>
+            <li>
+              <strong>Itemized scope</strong> — clear description of each deliverable, quantity, rate,
+              and line total. Avoid vague phrases like &quot;design work&quot; — write &quot;Homepage
+              design, 3 revisions included&quot; instead
+            </li>
+            <li>
+              <strong>Subtotal, tax breakdown, and grand total</strong> — show CGST/SGST or IGST
+              separately for India; VAT line for UK/EU; tax-inclusive vs. exclusive for the US
+            </li>
+            <li>
+              <strong>Payment terms</strong> — net 7/15/30, milestone splits (e.g., 50% advance, 50%
+              on delivery), accepted payment methods
+            </li>
+            <li>
+              <strong>Notes or terms section</strong> — revision policy, scope-change clause, what&apos;s
+              NOT included
+            </li>
+            <li>
+              <strong>Signature space or acceptance line</strong> — &quot;Accepted by: ____________
+              Date: _______&quot; gives you a written sign-off
+            </li>
+          </ol>
+
+          <h3 className="text-xl font-bold text-gray-900 mt-10 mb-3">Common mistakes to avoid</h3>
+          <p className="text-gray-700 leading-relaxed">
+            Five mistakes that turn a clean quotation into a payment dispute:
+          </p>
+          <ul className="text-gray-700 leading-relaxed space-y-3 mt-3 list-disc pl-6">
+            <li>
+              <strong>Vague scope.</strong> &quot;Website design&quot; can mean a single landing page
+              or a 40-page corporate site. Be specific: &quot;5-page responsive website (Home, About,
+              Services, Blog, Contact), 2 design revisions, hosted on client&apos;s domain.&quot;
+            </li>
+            <li>
+              <strong>No validity date.</strong> Without an expiry, a client can accept a 6-month-old
+              quote at last year&apos;s prices. Always include &quot;Valid until [date].&quot;
+            </li>
+            <li>
+              <strong>Missing tax treatment.</strong> Not clarifying whether prices include or exclude
+              GST/VAT leads to last-minute disputes. State it clearly: &quot;All prices are exclusive
+              of 18% GST&quot; or &quot;Inclusive of all taxes.&quot;
+            </li>
+            <li>
+              <strong>No payment milestones for large jobs.</strong> A ₹2 lakh project with payment
+              on delivery is risky. Break it into 30/40/30 or 50/50 splits so you have cashflow.
+            </li>
+            <li>
+              <strong>Skipping the scope-change clause.</strong> Without it, clients add features
+              mid-project and assume they&apos;re free. Add: &quot;Additional work outside this scope
+              will be quoted separately at ₹[rate] per hour.&quot;
+            </li>
+          </ul>
+
+          <h3 className="text-xl font-bold text-gray-900 mt-10 mb-3">After the client accepts</h3>
+          <p className="text-gray-700 leading-relaxed">
+            Once the client says yes (in writing — keep that email), convert the quotation into an
+            invoice. Use the same line items, the same totals, the same tax breakdown. Change the
+            document type to &quot;Invoice&quot; with an invoice number (INV-...) and add payment
+            terms. For long projects, send a partial invoice for the first milestone immediately so
+            the client commits financially. Our{" "}
+            <Link href="/" className="text-blue-600 hover:underline font-medium">
+              invoice generator
+            </Link>{" "}
+            is built to take a quotation and produce a matching invoice in seconds.
+          </p>
+        </div>
+      </section>
+
       <section className="py-10 sm:py-14">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <QuotationClient />
@@ -127,6 +264,68 @@ export default function QuotationPage() {
                 </div>
               </details>
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-12 border-t border-gray-100">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">
+            Learn more about quotations and invoicing
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <Link
+              href="/blog/invoice-vs-receipt-vs-quotation"
+              className="group block bg-white border border-gray-200 rounded-xl p-5 hover:border-blue-300 hover:shadow-md transition-all"
+            >
+              <span className="text-xs font-bold text-blue-600 uppercase tracking-wider">Guide</span>
+              <h3 className="text-base font-bold text-gray-900 mt-2 group-hover:text-blue-600">
+                Invoice vs. Receipt vs. Quotation: Key Differences
+              </h3>
+              <p className="text-sm text-gray-600 mt-2 leading-relaxed">
+                When to send each document, what they legally do, and how they fit into your
+                client&apos;s payment workflow.
+              </p>
+            </Link>
+            <Link
+              href="/blog/professional-invoice-complete-guide-2026"
+              className="group block bg-white border border-gray-200 rounded-xl p-5 hover:border-blue-300 hover:shadow-md transition-all"
+            >
+              <span className="text-xs font-bold text-blue-600 uppercase tracking-wider">Guide</span>
+              <h3 className="text-base font-bold text-gray-900 mt-2 group-hover:text-blue-600">
+                How to Create a Professional Invoice in 2026
+              </h3>
+              <p className="text-sm text-gray-600 mt-2 leading-relaxed">
+                Complete step-by-step guide covering required fields, tax compliance, and the
+                common mistakes that delay payments.
+              </p>
+            </Link>
+            <Link
+              href="/blog/invoice-mistakes-freelancers-make"
+              className="group block bg-white border border-gray-200 rounded-xl p-5 hover:border-blue-300 hover:shadow-md transition-all"
+            >
+              <span className="text-xs font-bold text-blue-600 uppercase tracking-wider">Tips</span>
+              <h3 className="text-base font-bold text-gray-900 mt-2 group-hover:text-blue-600">
+                7 Invoice Mistakes Freelancers Keep Making
+              </h3>
+              <p className="text-sm text-gray-600 mt-2 leading-relaxed">
+                Costly billing mistakes — from missing tax IDs to vague descriptions — and how to
+                avoid them on your next quote or invoice.
+              </p>
+            </Link>
+            <Link
+              href="/blog/send-invoices-get-paid-on-time"
+              className="group block bg-white border border-gray-200 rounded-xl p-5 hover:border-blue-300 hover:shadow-md transition-all"
+            >
+              <span className="text-xs font-bold text-blue-600 uppercase tracking-wider">Tips</span>
+              <h3 className="text-base font-bold text-gray-900 mt-2 group-hover:text-blue-600">
+                How to Send Invoices That Actually Get Paid On Time
+              </h3>
+              <p className="text-sm text-gray-600 mt-2 leading-relaxed">
+                Payment terms, follow-up cadence, and the language that gets clients to pay
+                without chasing.
+              </p>
+            </Link>
           </div>
         </div>
       </section>
