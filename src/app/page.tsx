@@ -337,16 +337,40 @@ export default function Home() {
 
   // Initialize dates/IDs + auto-detect country on client only
   useEffect(() => {
+    // Check if redirected from /templates with an edit request — that takes priority
+    const editIndex = sessionStorage.getItem("invoicegen_edit_index");
+    const hasEditRedirect = editIndex !== null;
+
     setInvoice((prev) => {
       const initialized = initializeInvoiceDates(prev);
       // Auto-detect currency from browser timezone/language
       const detectedCurrency = detectCurrency();
       const detectedTaxLabel = detectTaxLabel();
+
+      // First-time visitor with an empty form — pre-fill with country-specific
+      // sample data so they immediately see a complete invoice preview. Without
+      // this, the form lands blank and visitors bounce without ever testing the
+      // Download PDF action.
+      const isFreshEmptyForm =
+        !hasEditRedirect &&
+        !prev.senderName &&
+        !prev.clientName &&
+        (!prev.lineItems[0]?.description);
+
+      if (isFreshEmptyForm) {
+        const sample = getSampleInvoiceData();
+        return {
+          ...sample,
+          invoiceNumber: initialized.invoiceNumber,
+          invoiceDate: initialized.invoiceDate,
+          dueDate: initialized.dueDate,
+        };
+      }
+
       return { ...initialized, currency: detectedCurrency, taxLabel: detectedTaxLabel };
     });
 
-    // Check if redirected from /templates with an edit request
-    const editIndex = sessionStorage.getItem("invoicegen_edit_index");
+    // Continue handling redirected edit request below
     if (editIndex !== null) {
       sessionStorage.removeItem("invoicegen_edit_index");
       try {
