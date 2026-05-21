@@ -25,8 +25,8 @@ const SITE_URL = "https://freeinvoicegen.org";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Free Invoice, Quotation, Salary Slip & More — No Signup | InvoiceGen",
-    template: "%s | InvoiceGen — Free PDF Tools, No Signup",
+    default: "Free Invoice, Quotation, Salary Slip & More — No Signup | freeinvoicegen.org",
+    template: "%s | freeinvoicegen.org",
   },
   description:
     "Cancel your invoice subscription. Generate invoices, quotations, purchase orders, delivery notes, salary slips, and rent receipts — free, no signup, no email collection. 30+ currencies, 24 languages, 120+ countries.",
@@ -54,19 +54,19 @@ export const metadata: Metadata = {
     canonical: SITE_URL,
   },
   openGraph: {
-    title: "Cancel your invoice subscription — InvoiceGen",
+    title: "Cancel your invoice subscription — freeinvoicegen.org",
     description:
-      "6 free PDF generators: invoice, quotation, purchase order, delivery note, salary slip, rent receipt. No signup, no email, no limits. 120+ countries.",
+      "FreeInvoiceGen — 6 free PDF generators: invoice, quotation, purchase order, delivery note, salary slip, rent receipt. No signup, no email, no limits. 120+ countries.",
     type: "website",
     locale: "en_US",
     url: SITE_URL,
-    siteName: "InvoiceGen",
+    siteName: "freeinvoicegen.org",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Cancel your invoice subscription — InvoiceGen",
+    title: "Cancel your invoice subscription — freeinvoicegen.org",
     description:
-      "6 free PDF generators in one place: invoice, quotation, PO, delivery note, salary slip, rent receipt. No signup, ever.",
+      "FreeInvoiceGen — 6 free PDF generators in one place: invoice, quotation, PO, delivery note, salary slip, rent receipt. No signup, ever.",
   },
   icons: {
     icon: [
@@ -156,15 +156,20 @@ export default function RootLayout({
         <header className="sticky top-0 z-50 border-b border-gray-200/60 bg-white/80 backdrop-blur-xl">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
-              <a href="/" className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-200">
+              <a href="/" className="flex items-center gap-2.5 group">
+                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-200 group-hover:shadow-xl group-hover:shadow-blue-300/50 group-hover:scale-105 transition-all duration-200">
                   <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                   </svg>
                 </div>
-                <span className="text-lg font-bold text-gray-900">
-                  Invoice<span className="text-blue-600">Gen</span>
-                </span>
+                <div className="flex flex-col leading-none">
+                  <span className="text-lg font-extrabold tracking-tight text-gray-900">
+                    Free<span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-600 bg-clip-text text-transparent">InvoiceGen</span>
+                  </span>
+                  <span className="text-[10px] font-semibold text-gray-400 tracking-wider uppercase mt-1">
+                    freeinvoicegen.org
+                  </span>
+                </div>
               </a>
               <nav className="hidden md:flex items-center gap-7 text-sm font-medium text-gray-700">
                 {/* Documents dropdown */}
@@ -261,7 +266,12 @@ export default function RootLayout({
                     <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                   </svg>
                 </div>
-                <span className="text-lg font-bold text-gray-900">Invoice<span className="text-blue-600">Gen</span></span>
+                <div className="flex flex-col leading-none">
+                  <span className="text-lg font-extrabold text-gray-900">
+                    Free<span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-600 bg-clip-text text-transparent">InvoiceGen</span>
+                  </span>
+                  <span className="text-[10px] font-semibold text-gray-400 tracking-wider uppercase mt-1">freeinvoicegen.org</span>
+                </div>
               </div>
               <p className="text-sm text-gray-500 max-w-2xl">
                 Free professional invoice generator. No signup, no hidden fees, no limits. Made for freelancers & small businesses worldwide.
@@ -363,7 +373,7 @@ export default function RootLayout({
               {/* Bottom bar */}
               <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
                 <p className="text-xs text-gray-400">
-                  &copy; {new Date().getFullYear()} InvoiceGen. All rights reserved.
+                  &copy; {new Date().getFullYear()} freeinvoicegen.org · All rights reserved.
                 </p>
                 <p className="text-xs text-gray-400">
                   Free invoice generator for freelancers, creators &amp; small businesses worldwide.
