@@ -166,18 +166,79 @@ export default function RootLayout({
                   Invoice<span className="text-blue-600">Gen</span>
                 </span>
               </a>
-              <nav className="hidden md:flex items-center gap-5 text-sm font-medium text-gray-600">
-                <a href="/#generator" className="hover:text-blue-600 transition-colors">Generator</a>
-                <a href="/gallery" className="hover:text-blue-600 transition-colors">Gallery</a>
-                <a href="/invoice-template" className="hover:text-blue-600 transition-colors">Templates</a>
-                <a href="/invoice-generator" className="hover:text-blue-600 transition-colors">By Country</a>
-                <a href="/how-to" className="hover:text-blue-600 transition-colors">Guides</a>
-                <a href="/blog" className="hover:text-blue-600 transition-colors">Blog</a>
-                <a href="/quotation" className="hover:text-blue-600 transition-colors">Quotation</a>
-                <a href="/purchase-order" className="hover:text-blue-600 transition-colors">PO</a>
-                <a href="/delivery-note" className="hover:text-blue-600 transition-colors">Delivery Note</a>
-                <a href="/salary-slip" className="hover:text-blue-600 transition-colors">Salary Slip</a>
-                <a href="/rent-receipt" className="hover:text-blue-600 transition-colors">Rent Receipt</a>
+              <nav className="hidden md:flex items-center gap-7 text-sm font-medium text-gray-700">
+                {/* Documents dropdown */}
+                <div className="relative group">
+                  <button type="button" className="flex items-center gap-1 hover:text-blue-600 transition-colors py-2">
+                    Documents
+                    <svg className="w-3.5 h-3.5 transition-transform group-hover:rotate-180" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                    </svg>
+                  </button>
+                  <div className="absolute top-full left-0 w-64 bg-white border border-gray-100 rounded-2xl shadow-2xl shadow-gray-200/60 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 py-2 z-50">
+                    <a href="/#generator" className="flex items-start gap-3 px-4 py-2.5 hover:bg-gray-50">
+                      <span className="text-lg leading-none mt-0.5">📄</span>
+                      <span>
+                        <span className="block text-sm font-semibold text-gray-900">Invoice</span>
+                        <span className="block text-xs text-gray-500">After work is done</span>
+                      </span>
+                    </a>
+                    <a href="/quotation" className="flex items-start gap-3 px-4 py-2.5 hover:bg-gray-50">
+                      <span className="text-lg leading-none mt-0.5">💼</span>
+                      <span>
+                        <span className="block text-sm font-semibold text-gray-900">Quotation</span>
+                        <span className="block text-xs text-gray-500">Price proposal before work</span>
+                      </span>
+                    </a>
+                    <a href="/purchase-order" className="flex items-start gap-3 px-4 py-2.5 hover:bg-gray-50">
+                      <span className="text-lg leading-none mt-0.5">🛒</span>
+                      <span>
+                        <span className="block text-sm font-semibold text-gray-900">Purchase Order</span>
+                        <span className="block text-xs text-gray-500">Buyer → seller authorization</span>
+                      </span>
+                    </a>
+                    <a href="/delivery-note" className="flex items-start gap-3 px-4 py-2.5 hover:bg-gray-50">
+                      <span className="text-lg leading-none mt-0.5">📦</span>
+                      <span>
+                        <span className="block text-sm font-semibold text-gray-900">Delivery Note</span>
+                        <span className="block text-xs text-gray-500">Goods dispatch / India challan</span>
+                      </span>
+                    </a>
+                    <a href="/salary-slip" className="flex items-start gap-3 px-4 py-2.5 hover:bg-gray-50">
+                      <span className="text-lg leading-none mt-0.5">💰</span>
+                      <span>
+                        <span className="block text-sm font-semibold text-gray-900">Salary Slip</span>
+                        <span className="block text-xs text-gray-500">Monthly payslip / payroll</span>
+                      </span>
+                    </a>
+                    <a href="/rent-receipt" className="flex items-start gap-3 px-4 py-2.5 hover:bg-gray-50">
+                      <span className="text-lg leading-none mt-0.5">🏠</span>
+                      <span>
+                        <span className="block text-sm font-semibold text-gray-900">Rent Receipt</span>
+                        <span className="block text-xs text-gray-500">India HRA claim format</span>
+                      </span>
+                    </a>
+                  </div>
+                </div>
+
+                {/* Resources dropdown */}
+                <div className="relative group">
+                  <button type="button" className="flex items-center gap-1 hover:text-blue-600 transition-colors py-2">
+                    Resources
+                    <svg className="w-3.5 h-3.5 transition-transform group-hover:rotate-180" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                    </svg>
+                  </button>
+                  <div className="absolute top-full left-0 w-56 bg-white border border-gray-100 rounded-2xl shadow-2xl shadow-gray-200/60 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 py-2 z-50">
+                    <a href="/gallery" className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600">Template Gallery</a>
+                    <a href="/invoice-template" className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600">By Industry</a>
+                    <a href="/invoice-generator" className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600">By Country</a>
+                    <div className="h-px bg-gray-100 my-2 mx-3" />
+                    <a href="/how-to" className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600">How-to Guides</a>
+                    <a href="/blog" className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600">Blog</a>
+                  </div>
+                </div>
+
                 <a href="/templates" className="hover:text-amber-600 transition-colors">My Invoices</a>
               </nav>
               <MobileMenu />

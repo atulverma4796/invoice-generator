@@ -105,8 +105,15 @@ export default function RentReceiptPage() {
         </div>
       </section>
 
+      {/* Generator */}
+      <section className="py-10 sm:py-14">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <RentReceiptClient />
+        </div>
+      </section>
+
       {/* Educational content */}
-      <section className="py-12 sm:py-16 border-b border-gray-100">
+      <section className="py-12 sm:py-16 border-b border-gray-100 bg-gray-50">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 prose prose-gray max-w-none">
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
             Why rent receipts matter for your HRA claim
@@ -252,15 +259,8 @@ export default function RentReceiptPage() {
         </div>
       </section>
 
-      {/* Generator */}
-      <section className="py-10 sm:py-14">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <RentReceiptClient />
-        </div>
-      </section>
-
       {/* FAQs */}
-      <section className="py-12 bg-gray-50 border-t border-gray-100">
+      <section className="py-12 bg-white border-t border-gray-100">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-6">Frequently Asked Questions</h2>
           <div className="space-y-3">

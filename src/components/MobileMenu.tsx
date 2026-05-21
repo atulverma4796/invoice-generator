@@ -3,21 +3,48 @@
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 
-const NAV_LINKS = [
-  { href: "/#generator", label: "Generator" },
-  { href: "/gallery", label: "Gallery" },
-  { href: "/invoice-template", label: "Templates" },
-  { href: "/invoice-generator", label: "By Country" },
-  { href: "/how-to", label: "Guides" },
-  { href: "/blog", label: "Blog" },
-  { href: "/quotation", label: "Quotation" },
-  { href: "/purchase-order", label: "Purchase Order" },
-  { href: "/delivery-note", label: "Delivery Note" },
-  { href: "/salary-slip", label: "Salary Slip" },
-  { href: "/rent-receipt", label: "Rent Receipt" },
-  { href: "/templates", label: "My Invoices", accent: "amber" },
-  { href: "/#faq", label: "FAQ" },
-  { href: "/#feedback", label: "Feedback" },
+interface NavLink {
+  href: string;
+  label: string;
+  icon?: string;
+  sublabel?: string;
+  accent?: "amber";
+}
+
+interface NavSection {
+  title: string;
+  links: NavLink[];
+}
+
+const NAV_SECTIONS: NavSection[] = [
+  {
+    title: "Documents",
+    links: [
+      { href: "/#generator", label: "Invoice", icon: "📄", sublabel: "After work is done" },
+      { href: "/quotation", label: "Quotation", icon: "💼", sublabel: "Price proposal before work" },
+      { href: "/purchase-order", label: "Purchase Order", icon: "🛒", sublabel: "Buyer → seller authorization" },
+      { href: "/delivery-note", label: "Delivery Note", icon: "📦", sublabel: "Goods dispatch / India challan" },
+      { href: "/salary-slip", label: "Salary Slip", icon: "💰", sublabel: "Monthly payslip / payroll" },
+      { href: "/rent-receipt", label: "Rent Receipt", icon: "🏠", sublabel: "India HRA claim format" },
+    ],
+  },
+  {
+    title: "Resources",
+    links: [
+      { href: "/gallery", label: "Template Gallery" },
+      { href: "/invoice-template", label: "By Industry" },
+      { href: "/invoice-generator", label: "By Country" },
+      { href: "/how-to", label: "How-to Guides" },
+      { href: "/blog", label: "Blog" },
+    ],
+  },
+  {
+    title: "Account",
+    links: [
+      { href: "/templates", label: "My Invoices", accent: "amber" },
+      { href: "/#feedback", label: "Send Feedback" },
+    ],
+  },
 ];
 
 export default function MobileMenu() {
@@ -87,24 +114,37 @@ export default function MobileMenu() {
         </button>
       </div>
 
-      {/* Nav links */}
-      <nav className="px-4 py-6 flex flex-col gap-1 flex-1 overflow-y-auto">
-        {NAV_LINKS.map((link) => (
-          <a
-            key={link.href}
-            href={link.href}
-            onClick={() => setOpen(false)}
-            className={`flex items-center justify-between px-4 py-4 rounded-xl text-base font-medium transition-colors ${
-              link.accent === "amber"
-                ? "text-amber-700 bg-amber-50 hover:bg-amber-100"
-                : "text-gray-700 hover:bg-gray-50"
-            }`}
-          >
-            {link.label}
-            <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-            </svg>
-          </a>
+      {/* Nav links grouped by section */}
+      <nav className="px-4 py-4 flex flex-col gap-5 flex-1 overflow-y-auto">
+        {NAV_SECTIONS.map((section) => (
+          <div key={section.title} className="flex flex-col gap-1">
+            <p className="px-2 pt-1 pb-2 text-xs font-bold text-gray-400 uppercase tracking-wider">
+              {section.title}
+            </p>
+            {section.links.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                onClick={() => setOpen(false)}
+                className={`flex items-center gap-3 px-3 py-3 rounded-xl transition-colors ${
+                  link.accent === "amber"
+                    ? "text-amber-700 bg-amber-50 hover:bg-amber-100"
+                    : "text-gray-700 hover:bg-gray-50"
+                }`}
+              >
+                {link.icon && <span className="text-xl leading-none shrink-0">{link.icon}</span>}
+                <span className="flex-1 min-w-0">
+                  <span className="block text-base font-semibold">{link.label}</span>
+                  {link.sublabel && (
+                    <span className="block text-xs text-gray-500 mt-0.5">{link.sublabel}</span>
+                  )}
+                </span>
+                <svg className="w-4 h-4 text-gray-400 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                </svg>
+              </a>
+            ))}
+          </div>
         ))}
       </nav>
     </div>
