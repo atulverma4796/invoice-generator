@@ -603,95 +603,85 @@ export default function Home() {
             </p>
           </div>
 
-          {/* Comparison table — desktop */}
-          <div className="hidden md:block">
-            <div className="relative bg-white rounded-3xl shadow-2xl shadow-indigo-100/50 border border-gray-100 overflow-hidden">
+          {/* Comparison table — compact, factual */}
+          <div className="hidden md:block max-w-4xl mx-auto">
+            <div className="relative bg-white rounded-2xl shadow-xl shadow-indigo-100/40 border border-gray-100 overflow-hidden">
               <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-indigo-200 to-transparent" />
-              <table className="w-full">
+              <table className="w-full text-xs">
                 <thead>
-                  <tr className="border-b border-gray-100">
-                    <th className="text-left p-5 text-xs font-bold text-gray-500 uppercase tracking-wider w-2/5">Feature</th>
-                    <th className="p-5">
-                      <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">FreshBooks</div>
-                      <div className="text-sm font-bold text-gray-700">from $17/mo</div>
-                    </th>
-                    <th className="p-5">
-                      <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Zoho Invoice</div>
-                      <div className="text-sm font-bold text-gray-700">5 client cap</div>
-                    </th>
-                    <th className="p-5">
-                      <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Wave</div>
-                      <div className="text-sm font-bold text-gray-700">limited</div>
-                    </th>
-                    <th className="p-5 bg-gradient-to-b from-blue-50 to-indigo-50 border-l-2 border-r-2 border-indigo-200 rounded-t-2xl">
-                      <div className="inline-flex items-center gap-1.5 mb-1">
-                        <span className="text-xs font-bold text-indigo-600 uppercase tracking-wider">InvoiceGen</span>
-                        <span className="text-[10px] font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 px-1.5 py-0.5 rounded">YOU</span>
+                  <tr className="border-b border-gray-100 bg-gray-50/40">
+                    <th className="text-left p-3 text-[10px] font-bold text-gray-500 uppercase tracking-wider w-[34%]">What you get</th>
+                    {[
+                      { name: "QuickBooks", price: "from $20/mo" },
+                      { name: "FreshBooks", price: "from $19/mo" },
+                      { name: "Xero", price: "from $25/mo" },
+                      { name: "Wave", price: "Free (signup)" },
+                    ].map((c) => (
+                      <th key={c.name} className="p-3 align-bottom">
+                        <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-1 leading-tight">{c.name}</div>
+                        <div className="text-[11px] font-semibold text-gray-600 whitespace-nowrap">{c.price}</div>
+                      </th>
+                    ))}
+                    <th className="p-3 align-bottom bg-gradient-to-b from-blue-50 to-indigo-50 border-l-2 border-r-2 border-indigo-200">
+                      <div className="inline-flex items-center gap-1 mb-1">
+                        <span className="text-[10px] font-bold text-indigo-600 uppercase tracking-wider leading-tight">InvoiceGen</span>
                       </div>
-                      <div className="text-sm font-bold text-indigo-700">Always Free</div>
+                      <div className="text-[11px] font-bold text-indigo-700 whitespace-nowrap">Free · no signup</div>
                     </th>
                   </tr>
                 </thead>
-                <tbody className="text-sm">
+                <tbody>
                   {[
-                    { feature: "Unlimited invoices", fb: "5/month", zoho: "5 clients", wave: true, ig: true },
-                    { feature: "Custom logo upload", fb: "$17/mo", zoho: true, wave: true, ig: true },
-                    { feature: "Brand colors & fonts", fb: "$17/mo", zoho: "$9/mo", wave: false, ig: true },
-                    { feature: "Quotation / Estimate", fb: "$17/mo", zoho: "$9/mo", wave: false, ig: true },
-                    { feature: "Purchase Order", fb: "$17/mo", zoho: "$9/mo", wave: false, ig: true },
-                    { feature: "Delivery Note / Challan", fb: false, zoho: "$9/mo", wave: false, ig: true },
-                    { feature: "Salary Slip / Payslip", fb: "separate app", zoho: "separate app", wave: false, ig: true },
-                    { feature: "Rent Receipt (HRA)", fb: false, zoho: false, wave: false, ig: true },
-                    { feature: "Payment QR (UPI/PIX/PayNow)", fb: false, zoho: "$9/mo", wave: false, ig: true },
-                    { feature: "Digital signature", fb: "$17/mo", zoho: "$9/mo", wave: false, ig: true },
-                    { feature: "24 invoice output languages", fb: false, zoho: "10 langs", wave: false, ig: true },
-                    { feature: "Signup required", fb: true, zoho: true, wave: true, ig: "—" },
-                    { feature: "Email collected", fb: true, zoho: true, wave: true, ig: "—" },
-                    { feature: "Your data leaves your browser", fb: true, zoho: true, wave: true, ig: "—" },
-                  ].map((row, i) => (
-                    <tr key={i} className={`border-b border-gray-50 ${i % 2 === 0 ? "bg-white" : "bg-gray-50/30"} hover:bg-indigo-50/20 transition-colors`}>
-                      <td className="p-4 font-medium text-gray-900">{row.feature}</td>
-                      <td className="p-4 text-center">
-                        {typeof row.fb === "boolean" ? (
-                          row.fb ? <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-gray-100 text-gray-400">✓</span> : <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-rose-50 text-rose-400">✗</span>
-                        ) : (
-                          <span className="text-xs font-semibold text-rose-600 bg-rose-50 px-2 py-1 rounded-md">{row.fb}</span>
-                        )}
-                      </td>
-                      <td className="p-4 text-center">
-                        {typeof row.zoho === "boolean" ? (
-                          row.zoho ? <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-gray-100 text-gray-400">✓</span> : <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-rose-50 text-rose-400">✗</span>
-                        ) : (
-                          <span className="text-xs font-semibold text-rose-600 bg-rose-50 px-2 py-1 rounded-md">{row.zoho}</span>
-                        )}
-                      </td>
-                      <td className="p-4 text-center">
-                        {typeof row.wave === "boolean" ? (
-                          row.wave ? <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-gray-100 text-gray-400">✓</span> : <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-rose-50 text-rose-400">✗</span>
-                        ) : (
-                          <span className="text-xs font-semibold text-rose-600 bg-rose-50 px-2 py-1 rounded-md">{row.wave}</span>
-                        )}
-                      </td>
-                      <td className="p-4 text-center bg-gradient-to-r from-blue-50/40 to-indigo-50/40 border-l-2 border-r-2 border-indigo-100">
-                        {typeof row.ig === "boolean" ? (
-                          row.ig ? (
-                            <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 text-white shadow-sm shadow-emerald-200">
-                              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
+                    // Verified May 2026 from each provider's pricing page
+                    { feature: "Unlimited invoices on the free tier", qb: false, fb: false, xero: false, wave: true, ig: true },
+                    { feature: "No signup / email required", qb: false, fb: false, xero: false, wave: false, ig: true },
+                    { feature: "Quotation / Estimate generator", qb: true, fb: true, xero: true, wave: false, ig: true },
+                    { feature: "Purchase Order generator", qb: true, fb: true, xero: true, wave: false, ig: true },
+                    { feature: "Delivery Note / Challan", qb: false, fb: false, xero: false, wave: false, ig: true },
+                    { feature: "Salary Slip / Payslip", qb: false, fb: false, xero: false, wave: false, ig: true },
+                    { feature: "Rent Receipt (India HRA)", qb: false, fb: false, xero: false, wave: false, ig: true },
+                    { feature: "Multi-language invoice PDFs", qb: false, fb: false, xero: false, wave: false, ig: true },
+                    { feature: "Data stored only in your browser", qb: false, fb: false, xero: false, wave: false, ig: true },
+                  ].map((row, i) => {
+                    const cells: { key: string; val: boolean }[] = [
+                      { key: "qb", val: row.qb },
+                      { key: "fb", val: row.fb },
+                      { key: "xero", val: row.xero },
+                      { key: "wave", val: row.wave },
+                    ];
+                    return (
+                      <tr key={i} className={`border-b border-gray-50 ${i % 2 === 0 ? "bg-white" : "bg-gray-50/30"} hover:bg-indigo-50/20 transition-colors`}>
+                        <td className="px-3 py-2.5 font-medium text-gray-900 text-xs">{row.feature}</td>
+                        {cells.map(({ key, val }) => (
+                          <td key={key} className="px-2 py-2.5 text-center">
+                            {val ? (
+                              <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-gray-100 text-gray-400 text-[11px]">✓</span>
+                            ) : (
+                              <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-rose-50 text-rose-400 text-[11px]">✗</span>
+                            )}
+                          </td>
+                        ))}
+                        <td className="px-2 py-2.5 text-center bg-gradient-to-r from-blue-50/40 to-indigo-50/40 border-l-2 border-r-2 border-indigo-100">
+                          {row.ig ? (
+                            <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 text-white shadow-sm shadow-emerald-200">
+                              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
                             </span>
                           ) : (
-                            <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-rose-50 text-rose-400">✗</span>
-                          )
-                        ) : (
-                          <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-1 rounded-md border border-emerald-200">{row.ig}</span>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
+                            <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-rose-50 text-rose-400 text-[11px]">✗</span>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
-              <div className="bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 p-5 text-center border-t border-indigo-100">
-                <p className="text-sm text-gray-700">
-                  Pricing checked 2026-05 from each provider&apos;s official site. <span className="text-gray-500">Things change — verify before switching.</span>
+              <div className="bg-gradient-to-r from-blue-50/60 via-indigo-50/60 to-purple-50/60 px-4 py-3 text-center border-t border-indigo-100/70">
+                <p className="text-[11px] text-gray-700">
+                  Plan details checked May 2026 from each provider&apos;s official pricing page. Plans and pricing change — verify the current terms on
+                  {" "}<a href="https://quickbooks.intuit.com/pricing/" target="_blank" rel="noopener" className="underline hover:text-indigo-600">QuickBooks</a>,
+                  {" "}<a href="https://www.freshbooks.com/pricing" target="_blank" rel="noopener" className="underline hover:text-indigo-600">FreshBooks</a>,
+                  {" "}<a href="https://www.xero.com/us/pricing-plans/" target="_blank" rel="noopener" className="underline hover:text-indigo-600">Xero</a>, and
+                  {" "}<a href="https://www.waveapps.com/pricing" target="_blank" rel="noopener" className="underline hover:text-indigo-600">Wave</a> before deciding.
                 </p>
               </div>
             </div>

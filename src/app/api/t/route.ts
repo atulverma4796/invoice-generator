@@ -136,17 +136,31 @@ function botSignals(geo: GeoLookup | null, device: DeviceInfo, browserTimezone: 
   return flags;
 }
 
+// Maps the docType from the client beacon to a human-readable label
+// used in the email subject + body. Defaults to "Invoice" so the
+// existing invoice flow keeps its current labelling.
+const DOC_LABELS: Record<string, { name: string; subjectTag: string }> = {
+  invoice: { name: "Invoice", subjectTag: "Invoice" },
+  quotation: { name: "Quotation", subjectTag: "Quotation" },
+  "purchase-order": { name: "Purchase Order", subjectTag: "PO" },
+  "delivery-note": { name: "Delivery Note", subjectTag: "Delivery Note" },
+  "salary-slip": { name: "Salary Slip", subjectTag: "Salary Slip" },
+  "rent-receipt": { name: "Rent Receipt", subjectTag: "Rent Receipt" },
+};
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const {
       action = "download",
+      docType = "invoice",
       device = {} as DeviceInfo,
       timezone: browserTimezone = "",
       referrer = "",
       url = "",
       signals = {} as Signals,
     } = body || {};
+    const docLabel = DOC_LABELS[docType] || DOC_LABELS.invoice;
 
     // IP from headers
     const forwarded = req.headers.get("x-forwarded-for");
@@ -170,8 +184,8 @@ export async function POST(req: NextRequest) {
 
     const now = new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
 
-    const actionLabel = action === "email" ? "Invoice Emailed" : "Invoice Downloaded";
-    const subjectPrefix = action === "email" ? "[Email]" : "[Download]";
+    const actionLabel = action === "email" ? `${docLabel.name} Emailed` : `${docLabel.name} Downloaded`;
+    const subjectPrefix = action === "email" ? `[Email · ${docLabel.subjectTag}]` : `[${docLabel.subjectTag}]`;
     const subjectGeo = geo?.countryCode || (locationLine !== "Unknown" ? locationLine : "??");
     const subjectDevice = `${device.browser || "?"} on ${device.os || "?"}`;
     const subjectAmount = `${signals.totalBucket || "?"} ${signals.currency || ""}`.trim();

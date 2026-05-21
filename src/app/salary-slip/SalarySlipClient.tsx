@@ -7,6 +7,7 @@ import SalarySlipForm, {
   defaultSalarySlipData,
   SALARY_SLIP_STORAGE_KEY,
 } from "@/components/SalarySlipForm";
+import { trackDocDownload } from "@/lib/trackDocDownload";
 
 export default function SalarySlipClient() {
   const [data, setData] = useState<SalarySlipData>(defaultSalarySlipData);
@@ -32,6 +33,9 @@ export default function SalarySlipClient() {
       const safeName = (data.employeeName || "employee").replace(/[^a-z0-9]+/gi, "-").toLowerCase();
       doc.save(`payslip-${safeName}-${data.payMonth}.pdf`);
       toast.success("Payslip downloaded");
+      trackDocDownload("salary-slip", {
+        currency: data.currencySymbol,
+      });
     } catch (err) {
       console.error(err);
       toast.error("Could not generate the PDF. Please try again.");

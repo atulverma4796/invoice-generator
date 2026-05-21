@@ -7,6 +7,7 @@ import PurchaseOrderForm, {
   defaultPurchaseOrderData,
   PURCHASE_ORDER_STORAGE_KEY,
 } from "@/components/PurchaseOrderForm";
+import { trackDocDownload } from "@/lib/trackDocDownload";
 
 export default function PurchaseOrderClient() {
   const [data, setData] = useState<PurchaseOrderData>(defaultPurchaseOrderData);
@@ -31,6 +32,10 @@ export default function PurchaseOrderClient() {
       const doc = generatePurchaseOrderPDF(data);
       doc.save(`purchase-order-${data.poNumber || "unnamed"}.pdf`);
       toast.success("Purchase order downloaded");
+      trackDocDownload("purchase-order", {
+        currency: data.currency,
+        lineItemCount: data.lineItems?.length,
+      });
     } catch (err) {
       console.error(err);
       toast.error("Could not generate the PDF. Please try again.");

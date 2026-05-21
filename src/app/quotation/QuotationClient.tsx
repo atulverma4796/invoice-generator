@@ -7,6 +7,7 @@ import QuotationForm, {
   defaultQuotationData,
   QUOTATION_STORAGE_KEY,
 } from "@/components/QuotationForm";
+import { trackDocDownload } from "@/lib/trackDocDownload";
 
 export default function QuotationClient() {
   const [data, setData] = useState<QuotationData>(defaultQuotationData);
@@ -31,6 +32,10 @@ export default function QuotationClient() {
       const doc = generateQuotationPDF(data);
       doc.save(`quotation-${data.quoteNumber || "unnamed"}.pdf`);
       toast.success("Quotation downloaded");
+      trackDocDownload("quotation", {
+        currency: data.currency,
+        lineItemCount: data.lineItems?.length,
+      });
     } catch (err) {
       console.error(err);
       toast.error("Could not generate the PDF. Please try again.");

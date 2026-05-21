@@ -7,6 +7,7 @@ import DeliveryNoteForm, {
   defaultDeliveryNoteData,
   DELIVERY_NOTE_STORAGE_KEY,
 } from "@/components/DeliveryNoteForm";
+import { trackDocDownload } from "@/lib/trackDocDownload";
 
 export default function DeliveryNoteClient() {
   const [data, setData] = useState<DeliveryNoteData>(defaultDeliveryNoteData);
@@ -31,6 +32,9 @@ export default function DeliveryNoteClient() {
       const doc = generateDeliveryNotePDF(data);
       doc.save(`delivery-note-${data.challanNumber || "unnamed"}.pdf`);
       toast.success("Delivery note downloaded");
+      trackDocDownload("delivery-note", {
+        lineItemCount: data.items?.length,
+      });
     } catch (err) {
       console.error(err);
       toast.error("Could not generate the PDF. Please try again.");

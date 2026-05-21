@@ -8,6 +8,7 @@ import RentReceiptForm, {
   RENT_RECEIPT_STORAGE_KEY,
   monthsBetween,
 } from "@/components/RentReceiptForm";
+import { trackDocDownload } from "@/lib/trackDocDownload";
 
 export default function RentReceiptClient() {
   const [data, setData] = useState<RentReceiptData>(defaultRentReceiptData);
@@ -35,6 +36,10 @@ export default function RentReceiptClient() {
       const filename = `rent-receipts-${data.startMonth}-to-${data.endMonth}.pdf`;
       doc.save(filename);
       toast.success(`Downloaded ${months.length} receipt${months.length === 1 ? "" : "s"}`);
+      trackDocDownload("rent-receipt", {
+        lineItemCount: months.length,
+        flags: { hasLandlordPan: !!data.landlordPan },
+      });
     } catch (err) {
       console.error(err);
       toast.error("Could not generate the PDF. Please try again.");
