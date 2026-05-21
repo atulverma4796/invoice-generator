@@ -6,9 +6,9 @@ import Link from "next/link";
 const SITE_URL = "https://freeinvoicegen.org";
 
 export const metadata: Metadata = {
-  title: "Free Rent Receipt Generator (India) — HRA Claim, PDF Download",
+  title: "Free Rent Receipt Generator (HRA)",
   description:
-    "Generate professional rent receipts for HRA claim under Section 10(13A). Free, no signup. Auto-fills the entire financial year (12 receipts), supports landlord PAN, revenue stamp prompt for cash payments, and instant PDF download.",
+    "Generate 12 HRA-compliant rent receipts for the whole financial year. Landlord PAN, revenue stamp prompt, Section 10(13A) ready. Free PDF, no signup.",
   keywords: [
     "rent receipt generator",
     "rent receipt format",
@@ -24,11 +24,16 @@ export const metadata: Metadata = {
   ],
   alternates: { canonical: `${SITE_URL}/rent-receipt` },
   openGraph: {
-    title: "Free Rent Receipt Generator — HRA Claim Compliant",
+    title: "Free Rent Receipt Generator (HRA) — freeinvoicegen.org",
     description:
-      "Generate professional rent receipts for HRA claim. Free, no signup. PDF download with revenue stamp prompt and landlord PAN support.",
+      "Generate 12 HRA-compliant rent receipts for the whole financial year. Landlord PAN, Section 10(13A). Free PDF, no signup.",
     url: `${SITE_URL}/rent-receipt`,
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Free Rent Receipt Generator (HRA) — freeinvoicegen.org",
+    description: "Generate 12 HRA rent receipts in one click. Landlord PAN, Section 10(13A). Free PDF, no signup.",
   },
 };
 

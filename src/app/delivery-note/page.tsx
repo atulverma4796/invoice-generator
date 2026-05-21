@@ -6,9 +6,9 @@ import Link from "next/link";
 const SITE_URL = "https://freeinvoicegen.org";
 
 export const metadata: Metadata = {
-  title: "Free Delivery Note Generator (Delivery Challan) — PDF Download | InvoiceGen",
+  title: "Free Delivery Note / Challan Generator",
   description:
-    "Generate a professional delivery note / delivery challan in seconds. Free, no signup, instant PDF download. Vehicle number, driver details, two-signature block (dispatched / received), and India GST-friendly format.",
+    "Generate a professional delivery note or India GST challan in seconds. Vehicle, driver, two-signature block, GST-friendly. Free PDF, no signup.",
   keywords: [
     "delivery note generator",
     "delivery challan generator",
@@ -23,11 +23,16 @@ export const metadata: Metadata = {
   ],
   alternates: { canonical: `${SITE_URL}/delivery-note` },
   openGraph: {
-    title: "Free Delivery Note / Challan Generator — PDF Download",
+    title: "Free Delivery Note / Challan Generator — freeinvoicegen.org",
     description:
-      "Generate a professional delivery note / delivery challan in seconds. Free, no signup, instant PDF download.",
+      "Generate a delivery note or India GST challan in seconds. Vehicle, driver, two-signature block. Free PDF, no signup.",
     url: `${SITE_URL}/delivery-note`,
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Free Delivery Note / Challan Generator — freeinvoicegen.org",
+    description: "Generate a delivery note or India GST challan. Vehicle, driver, two-signature block. Free PDF, no signup.",
   },
 };
 

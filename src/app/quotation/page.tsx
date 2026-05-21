@@ -6,9 +6,9 @@ import Link from "next/link";
 const SITE_URL = "https://freeinvoicegen.org";
 
 export const metadata: Metadata = {
-  title: "Free Quotation Generator — PDF Download, No Signup | InvoiceGen",
+  title: "Free Quotation Generator",
   description:
-    "Create professional quotations and estimates in seconds. Free, no signup, instant PDF download. Multi-currency, GST/VAT support, validity dates, and clean templates. Convert to invoice when accepted.",
+    "Create professional quotations and estimates in seconds. Multi-currency, GST/VAT-aware, with validity date and clean PDF download. No signup, no email.",
   keywords: [
     "quotation generator",
     "estimate generator",
@@ -24,11 +24,16 @@ export const metadata: Metadata = {
   ],
   alternates: { canonical: `${SITE_URL}/quotation` },
   openGraph: {
-    title: "Free Quotation Generator — PDF Download, No Signup",
+    title: "Free Quotation Generator — freeinvoicegen.org",
     description:
-      "Create professional quotations and estimates in seconds. Free, no signup, instant PDF download.",
+      "Create professional quotations and estimates in seconds. Multi-currency, GST/VAT-aware, validity date, clean PDF. No signup.",
     url: `${SITE_URL}/quotation`,
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Free Quotation Generator — freeinvoicegen.org",
+    description: "Create professional quotations and estimates in seconds. Multi-currency, GST/VAT-aware. No signup, no email.",
   },
 };
 

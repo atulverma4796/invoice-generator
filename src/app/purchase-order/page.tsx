@@ -6,9 +6,9 @@ import Link from "next/link";
 const SITE_URL = "https://freeinvoicegen.org";
 
 export const metadata: Metadata = {
-  title: "Free Purchase Order Generator — PDF Download, No Signup | InvoiceGen",
+  title: "Free Purchase Order Generator",
   description:
-    "Create professional purchase orders in seconds. Free, no signup, instant PDF download. Multi-currency, GST/VAT, separate ship-to address, expected delivery date, and terms & conditions.",
+    "Create professional POs in seconds — PO number, ship-to address, expected delivery date, GST/VAT, multi-currency. Free PDF, no signup, no email.",
   keywords: [
     "purchase order generator",
     "purchase order PDF",
@@ -24,11 +24,16 @@ export const metadata: Metadata = {
   ],
   alternates: { canonical: `${SITE_URL}/purchase-order` },
   openGraph: {
-    title: "Free Purchase Order Generator — PDF Download, No Signup",
+    title: "Free Purchase Order Generator — freeinvoicegen.org",
     description:
-      "Create professional purchase orders in seconds. Free, no signup, instant PDF download.",
+      "Create professional POs in seconds — PO number, ship-to address, delivery date, GST/VAT. Free PDF, no signup.",
     url: `${SITE_URL}/purchase-order`,
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Free Purchase Order Generator — freeinvoicegen.org",
+    description: "Create professional POs in seconds. PO number, ship-to, delivery date, GST/VAT. No signup, no email.",
   },
 };
 

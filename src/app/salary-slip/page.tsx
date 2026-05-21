@@ -6,9 +6,9 @@ import Link from "next/link";
 const SITE_URL = "https://freeinvoicegen.org";
 
 export const metadata: Metadata = {
-  title: "Free Salary Slip Generator (Payslip) — PDF Download | InvoiceGen",
+  title: "Free Salary Slip Generator (Payslip)",
   description:
-    "Generate a professional salary slip / payslip in seconds. Free, no signup, instant PDF download. Editable earnings (Basic, HRA, DA, allowances), deductions (PF, PT, TDS), days-worked block, net pay in words. India-friendly format.",
+    "Generate a professional payslip with editable Basic/HRA/DA, PF/PT/TDS deductions, days-worked block, net pay in words. Free PDF, no signup.",
   keywords: [
     "salary slip generator",
     "payslip generator",
@@ -24,11 +24,16 @@ export const metadata: Metadata = {
   ],
   alternates: { canonical: `${SITE_URL}/salary-slip` },
   openGraph: {
-    title: "Free Salary Slip / Payslip Generator — PDF Download",
+    title: "Free Salary Slip / Payslip Generator — freeinvoicegen.org",
     description:
-      "Generate a professional salary slip in seconds. Free, no signup, instant PDF download.",
+      "Generate a payslip with editable Basic/HRA/DA, PF/PT/TDS, net pay in words. Free PDF, no signup.",
     url: `${SITE_URL}/salary-slip`,
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Free Salary Slip Generator — freeinvoicegen.org",
+    description: "Editable payslip — Basic, HRA, DA, PF, PT, TDS, days-worked, net pay in words. Free PDF, no signup.",
   },
 };
 
