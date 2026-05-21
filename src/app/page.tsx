@@ -603,18 +603,19 @@ export default function Home() {
             </p>
           </div>
 
-          {/* Comparison table — compact, factual */}
-          <div className="hidden md:block max-w-4xl mx-auto">
+          {/* Comparison table — compact, factual, verified May 2026 */}
+          <div className="hidden md:block max-w-5xl mx-auto">
             <div className="relative bg-white rounded-2xl shadow-xl shadow-indigo-100/40 border border-gray-100 overflow-hidden">
               <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-indigo-200 to-transparent" />
               <table className="w-full text-xs">
                 <thead>
                   <tr className="border-b border-gray-100 bg-gray-50/40">
-                    <th className="text-left p-3 text-[10px] font-bold text-gray-500 uppercase tracking-wider w-[34%]">What you get</th>
+                    <th className="text-left p-3 text-[10px] font-bold text-gray-500 uppercase tracking-wider w-[30%]">What you get</th>
                     {[
                       { name: "QuickBooks", price: "from $20/mo" },
                       { name: "FreshBooks", price: "from $19/mo" },
                       { name: "Xero", price: "from $25/mo" },
+                      { name: "Zoho Invoice", price: "Free, 500/yr" },
                       { name: "Wave", price: "Free (signup)" },
                     ].map((c) => (
                       <th key={c.name} className="p-3 align-bottom">
@@ -632,21 +633,25 @@ export default function Home() {
                 </thead>
                 <tbody>
                   {[
-                    // Verified May 2026 from each provider's pricing page
-                    { feature: "Unlimited invoices on the free tier", qb: false, fb: false, xero: false, wave: true, ig: true },
-                    { feature: "No signup / email required", qb: false, fb: false, xero: false, wave: false, ig: true },
-                    { feature: "Quotation / Estimate generator", qb: true, fb: true, xero: true, wave: false, ig: true },
-                    { feature: "Purchase Order generator", qb: true, fb: true, xero: true, wave: false, ig: true },
-                    { feature: "Delivery Note / Challan", qb: false, fb: false, xero: false, wave: false, ig: true },
-                    { feature: "Salary Slip / Payslip", qb: false, fb: false, xero: false, wave: false, ig: true },
-                    { feature: "Rent Receipt (India HRA)", qb: false, fb: false, xero: false, wave: false, ig: true },
-                    { feature: "Multi-language invoice PDFs", qb: false, fb: false, xero: false, wave: false, ig: true },
-                    { feature: "Data stored only in your browser", qb: false, fb: false, xero: false, wave: false, ig: true },
+                    // Verified May 2026 from each provider's official pricing page.
+                    // QuickBooks/FreshBooks/Xero/Wave from earlier WebSearch.
+                    // Zoho Invoice from direct fetch of zoho.com/us/invoice/pricing/:
+                    // $0 free, max 500 invoices/year, 2 users, 3 projects.
+                    { feature: "Truly unlimited free invoices", qb: false, fb: false, xero: false, zoho: false, wave: true, ig: true },
+                    { feature: "No signup / email required", qb: false, fb: false, xero: false, zoho: false, wave: false, ig: true },
+                    { feature: "Quotation / Estimate", qb: true, fb: true, xero: true, zoho: true, wave: false, ig: true },
+                    { feature: "Purchase Order", qb: true, fb: true, xero: true, zoho: false, wave: false, ig: true },
+                    { feature: "Delivery Note / Challan", qb: false, fb: false, xero: false, zoho: false, wave: false, ig: true },
+                    { feature: "Salary Slip / Payslip", qb: false, fb: false, xero: false, zoho: false, wave: false, ig: true },
+                    { feature: "Rent Receipt (India HRA)", qb: false, fb: false, xero: false, zoho: false, wave: false, ig: true },
+                    { feature: "Multi-language invoice PDFs", qb: false, fb: false, xero: false, zoho: true, wave: false, ig: true },
+                    { feature: "Data stored only in your browser", qb: false, fb: false, xero: false, zoho: false, wave: false, ig: true },
                   ].map((row, i) => {
                     const cells: { key: string; val: boolean }[] = [
                       { key: "qb", val: row.qb },
                       { key: "fb", val: row.fb },
                       { key: "xero", val: row.xero },
+                      { key: "zoho", val: row.zoho },
                       { key: "wave", val: row.wave },
                     ];
                     return (
@@ -680,7 +685,8 @@ export default function Home() {
                   Plan details checked May 2026 from each provider&apos;s official pricing page. Plans and pricing change — verify the current terms on
                   {" "}<a href="https://quickbooks.intuit.com/pricing/" target="_blank" rel="noopener" className="underline hover:text-indigo-600">QuickBooks</a>,
                   {" "}<a href="https://www.freshbooks.com/pricing" target="_blank" rel="noopener" className="underline hover:text-indigo-600">FreshBooks</a>,
-                  {" "}<a href="https://www.xero.com/us/pricing-plans/" target="_blank" rel="noopener" className="underline hover:text-indigo-600">Xero</a>, and
+                  {" "}<a href="https://www.xero.com/us/pricing-plans/" target="_blank" rel="noopener" className="underline hover:text-indigo-600">Xero</a>,
+                  {" "}<a href="https://www.zoho.com/us/invoice/pricing/" target="_blank" rel="noopener" className="underline hover:text-indigo-600">Zoho Invoice</a>, and
                   {" "}<a href="https://www.waveapps.com/pricing" target="_blank" rel="noopener" className="underline hover:text-indigo-600">Wave</a> before deciding.
                 </p>
               </div>
