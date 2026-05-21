@@ -478,28 +478,53 @@ export default function Home() {
         </div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
           <div className="text-center max-w-3xl mx-auto">
-            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-100 to-emerald-100 text-green-800 text-sm font-bold px-5 py-2 rounded-full mb-6 shadow-sm border border-green-200 animate-pulse">
-              <svg className="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                  fillRule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              100% Free &mdash; No Signup, No Limits, No Catch
+            <div className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm text-gray-700 text-xs font-semibold px-4 py-1.5 rounded-full mb-6 shadow-sm border border-gray-200/80">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              </span>
+              6 free PDF generators · 120+ countries
             </div>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-gray-900 leading-tight">
-              Create Professional{" "}
-              <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                Invoices
-              </span>{" "}
-              in Seconds
+            <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight text-gray-900 leading-[1.05]">
+              Cancel your invoice{" "}
+              <span className="relative inline-block">
+                <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                  subscription
+                </span>
+                <svg className="absolute -bottom-2 left-0 w-full" height="12" viewBox="0 0 200 12" fill="none" preserveAspectRatio="none">
+                  <path d="M2 8 Q50 2, 100 6 T198 7" stroke="url(#underlineGrad)" strokeWidth="3" strokeLinecap="round" fill="none" />
+                  <defs>
+                    <linearGradient id="underlineGrad" x1="0" y1="0" x2="200" y2="0" gradientUnits="userSpaceOnUse">
+                      <stop stopColor="#2563eb" />
+                      <stop offset="0.5" stopColor="#7c3aed" />
+                      <stop offset="1" stopColor="#9333ea" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </span>
+              <span className="text-gray-900">.</span>
             </h1>
-            <p className="mt-6 text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
-              The fastest free invoice generator online. Fill in your details,
-              pick a template, and download a stunning PDF invoice. No signup,
-              no fees, no limits.
+            <p className="mt-7 text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+              Generate <strong className="text-gray-900">invoices, quotations, purchase orders, delivery notes, salary slips, and rent receipts</strong> — free, no signup, no email collection, no limits.
             </p>
+            <div className="mt-5 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs sm:text-sm text-gray-500">
+              <span className="inline-flex items-center gap-1.5">
+                <svg className="w-4 h-4 text-emerald-500" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clipRule="evenodd" /></svg>
+                30+ currencies
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <svg className="w-4 h-4 text-emerald-500" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clipRule="evenodd" /></svg>
+                24 invoice languages
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <svg className="w-4 h-4 text-emerald-500" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clipRule="evenodd" /></svg>
+                GST / VAT / Sales Tax compliant
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <svg className="w-4 h-4 text-emerald-500" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clipRule="evenodd" /></svg>
+                Browser-only — your data never leaves your device
+              </span>
+            </div>
             <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
               <button
                 type="button"
@@ -555,6 +580,160 @@ export default function Home() {
                 See a Demo Invoice
               </button>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Comparison Section — InvoiceGen vs the rest */}
+      <section className="relative py-16 sm:py-20 bg-gradient-to-b from-white via-slate-50/40 to-white overflow-hidden">
+        <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: "radial-gradient(circle at 1px 1px, #6366f1 1px, transparent 0)", backgroundSize: "32px 32px" }} />
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 bg-amber-50 text-amber-800 text-xs font-bold px-3 py-1 rounded-full mb-4 border border-amber-200">
+              <span>💰</span>
+              Save $360+/year on billing software
+            </div>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-gray-900">
+              Everything they charge for.
+              <br />
+              <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">We give away free.</span>
+            </h2>
+            <p className="mt-4 text-gray-600 max-w-2xl mx-auto">
+              We compared InvoiceGen against the most popular paid alternatives. Here&apos;s exactly what you get — and what you stop paying for.
+            </p>
+          </div>
+
+          {/* Comparison table — desktop */}
+          <div className="hidden md:block">
+            <div className="relative bg-white rounded-3xl shadow-2xl shadow-indigo-100/50 border border-gray-100 overflow-hidden">
+              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-indigo-200 to-transparent" />
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-gray-100">
+                    <th className="text-left p-5 text-xs font-bold text-gray-500 uppercase tracking-wider w-2/5">Feature</th>
+                    <th className="p-5">
+                      <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">FreshBooks</div>
+                      <div className="text-sm font-bold text-gray-700">from $17/mo</div>
+                    </th>
+                    <th className="p-5">
+                      <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Zoho Invoice</div>
+                      <div className="text-sm font-bold text-gray-700">5 client cap</div>
+                    </th>
+                    <th className="p-5">
+                      <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Wave</div>
+                      <div className="text-sm font-bold text-gray-700">limited</div>
+                    </th>
+                    <th className="p-5 bg-gradient-to-b from-blue-50 to-indigo-50 border-l-2 border-r-2 border-indigo-200 rounded-t-2xl">
+                      <div className="inline-flex items-center gap-1.5 mb-1">
+                        <span className="text-xs font-bold text-indigo-600 uppercase tracking-wider">InvoiceGen</span>
+                        <span className="text-[10px] font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 px-1.5 py-0.5 rounded">YOU</span>
+                      </div>
+                      <div className="text-sm font-bold text-indigo-700">Always Free</div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="text-sm">
+                  {[
+                    { feature: "Unlimited invoices", fb: "5/month", zoho: "5 clients", wave: true, ig: true },
+                    { feature: "Custom logo upload", fb: "$17/mo", zoho: true, wave: true, ig: true },
+                    { feature: "Brand colors & fonts", fb: "$17/mo", zoho: "$9/mo", wave: false, ig: true },
+                    { feature: "Quotation / Estimate", fb: "$17/mo", zoho: "$9/mo", wave: false, ig: true },
+                    { feature: "Purchase Order", fb: "$17/mo", zoho: "$9/mo", wave: false, ig: true },
+                    { feature: "Delivery Note / Challan", fb: false, zoho: "$9/mo", wave: false, ig: true },
+                    { feature: "Salary Slip / Payslip", fb: "separate app", zoho: "separate app", wave: false, ig: true },
+                    { feature: "Rent Receipt (HRA)", fb: false, zoho: false, wave: false, ig: true },
+                    { feature: "Payment QR (UPI/PIX/PayNow)", fb: false, zoho: "$9/mo", wave: false, ig: true },
+                    { feature: "Digital signature", fb: "$17/mo", zoho: "$9/mo", wave: false, ig: true },
+                    { feature: "24 invoice output languages", fb: false, zoho: "10 langs", wave: false, ig: true },
+                    { feature: "Signup required", fb: true, zoho: true, wave: true, ig: "—" },
+                    { feature: "Email collected", fb: true, zoho: true, wave: true, ig: "—" },
+                    { feature: "Your data leaves your browser", fb: true, zoho: true, wave: true, ig: "—" },
+                  ].map((row, i) => (
+                    <tr key={i} className={`border-b border-gray-50 ${i % 2 === 0 ? "bg-white" : "bg-gray-50/30"} hover:bg-indigo-50/20 transition-colors`}>
+                      <td className="p-4 font-medium text-gray-900">{row.feature}</td>
+                      <td className="p-4 text-center">
+                        {typeof row.fb === "boolean" ? (
+                          row.fb ? <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-gray-100 text-gray-400">✓</span> : <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-rose-50 text-rose-400">✗</span>
+                        ) : (
+                          <span className="text-xs font-semibold text-rose-600 bg-rose-50 px-2 py-1 rounded-md">{row.fb}</span>
+                        )}
+                      </td>
+                      <td className="p-4 text-center">
+                        {typeof row.zoho === "boolean" ? (
+                          row.zoho ? <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-gray-100 text-gray-400">✓</span> : <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-rose-50 text-rose-400">✗</span>
+                        ) : (
+                          <span className="text-xs font-semibold text-rose-600 bg-rose-50 px-2 py-1 rounded-md">{row.zoho}</span>
+                        )}
+                      </td>
+                      <td className="p-4 text-center">
+                        {typeof row.wave === "boolean" ? (
+                          row.wave ? <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-gray-100 text-gray-400">✓</span> : <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-rose-50 text-rose-400">✗</span>
+                        ) : (
+                          <span className="text-xs font-semibold text-rose-600 bg-rose-50 px-2 py-1 rounded-md">{row.wave}</span>
+                        )}
+                      </td>
+                      <td className="p-4 text-center bg-gradient-to-r from-blue-50/40 to-indigo-50/40 border-l-2 border-r-2 border-indigo-100">
+                        {typeof row.ig === "boolean" ? (
+                          row.ig ? (
+                            <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 text-white shadow-sm shadow-emerald-200">
+                              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-rose-50 text-rose-400">✗</span>
+                          )
+                        ) : (
+                          <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-1 rounded-md border border-emerald-200">{row.ig}</span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <div className="bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 p-5 text-center border-t border-indigo-100">
+                <p className="text-sm text-gray-700">
+                  Pricing checked 2026-05 from each provider&apos;s official site. <span className="text-gray-500">Things change — verify before switching.</span>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Comparison cards — mobile */}
+          <div className="md:hidden space-y-4">
+            <div className="bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl p-5 shadow-xl shadow-blue-200 text-white">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-xs font-bold uppercase tracking-wider opacity-80">InvoiceGen — You</span>
+                <span className="text-xs font-bold bg-white/20 px-2 py-1 rounded">Always Free</span>
+              </div>
+              <ul className="space-y-2 text-sm">
+                {["Unlimited invoices, quotations, POs, delivery notes", "Salary slips & HRA rent receipts", "Custom logo + brand colors + signature", "Payment QR (UPI, PIX, PayNow)", "24 invoice output languages", "No signup, no email, browser-only data"].map((item, i) => (
+                  <li key={i} className="flex items-start gap-2">
+                    <svg className="w-5 h-5 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="grid grid-cols-3 gap-3">
+              <div className="bg-white border border-gray-200 rounded-xl p-3 text-center">
+                <p className="text-[10px] font-bold text-gray-500 uppercase mb-1">FreshBooks</p>
+                <p className="text-xs font-bold text-rose-600">$17/mo</p>
+              </div>
+              <div className="bg-white border border-gray-200 rounded-xl p-3 text-center">
+                <p className="text-[10px] font-bold text-gray-500 uppercase mb-1">Zoho</p>
+                <p className="text-xs font-bold text-rose-600">5 client cap</p>
+              </div>
+              <div className="bg-white border border-gray-200 rounded-xl p-3 text-center">
+                <p className="text-[10px] font-bold text-gray-500 uppercase mb-1">Wave</p>
+                <p className="text-xs font-bold text-rose-600">limited</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="text-center mt-10">
+            <a href="#generator" className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-7 py-3 rounded-xl font-semibold shadow-lg shadow-blue-200 hover:shadow-xl hover:-translate-y-0.5 transition-all">
+              Generate your first invoice
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
+            </a>
           </div>
         </div>
       </section>

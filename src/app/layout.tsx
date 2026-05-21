@@ -25,11 +25,11 @@ const SITE_URL = "https://freeinvoicegen.org";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Free Invoice Generator - PDF Download, No Signup | InvoiceGen",
-    template: "%s | InvoiceGen - Free Invoice Generator",
+    default: "Free Invoice, Quotation, Salary Slip & More — No Signup | InvoiceGen",
+    template: "%s | InvoiceGen — Free PDF Tools, No Signup",
   },
   description:
-    "Create professional invoices in seconds. 100% free online invoice generator with 10 templates, 30+ currencies, live preview, and instant PDF download. No signup, no limits.",
+    "Cancel your invoice subscription. Generate invoices, quotations, purchase orders, delivery notes, salary slips, and rent receipts — free, no signup, no email collection. 30+ currencies, 24 languages, 120+ countries.",
   keywords: [
     "free invoice generator",
     "invoice maker",
@@ -54,9 +54,9 @@ export const metadata: Metadata = {
     canonical: SITE_URL,
   },
   openGraph: {
-    title: "Free Invoice Generator - PDF Download, No Signup",
+    title: "Cancel your invoice subscription — InvoiceGen",
     description:
-      "Create professional invoices in seconds. 10 templates, 30+ currencies, live preview, instant PDF. 100% free, no signup.",
+      "6 free PDF generators: invoice, quotation, purchase order, delivery note, salary slip, rent receipt. No signup, no email, no limits. 120+ countries.",
     type: "website",
     locale: "en_US",
     url: SITE_URL,
@@ -64,9 +64,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Free Invoice Generator - No Signup Required",
+    title: "Cancel your invoice subscription — InvoiceGen",
     description:
-      "Create professional invoices in seconds. 10 templates, 30+ currencies, instant PDF download. 100% free.",
+      "6 free PDF generators in one place: invoice, quotation, PO, delivery note, salary slip, rent receipt. No signup, ever.",
   },
   icons: {
     icon: [
