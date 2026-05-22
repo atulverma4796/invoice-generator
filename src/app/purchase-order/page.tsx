@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import PurchaseOrderClient from "./PurchaseOrderClient";
 import JsonLd from "@/components/JsonLd";
 import Link from "next/link";
+import AffiliateCard from "@/components/AffiliateCard";
 
 const SITE_URL = "https://freeinvoicegen.org";
 
@@ -128,6 +129,7 @@ export default function PurchaseOrderPage() {
       <section className="py-10 sm:py-14">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <PurchaseOrderClient />
+          <AffiliateCard variant="fast-payment" />
         </div>
       </section>
 
