@@ -8,6 +8,11 @@ export interface CountrySeoData {
   legalRequirements: string[];
   paymentMethods: string[];
   faqs: { q: string; a: string }[];
+  // SEO overrides — when present, used in <title> and meta description
+  // instead of the auto-generated copy. Used for high-impression country
+  // pages where CTR matters (UK, Canada, Germany, etc.).
+  seoTitle?: string;
+  seoDescription?: string;
 }
 
 export const SEO_COUNTRIES: Record<string, CountrySeoData> = {
@@ -43,6 +48,8 @@ export const SEO_COUNTRIES: Record<string, CountrySeoData> = {
       { q: "Do I need to add HSN/SAC codes on invoices?", a: "Yes, if your turnover exceeds ₹5 crore, you must include 6-digit HSN/SAC codes. Below that, 4-digit codes or no codes are allowed depending on category." },
       { q: "Is e-invoicing mandatory in India?", a: "E-invoicing is mandatory for businesses with turnover above ₹5 crore (as of 2023). Use our generator for non-e-invoice scenarios or as a draft before generating e-invoice via the official portal." },
     ],
+    seoTitle: "Free India GST Invoice Generator",
+    seoDescription: "Create GST-compliant invoices for Indian businesses. Auto CGST/SGST/IGST split, GSTIN field, HSN/SAC codes. Free, no signup, instant PDF.",
   },
   uk: {
     slug: "uk",
@@ -77,6 +84,8 @@ export const SEO_COUNTRIES: Record<string, CountrySeoData> = {
       { q: "Can I issue an invoice without being VAT-registered?", a: "Yes. If you're not VAT-registered, your invoice should not include VAT. Just don't add a VAT line and don't include a VAT number." },
       { q: "What is reverse charge VAT?", a: "Reverse charge means the customer accounts for VAT instead of the supplier. Common in B2B services across EU borders and in the UK construction industry. Add a reverse charge note to your invoice." },
     ],
+    seoTitle: "Free UK Invoice Generator — VAT Compliant",
+    seoDescription: "Create VAT-compliant invoices for UK businesses. Free, no signup, instant PDF. Add VAT number, late fees, multi-currency. HMRC-ready format.",
   },
   usa: {
     slug: "usa",
@@ -108,6 +117,8 @@ export const SEO_COUNTRIES: Record<string, CountrySeoData> = {
       { q: "Do I need an EIN to invoice clients?", a: "No. Sole proprietors can use their SSN. However, an EIN is recommended for privacy and professionalism — it's free from the IRS." },
       { q: "What information must a US invoice include?", a: "There's no federal law mandating invoice format, but standard practice includes business info, client info, invoice number, dates, line items, subtotal, tax (if applicable), and total." },
     ],
+    seoTitle: "Free US Invoice Generator — EIN, Sales Tax",
+    seoDescription: "Create professional US invoices in seconds. EIN field, sales tax by state, USD format. Free, no signup, instant PDF download.",
   },
   canada: {
     slug: "canada",
@@ -136,6 +147,8 @@ export const SEO_COUNTRIES: Record<string, CountrySeoData> = {
       { q: "When do I need to register for GST/HST in Canada?", a: "Registration is mandatory if your gross revenue exceeds $30,000 in any 12-month period. Below that, you're a 'small supplier' and can choose to register voluntarily." },
       { q: "Which provinces use HST vs GST + PST?", a: "HST provinces: ON (13%), NB/NL/NS/PE (15%). GST-only: AB, NT, NU, YT (5%). GST + PST: BC, SK, MB, QC (rates vary)." },
     ],
+    seoTitle: "Free Canada Invoice Generator (GST/HST)",
+    seoDescription: "Create GST/HST-compliant invoices for Canadian businesses. Free, no signup, instant PDF. CAD support, GST/HST number field, all provinces covered.",
   },
   australia: {
     slug: "australia",
@@ -167,6 +180,8 @@ export const SEO_COUNTRIES: Record<string, CountrySeoData> = {
       { q: "When must I register for GST in Australia?", a: "GST registration is mandatory if your business turnover is $75,000 or more (or $150,000 for non-profits). Below that, registration is optional." },
       { q: "Must I write 'Tax Invoice' on my invoice?", a: "Yes — Australian tax law requires the words 'Tax Invoice' to be prominently displayed on any invoice that includes GST." },
     ],
+    seoTitle: "Free Australia Invoice Generator (GST, ABN)",
+    seoDescription: "Create ATO-compliant tax invoices for Australian businesses. ABN field, 10% GST auto-calc, AUD support. Free, no signup, instant PDF.",
   },
   uae: {
     slug: "uae",
@@ -256,6 +271,8 @@ export const SEO_COUNTRIES: Record<string, CountrySeoData> = {
     faqs: [
       { q: "Is VAT registration mandatory in Germany?", a: "Small businesses with turnover under €22,000/year qualify for the Kleinunternehmerregelung (small business rule) and don't charge VAT. Above this, VAT registration is mandatory." },
     ],
+    seoTitle: "Free German Invoice Generator (USt/Rechnung)",
+    seoDescription: "Create USt-compliant Rechnung for German businesses. Steuernummer/USt-ID field, 19% VAT auto-calc, EUR. Free, no signup, instant PDF.",
   },
   brazil: {
     slug: "brazil",

@@ -7,6 +7,11 @@ export interface IndustryData {
   sampleItems: { description: string; qty: number; rate: number }[];
   tips: string[];
   faqs: { q: string; a: string }[];
+  // SEO overrides — when present, used in <title> and meta description
+  // instead of the auto-generated copy. For high-impression industry
+  // pages where CTR optimization matters (contractor, photography, etc.).
+  seoTitle?: string;
+  seoDescription?: string;
 }
 
 export const INDUSTRIES: Record<string, IndustryData> = {
@@ -59,6 +64,8 @@ export const INDUSTRIES: Record<string, IndustryData> = {
       { q: "Should contractors charge sales tax on invoices?", a: "Depends on your state/country. Most US states don't tax labor but do tax materials. Check with your local tax authority — and use our country-aware tax fields to handle it correctly." },
       { q: "How do I invoice for a milestone payment?", a: "Add a line item like 'Milestone 1 of 3 — Foundation Complete' with the agreed amount. Reference the original contract or estimate number in the notes." },
     ],
+    seoTitle: "Free Contractor Invoice Template — PDF",
+    seoDescription: "Free contractor invoice template with labor, materials, change orders, license number. PDF download, no signup. Built for tradespeople.",
   },
   consulting: {
     slug: "consulting",
@@ -107,6 +114,8 @@ export const INDUSTRIES: Record<string, IndustryData> = {
       { q: "How do I invoice for image licensing?", a: "Add a separate line item for licensing with details (e.g. 'Commercial usage rights — 1 year, web only'). Specify any restrictions in the terms section." },
       { q: "Should photographers charge sales tax?", a: "Depends on your location. In many US states, photography services and prints are taxable. Use the country selector to apply your local tax rules automatically." },
     ],
+    seoTitle: "Photography Invoice Template — Free PDF",
+    seoDescription: "Free photography invoice template for weddings, portraits, events. Shoot fees, editing, licensing, travel. PDF download, no signup.",
   },
   "graphic-design": {
     slug: "graphic-design",

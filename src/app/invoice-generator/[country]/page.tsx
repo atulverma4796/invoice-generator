@@ -41,8 +41,12 @@ export async function generateMetadata({ params }: { params: Promise<{ country: 
   const data = SEO_COUNTRIES[country];
   if (!data) return {};
 
-  const title = `Free Invoice Generator ${data.name} - ${data.taxName} Compliant, PDF Download`;
-  const description = `Create professional ${data.taxName}-compliant invoices for ${data.name} businesses. Free invoice generator with ${data.currency} support, ${data.taxIdName.split(" ")[0]} field, and instant PDF download.`;
+  // Use hand-tuned SEO copy when available (CTR-optimized), otherwise fall
+  // back to the auto-generated default. Layout appends " | freeinvoicegen.org"
+  // (~21 chars) so keep seoTitle <= ~43 chars to stay under 60 in SERP.
+  const title = data.seoTitle || `Free Invoice Generator ${data.name} - ${data.taxName} Compliant`;
+  const description = data.seoDescription ||
+    `Create professional ${data.taxName}-compliant invoices for ${data.name} businesses. Free invoice generator with ${data.currency} support, ${data.taxIdName.split(" ")[0]} field, and instant PDF download.`;
 
   return {
     title,

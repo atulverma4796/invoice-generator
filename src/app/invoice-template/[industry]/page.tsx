@@ -25,17 +25,21 @@ export async function generateMetadata({ params }: { params: Promise<{ industry:
   const data = INDUSTRIES[industry];
   if (!data) return {};
 
+  const title = data.seoTitle || `${data.h1} - PDF Download, No Signup`;
+  const description = data.seoDescription || data.description;
+  const ogTitle = data.seoTitle || data.h1;
+
   return {
-    title: `${data.h1} - PDF Download, No Signup`,
-    description: data.description,
+    title,
+    description,
     alternates: { canonical: `${SITE_URL}/invoice-template/${data.slug}` },
     openGraph: {
-      title: data.h1,
-      description: data.description,
+      title: ogTitle,
+      description,
       url: `${SITE_URL}/invoice-template/${data.slug}`,
       type: "website",
     },
-    twitter: { card: "summary_large_image", title: data.h1, description: data.description },
+    twitter: { card: "summary_large_image", title: ogTitle, description },
   };
 }
 
