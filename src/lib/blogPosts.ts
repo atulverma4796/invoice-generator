@@ -1497,9 +1497,9 @@ This is not theoretical. Doing this once cuts payment cycles by 30-50% for most 
 
   "tax-invoice-requirements-by-country": {
     slug: "tax-invoice-requirements-by-country",
-    title: "Tax Invoice Requirements by Country: 30+ Countries Explained",
+    title: "Tax Invoice Requirements: 30+ Countries",
     excerpt: "A working reference for tax invoice rules across the world's major economies — what each country requires on a compliant invoice, registration thresholds, and the gotchas that catch out cross-border freelancers.",
-    metaDescription: "Tax invoice requirements for India (GST), UK (VAT), US (sales tax), EU, Australia (GST), Canada (GST/HST), and 25+ other countries — registration thresholds, mandatory fields, and compliance pitfalls.",
+    metaDescription: "Tax invoice rules for India (GST), UK (VAT), US sales tax, EU, Australia, Canada, and 25+ other countries. Mandatory fields, thresholds, gotchas.",
     publishedAt: today,
     updatedAt: today,
     author: "InvoiceGen Team",

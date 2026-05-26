@@ -298,6 +298,8 @@ export const SEO_COUNTRIES: Record<string, CountrySeoData> = {
     faqs: [
       { q: "Is electronic invoicing mandatory in Brazil?", a: "Yes — Nota Fiscal Eletrônica (NF-e) is mandatory for goods, and NFS-e for services in most municipalities. Use our generator for drafts and reference; final invoices must be issued via the official municipal/state systems." },
     ],
+    seoTitle: "Free Brazil Invoice Generator (CNPJ)",
+    seoDescription: "Generate Brazil invoices with CNPJ fields, NF-e/NFS-e structure, BRL, sequential numbering. Free, no signup, instant PDF download.",
   },
   "south-africa": {
     slug: "south-africa",
