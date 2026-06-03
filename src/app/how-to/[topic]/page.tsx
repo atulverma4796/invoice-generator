@@ -50,6 +50,10 @@ export async function generateMetadata({ params }: { params: Promise<{ topic: st
     title: data.metaTitle,
     description: data.metaDescription,
     alternates: { canonical: `${SITE_URL}/how-to/${data.slug}` },
+    // Temporarily noindex — these how-to pages share a structure that's
+    // too uniform across topics. Re-index after each one is rewritten as
+    // a deep editorial guide rather than a templated container.
+    robots: { index: false, follow: true },
     openGraph: { title: data.metaTitle, description: data.metaDescription, url: `${SITE_URL}/how-to/${data.slug}`, type: "article" },
     twitter: { card: "summary_large_image", title: data.metaTitle, description: data.metaDescription },
   };

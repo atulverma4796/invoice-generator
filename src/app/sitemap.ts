@@ -1,65 +1,42 @@
+// Sitemap restricted to high-quality, unique-content pages while we work
+// through the AdSense "Low value content" rejection. The templated
+// programmatic pages (country, industry, how-to listings, gallery) are
+// excluded here AND noindex'd on the page itself — leaving them as
+// nav-accessible doorways was reading as a templated factory to Google's
+// reviewer.
+//
+// Re-add programmatic pages to the sitemap one wave at a time AFTER:
+//   (a) AdSense is approved on freeinvoicegen.org, and
+//   (b) Each batch has been rewritten with substantially unique editorial
+//       content per page (not just data swaps), so they're individually
+//       index-worthy.
+
 import { MetadataRoute } from "next";
 import { BLOG_LIST } from "@/lib/blogPosts";
 
 const BASE_URL = "https://freeinvoicegen.org";
 
-const INDUSTRIES = [
-  "freelance", "contractor", "consulting", "photography", "graphic-design",
-  "web-design", "construction", "cleaning", "plumbing", "landscaping",
-  "catering", "tutoring", "electrician", "painting", "videography",
-];
-
-const COUNTRIES = [
-  "india", "uk", "usa", "canada", "australia", "south-africa",
-  "philippines", "nigeria", "singapore", "uae", "germany", "brazil",
-  "malaysia", "pakistan", "indonesia",
-];
-
-const HOW_TO_TOPICS = [
-  "create-invoice", "write-invoice", "create-invoice-freelancer",
-  "send-invoice", "add-tax-to-invoice",
-];
-
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
 
-  const staticPages: MetadataRoute.Sitemap = [
+  // Single-purpose document tools — each is a fundamentally different
+  // document type (like CalcHub's calculators), so they're substantive on
+  // their own and stay indexed.
+  const toolPages: MetadataRoute.Sitemap = [
     { url: BASE_URL, lastModified: now, changeFrequency: "weekly", priority: 1.0 },
-    { url: `${BASE_URL}/gallery`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
-    { url: `${BASE_URL}/invoice-template`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
-    { url: `${BASE_URL}/invoice-generator`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
-    { url: `${BASE_URL}/how-to`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
-    { url: `${BASE_URL}/blog`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE_URL}/rent-receipt`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
     { url: `${BASE_URL}/quotation`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
     { url: `${BASE_URL}/purchase-order`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
     { url: `${BASE_URL}/delivery-note`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
     { url: `${BASE_URL}/salary-slip`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
+  ];
+
+  const editorialPages: MetadataRoute.Sitemap = [
+    { url: `${BASE_URL}/blog`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE_URL}/about`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
     { url: `${BASE_URL}/privacy`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
     { url: `${BASE_URL}/terms`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
   ];
-
-  const industryPages: MetadataRoute.Sitemap = INDUSTRIES.map((slug) => ({
-    url: `${BASE_URL}/invoice-template/${slug}`,
-    lastModified: now,
-    changeFrequency: "monthly",
-    priority: 0.8,
-  }));
-
-  const countryPages: MetadataRoute.Sitemap = COUNTRIES.map((slug) => ({
-    url: `${BASE_URL}/invoice-generator/${slug}`,
-    lastModified: now,
-    changeFrequency: "monthly",
-    priority: 0.8,
-  }));
-
-  const howToPages: MetadataRoute.Sitemap = HOW_TO_TOPICS.map((slug) => ({
-    url: `${BASE_URL}/how-to/${slug}`,
-    lastModified: now,
-    changeFrequency: "monthly",
-    priority: 0.7,
-  }));
 
   const blogPages: MetadataRoute.Sitemap = BLOG_LIST.map((post) => ({
     url: `${BASE_URL}/blog/${post.slug}`,
@@ -68,5 +45,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  return [...staticPages, ...industryPages, ...countryPages, ...howToPages, ...blogPages];
+  return [...toolPages, ...editorialPages, ...blogPages];
 }

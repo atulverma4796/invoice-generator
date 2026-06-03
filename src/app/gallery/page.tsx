@@ -9,6 +9,10 @@ export const metadata: Metadata = {
   title: "Invoice Template Gallery — 10 Free Designs to Pick From",
   description: "Browse 10 free professional invoice templates side by side. Pick the design you like, click Use, and download a beautiful PDF in seconds. No signup required.",
   alternates: { canonical: `${SITE_URL}/gallery` },
+  // Previews-only showcase that CTAs to the homepage tool — reads as a
+  // thin showcase page. Noindex until we either drop it or rebuild each
+  // card with substantive editorial about that design.
+  robots: { index: false, follow: true },
   openGraph: {
     title: "Invoice Template Gallery — 10 Free Designs",
     description: "10 professional invoice templates. Pick one, customize, download. Free forever.",

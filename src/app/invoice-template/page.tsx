@@ -8,6 +8,9 @@ export const metadata: Metadata = {
   title: "Free Invoice Templates - 15+ Industry Templates, PDF Download",
   description: "Browse 15+ free professional invoice templates for freelancers, contractors, photographers, consultants, designers, and more. No signup, instant PDF download.",
   alternates: { canonical: `${SITE_URL}/invoice-template` },
+  // Listing of templated industry pages — noindex while those children
+  // are noindex'd. Re-enable after AdSense approval + content rewrite.
+  robots: { index: false, follow: true },
   openGraph: {
     title: "Free Invoice Templates - 15+ Industry Templates",
     description: "15+ professional invoice templates for every industry. 100% free, no signup, instant PDF.",

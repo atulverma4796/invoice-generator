@@ -50,6 +50,21 @@ const AI_BOTS = [
   "ICC-Crawler",
 ];
 
+// Paths to block from crawling while we work through AdSense "Low value
+// content" rejection. Keep in sync with the noindex metadata on the
+// corresponding pages — robots.txt prevents crawl, noindex prevents
+// indexing of already-known URLs, and they overlap intentionally
+// (belt-and-braces). Restore index-ability page-by-page only after each
+// has substantially unique editorial content.
+const TEMPLATED_PATHS = [
+  "/invoice-generator/",  // /invoice-generator + every /invoice-generator/<country>
+  "/invoice-template/",   // /invoice-template + every /invoice-template/<industry>
+  "/how-to/",             // /how-to + every /how-to/<topic>
+  "/gallery",             // previews-only showcase
+];
+
+const DISALLOW = ["/api/", "/templates", ...TEMPLATED_PATHS];
+
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
@@ -57,13 +72,13 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/api/", "/templates"],
+        disallow: DISALLOW,
       },
       // Explicit allow rules for each AI bot — some only respect their own user-agent
       ...AI_BOTS.map((bot) => ({
         userAgent: bot,
         allow: "/",
-        disallow: ["/api/", "/templates"],
+        disallow: DISALLOW,
       })),
     ],
     sitemap: "https://freeinvoicegen.org/sitemap.xml",

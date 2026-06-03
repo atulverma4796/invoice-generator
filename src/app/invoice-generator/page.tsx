@@ -8,6 +8,8 @@ export const metadata: Metadata = {
   title: "Free Invoice Generator by Country - 10+ Country-Specific Templates",
   description: "Country-specific invoice generators for India (GST), UK (VAT), USA, Canada, Australia (GST), UAE, Singapore, Germany, Brazil, and South Africa. Free PDF download, no signup.",
   alternates: { canonical: `${SITE_URL}/invoice-generator` },
+  // Listing of country pages — noindex with them. Re-enable post-approval.
+  robots: { index: false, follow: true },
   openGraph: {
     title: "Free Invoice Generator by Country",
     description: "10+ country-specific invoice generators with local tax compliance, currency, and legal requirements built in.",

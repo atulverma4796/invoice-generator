@@ -8,6 +8,8 @@ export const metadata: Metadata = {
   title: "How-To Guides — Free Invoice & Billing Tutorials",
   description: "Free step-by-step guides on how to create invoices, write invoices, send invoices, add tax, and more. Practical tips for freelancers and small businesses.",
   alternates: { canonical: `${SITE_URL}/how-to` },
+  // Listing of how-to pages — noindex with them. Re-enable post-approval.
+  robots: { index: false, follow: true },
   openGraph: {
     title: "Free Invoice How-To Guides",
     description: "Step-by-step invoice tutorials. Learn to create, write, send, and manage invoices like a pro.",

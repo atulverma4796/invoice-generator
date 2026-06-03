@@ -33,6 +33,10 @@ export async function generateMetadata({ params }: { params: Promise<{ industry:
     title,
     description,
     alternates: { canonical: `${SITE_URL}/invoice-template/${data.slug}` },
+    // Temporarily noindex — same template across 15 industry pages reads
+    // as doorway-pattern. Re-index per page only after substantially
+    // unique editorial content has been added.
+    robots: { index: false, follow: true },
     openGraph: {
       title: ogTitle,
       description,

@@ -52,6 +52,11 @@ export async function generateMetadata({ params }: { params: Promise<{ country: 
     title,
     description,
     alternates: { canonical: `${SITE_URL}/invoice-generator/${data.slug}` },
+    // Temporarily noindex while we work through AdSense "Low value content"
+    // rejection. These country pages share a template that reads as
+    // doorway-pattern to Google's reviewer. Re-enable indexing batch by
+    // batch only after each page has substantially unique editorial content.
+    robots: { index: false, follow: true },
     openGraph: { title, description, url: `${SITE_URL}/invoice-generator/${data.slug}`, type: "website" },
     twitter: { card: "summary_large_image", title, description },
   };
