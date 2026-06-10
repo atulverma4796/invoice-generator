@@ -29,7 +29,7 @@ export default function DeliveryNoteClient() {
     setGenerating(true);
     try {
       const { generateDeliveryNotePDF } = await import("@/lib/generateDeliveryNotePDF");
-      const doc = generateDeliveryNotePDF(data);
+      const doc = await generateDeliveryNotePDF(data);
       doc.save(`delivery-note-${data.challanNumber || "unnamed"}.pdf`);
       toast.success("Delivery note downloaded");
       trackDocDownload("delivery-note", {

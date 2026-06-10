@@ -82,8 +82,8 @@ export function trackInvoiceEvent(
   void _extra;
   try {
     const subtotal = calculateSubtotal(data.lineItems);
-    const tax = calculateTax(subtotal, data.taxRate);
     const discount = calculateDiscount(subtotal, data.discountRate);
+    const tax = calculateTax(subtotal, data.taxRate, discount);
     const total = calculateTotal(subtotal, tax, discount) + (data.shippingFee || 0);
 
     const items = data.lineItems.filter(

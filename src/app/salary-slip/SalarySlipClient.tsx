@@ -29,7 +29,7 @@ export default function SalarySlipClient() {
     setGenerating(true);
     try {
       const { generateSalarySlipPDF } = await import("@/lib/generateSalarySlipPDF");
-      const doc = generateSalarySlipPDF(data);
+      const doc = await generateSalarySlipPDF(data);
       const safeName = (data.employeeName || "employee").replace(/[^a-z0-9]+/gi, "-").toLowerCase();
       doc.save(`payslip-${safeName}-${data.payMonth}.pdf`);
       toast.success("Payslip downloaded");

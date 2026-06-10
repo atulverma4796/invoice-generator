@@ -1,5 +1,6 @@
 import jsPDF from "jspdf";
 import type { DeliveryNoteData } from "@/components/DeliveryNoteForm";
+import { applyUnicodeFont, PDF_FONT_FAMILY } from "./pdfFont";
 
 function isoToReadable(iso: string): string {
   if (!iso) return "";
@@ -14,8 +15,11 @@ function isoToReadable(iso: string): string {
   }
 }
 
-export function generateDeliveryNotePDF(data: DeliveryNoteData): jsPDF {
+export async function generateDeliveryNotePDF(
+  data: DeliveryNoteData,
+): Promise<jsPDF> {
   const doc = new jsPDF({ unit: "mm", format: "a4" });
+  const ff = (await applyUnicodeFont(doc)) ? PDF_FONT_FAMILY : "helvetica";
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
   const mL = 18;
@@ -26,24 +30,24 @@ export function generateDeliveryNotePDF(data: DeliveryNoteData): jsPDF {
   doc.rect(0, 0, pageWidth, 38, "F");
   doc.setTextColor(255);
   doc.setFontSize(22);
-  doc.setFont("helvetica", "bold");
+  doc.setFont(ff, "bold");
   doc.text("DELIVERY NOTE", mL, 20);
   doc.setFontSize(11);
-  doc.setFont("helvetica", "normal");
+  doc.setFont(ff, "normal");
   doc.text(`#${data.challanNumber}`, mL, 28);
 
   doc.setFontSize(10);
   doc.text("Issue Date", pageWidth - mR, 16, { align: "right" });
-  doc.setFont("helvetica", "bold");
+  doc.setFont(ff, "bold");
   doc.text(isoToReadable(data.challanDate), pageWidth - mR, 22, { align: "right" });
-  doc.setFont("helvetica", "normal");
+  doc.setFont(ff, "normal");
   doc.text("Delivery Date", pageWidth - mR, 30, { align: "right" });
-  doc.setFont("helvetica", "bold");
+  doc.setFont(ff, "bold");
   doc.text(isoToReadable(data.deliveryDate), pageWidth - mR, 36, { align: "right" });
 
   // Reset
   doc.setTextColor(31, 41, 55);
-  doc.setFont("helvetica", "normal");
+  doc.setFont(ff, "normal");
 
   let y = 50;
 
@@ -67,11 +71,11 @@ export function generateDeliveryNotePDF(data: DeliveryNoteData): jsPDF {
   y += 5;
   doc.setFontSize(11);
   doc.setTextColor(31, 41, 55);
-  doc.setFont("helvetica", "bold");
+  doc.setFont(ff, "bold");
   doc.text(data.consignorName || "—", mL, y);
   doc.text(data.consigneeName || "—", pageWidth / 2 + 4, y);
   y += 5;
-  doc.setFont("helvetica", "normal");
+  doc.setFont(ff, "normal");
   doc.setFontSize(9);
   doc.setTextColor(75, 85, 99);
 
@@ -108,12 +112,12 @@ export function generateDeliveryNotePDF(data: DeliveryNoteData): jsPDF {
   const tcol2 = mL + 4 + colW;
   const tcol3 = mL + 4 + colW * 2;
 
-  doc.setFont("helvetica", "bold");
+  doc.setFont(ff, "bold");
   doc.text(data.transportMode || "—", tcol1, transportY + 12);
   doc.text(data.vehicleNumber || "—", tcol2, transportY + 12);
   doc.text(data.driverName || "—", tcol3, transportY + 12);
 
-  doc.setFont("helvetica", "normal");
+  doc.setFont(ff, "normal");
   doc.setFontSize(8);
   doc.setTextColor(107, 114, 128);
   doc.text("Mode", tcol1, transportY + 16);
@@ -133,13 +137,13 @@ export function generateDeliveryNotePDF(data: DeliveryNoteData): jsPDF {
   doc.rect(tableX, y, tableW, 9, "F");
   doc.setFontSize(9);
   doc.setTextColor(75, 85, 99);
-  doc.setFont("helvetica", "bold");
+  doc.setFont(ff, "bold");
   doc.text("DESCRIPTION", colDesc, y + 6);
   doc.text("QTY", colQty, y + 6, { align: "right" });
   doc.text("UNIT", colUnit, y + 6, { align: "right" });
   y += 12;
 
-  doc.setFont("helvetica", "normal");
+  doc.setFont(ff, "normal");
   doc.setTextColor(31, 41, 55);
   doc.setFontSize(10);
   let totalItems = 0;
@@ -164,7 +168,7 @@ export function generateDeliveryNotePDF(data: DeliveryNoteData): jsPDF {
 
   // Total quantity row
   y += 2;
-  doc.setFont("helvetica", "bold");
+  doc.setFont(ff, "bold");
   doc.setFontSize(10);
   doc.setTextColor(37, 99, 235);
   doc.text(`Total: ${totalItems} item${totalItems === 1 ? "" : "s"}`, colDesc, y);
@@ -177,12 +181,12 @@ export function generateDeliveryNotePDF(data: DeliveryNoteData): jsPDF {
       doc.addPage();
       y = 20;
     }
-    doc.setFont("helvetica", "bold");
+    doc.setFont(ff, "bold");
     doc.setFontSize(9);
     doc.setTextColor(31, 41, 55);
     doc.text("Notes", mL, y);
     y += 5;
-    doc.setFont("helvetica", "normal");
+    doc.setFont(ff, "normal");
     doc.setTextColor(75, 85, 99);
     const lines = doc.splitTextToSize(data.notes, pageWidth - mL - mR);
     doc.text(lines, mL, y);

@@ -6,9 +6,6 @@ import MobileMenu from "@/components/MobileMenu";
 import Analytics from "@/components/Analytics";
 import CookieConsent from "@/components/CookieConsent";
 import AppToaster from "@/components/AppToaster";
-import { INDUSTRY_LIST } from "@/lib/industries";
-import { SEO_COUNTRY_LIST } from "@/lib/seoCountries";
-import { HOW_TO_LIST } from "@/lib/howToGuides";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -226,24 +223,7 @@ export default function RootLayout({
                   </div>
                 </div>
 
-                {/* Resources dropdown */}
-                <div className="relative group">
-                  <button type="button" className="flex items-center gap-1 hover:text-blue-600 transition-colors py-2">
-                    Resources
-                    <svg className="w-3.5 h-3.5 transition-transform group-hover:rotate-180" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                    </svg>
-                  </button>
-                  <div className="absolute top-full left-0 w-56 bg-white border border-gray-100 rounded-2xl shadow-2xl shadow-gray-200/60 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 py-2 z-50">
-                    <a href="/gallery" className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600">Template Gallery</a>
-                    <a href="/invoice-template" className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600">By Industry</a>
-                    <a href="/invoice-generator" className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600">By Country</a>
-                    <div className="h-px bg-gray-100 my-2 mx-3" />
-                    <a href="/how-to" className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600">How-to Guides</a>
-                    <a href="/blog" className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600">Blog</a>
-                  </div>
-                </div>
-
+                <a href="/blog" className="hover:text-blue-600 transition-colors">Blog</a>
                 <a href="/templates" className="hover:text-amber-600 transition-colors">My Invoices</a>
               </nav>
               <MobileMenu />
@@ -278,80 +258,48 @@ export default function RootLayout({
               </p>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
-              {/* Quick Links */}
+            {/*
+              Footer link sets are deliberately small. We do NOT link out
+              to the noindex'd templated paths (/invoice-template/*,
+              /invoice-generator/*, /how-to/*, /gallery) — AdSense
+              previously flagged those as a doorway-page pattern, and
+              site-wide footer doorways are exactly what that signal
+              looks for. Keep only the standalone generator tools + the
+              blog + utility pages.
+            */}
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
+              {/* Generators */}
               <div>
-                <h4 className="text-sm font-semibold text-gray-800 mb-3">Quick Links</h4>
+                <h4 className="text-sm font-semibold text-gray-800 mb-3">Generators</h4>
                 <nav className="flex flex-col gap-2">
-                  <a href="/#generator" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">Generator</a>
-                  <a href="/gallery" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">Template Gallery</a>
-                  <a href="/invoice-template" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">All Templates</a>
-                  <a href="/invoice-generator" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">By Country</a>
-                  <a href="/how-to" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">How-To Guides</a>
-                  <a href="/blog" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">Blog</a>
+                  <a href="/#generator" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">Invoice Generator</a>
                   <a href="/quotation" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">Quotation Generator</a>
                   <a href="/purchase-order" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">Purchase Order Generator</a>
                   <a href="/delivery-note" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">Delivery Note Generator</a>
                   <a href="/salary-slip" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">Salary Slip Generator</a>
                   <a href="/rent-receipt" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">Rent Receipt Generator</a>
-                  <a href="/templates" className="text-sm text-gray-500 hover:text-amber-600 transition-colors">My Invoices</a>
+                </nav>
+              </div>
+
+              {/* Site */}
+              <div>
+                <h4 className="text-sm font-semibold text-gray-800 mb-3">Site</h4>
+                <nav className="flex flex-col gap-2">
                   <a href="/#features" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">Features</a>
                   <a href="/#faq" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">FAQ</a>
+                  <a href="/blog" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">Blog</a>
+                  <a href="/templates" className="text-sm text-gray-500 hover:text-amber-600 transition-colors">My Invoices</a>
                   <a href="/#feedback" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">Feedback</a>
                 </nav>
               </div>
 
-              {/* Industry Templates — column 1 */}
+              {/* Company */}
               <div>
-                <h4 className="text-sm font-semibold text-gray-800 mb-3">
-                  <a href="/invoice-template" className="hover:text-blue-600">Templates by Industry</a>
-                </h4>
+                <h4 className="text-sm font-semibold text-gray-800 mb-3">Company</h4>
                 <nav className="flex flex-col gap-2">
-                  {INDUSTRY_LIST.slice(0, 8).map((i) => (
-                    <a key={i.slug} href={`/invoice-template/${i.slug}`} className="text-sm text-gray-500 hover:text-blue-600 transition-colors">
-                      {i.name}
-                    </a>
-                  ))}
-                </nav>
-              </div>
-
-              {/* Industry Templates — column 2 */}
-              <div>
-                <h4 className="text-sm font-semibold text-gray-800 mb-3">More Templates</h4>
-                <nav className="flex flex-col gap-2">
-                  {INDUSTRY_LIST.slice(8).map((i) => (
-                    <a key={i.slug} href={`/invoice-template/${i.slug}`} className="text-sm text-gray-500 hover:text-blue-600 transition-colors">
-                      {i.name}
-                    </a>
-                  ))}
-                </nav>
-              </div>
-
-              {/* Countries */}
-              <div>
-                <h4 className="text-sm font-semibold text-gray-800 mb-3">
-                  <a href="/invoice-generator" className="hover:text-blue-600">By Country</a>
-                </h4>
-                <nav className="flex flex-col gap-2">
-                  {SEO_COUNTRY_LIST.map((c) => (
-                    <a key={c.slug} href={`/invoice-generator/${c.slug}`} className="text-sm text-gray-500 hover:text-blue-600 transition-colors">
-                      {c.name}
-                    </a>
-                  ))}
-                </nav>
-              </div>
-
-              {/* How-To Guides */}
-              <div>
-                <h4 className="text-sm font-semibold text-gray-800 mb-3">
-                  <a href="/how-to" className="hover:text-blue-600">Invoice Guides</a>
-                </h4>
-                <nav className="flex flex-col gap-2">
-                  {HOW_TO_LIST.map((g) => (
-                    <a key={g.slug} href={`/how-to/${g.slug}`} className="text-sm text-gray-500 hover:text-blue-600 transition-colors">
-                      {g.title.replace(/^How to /, "")}
-                    </a>
-                  ))}
+                  <a href="/about" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">About</a>
+                  <a href="/privacy" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">Privacy</a>
+                  <a href="/terms" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">Terms</a>
                 </nav>
               </div>
             </div>

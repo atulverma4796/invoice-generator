@@ -36,8 +36,8 @@ function MiniPreview({ data }: { data: InvoiceData }) {
   const style = data.customStyle;
   const symbol = getCurrencySymbol(data.currency);
   const subtotal = calculateSubtotal(data.lineItems);
-  const tax = calculateTax(subtotal, data.taxRate);
   const discount = calculateDiscount(subtotal, data.discountRate);
+  const tax = calculateTax(subtotal, data.taxRate, discount);
   const total = calculateTotal(subtotal, tax, discount) + (data.shippingFee || 0);
   const isLight = data.template === "minimal";
   const headerBg = isLight ? "#f9fafb" : style.primaryColor;
@@ -286,8 +286,8 @@ export default function TemplatesPage() {
                 {templates.map((t, i) => {
                   const symbol = getCurrencySymbol(t.data.currency);
                   const subtotal = calculateSubtotal(t.data.lineItems);
-                  const tax = calculateTax(subtotal, t.data.taxRate);
                   const discount = calculateDiscount(subtotal, t.data.discountRate);
+                  const tax = calculateTax(subtotal, t.data.taxRate, discount);
                   const total = calculateTotal(subtotal, tax, discount) + (t.data.shippingFee || 0);
 
                   return (

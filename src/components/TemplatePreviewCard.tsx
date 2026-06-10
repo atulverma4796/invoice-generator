@@ -98,8 +98,8 @@ function MiniPreview({ data }: { data: InvoiceData }) {
   const style = data.customStyle;
   const symbol = getCurrencySymbol(data.currency);
   const subtotal = calculateSubtotal(data.lineItems);
-  const tax = calculateTax(subtotal, data.taxRate);
   const discount = calculateDiscount(subtotal, data.discountRate);
+  const tax = calculateTax(subtotal, data.taxRate, discount);
   const total = calculateTotal(subtotal, tax, discount) + (data.shippingFee || 0);
 
   const isLight = data.template === "minimal" || data.template === "pastel" || data.template === "monochrome";

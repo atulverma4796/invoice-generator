@@ -1,6 +1,7 @@
 import jsPDF from "jspdf";
 import type { PurchaseOrderData } from "@/components/PurchaseOrderForm";
 import { getCurrencySymbol } from "@/components/PurchaseOrderForm";
+import { applyUnicodeFont, PDF_FONT_FAMILY } from "./pdfFont";
 
 function fmt(n: number): string {
   return new Intl.NumberFormat("en-US", {
@@ -22,8 +23,11 @@ function isoToReadable(iso: string): string {
   }
 }
 
-export function generatePurchaseOrderPDF(data: PurchaseOrderData): jsPDF {
+export async function generatePurchaseOrderPDF(
+  data: PurchaseOrderData,
+): Promise<jsPDF> {
   const doc = new jsPDF({ unit: "mm", format: "a4" });
+  const ff = (await applyUnicodeFont(doc)) ? PDF_FONT_FAMILY : "helvetica";
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
   const mL = 18;
@@ -36,24 +40,24 @@ export function generatePurchaseOrderPDF(data: PurchaseOrderData): jsPDF {
   doc.rect(0, 0, pageWidth, 38, "F");
   doc.setTextColor(255);
   doc.setFontSize(22);
-  doc.setFont("helvetica", "bold");
+  doc.setFont(ff, "bold");
   doc.text("PURCHASE ORDER", mL, 20);
   doc.setFontSize(11);
-  doc.setFont("helvetica", "normal");
+  doc.setFont(ff, "normal");
   doc.text(`#${data.poNumber}`, mL, 28);
 
   doc.setFontSize(10);
   doc.text("PO Date", pageWidth - mR, 16, { align: "right" });
-  doc.setFont("helvetica", "bold");
+  doc.setFont(ff, "bold");
   doc.text(isoToReadable(data.poDate), pageWidth - mR, 22, { align: "right" });
-  doc.setFont("helvetica", "normal");
+  doc.setFont(ff, "normal");
   doc.text("Expected Delivery", pageWidth - mR, 30, { align: "right" });
-  doc.setFont("helvetica", "bold");
+  doc.setFont(ff, "bold");
   doc.text(isoToReadable(data.expectedDelivery), pageWidth - mR, 36, { align: "right" });
 
   // Reset
   doc.setTextColor(31, 41, 55);
-  doc.setFont("helvetica", "normal");
+  doc.setFont(ff, "normal");
 
   // Buyer / Vendor blocks
   let y = 50;
@@ -64,11 +68,11 @@ export function generatePurchaseOrderPDF(data: PurchaseOrderData): jsPDF {
   y += 5;
   doc.setFontSize(11);
   doc.setTextColor(31, 41, 55);
-  doc.setFont("helvetica", "bold");
+  doc.setFont(ff, "bold");
   doc.text(data.buyerName || "—", mL, y);
   doc.text(data.vendorName || "—", pageWidth / 2 + 4, y);
   y += 5;
-  doc.setFont("helvetica", "normal");
+  doc.setFont(ff, "normal");
   doc.setFontSize(9);
   doc.setTextColor(75, 85, 99);
 
@@ -98,7 +102,7 @@ export function generatePurchaseOrderPDF(data: PurchaseOrderData): jsPDF {
     y += 5;
     doc.setFontSize(10);
     doc.setTextColor(31, 41, 55);
-    doc.setFont("helvetica", "normal");
+    doc.setFont(ff, "normal");
     const shipLines = doc.splitTextToSize(data.shipToAddress, pageWidth - mL - mR);
     doc.text(shipLines, mL, y);
     y += 5 * shipLines.length + 3;
@@ -116,14 +120,14 @@ export function generatePurchaseOrderPDF(data: PurchaseOrderData): jsPDF {
   doc.rect(tableX, y, tableW, 9, "F");
   doc.setFontSize(9);
   doc.setTextColor(75, 85, 99);
-  doc.setFont("helvetica", "bold");
+  doc.setFont(ff, "bold");
   doc.text("DESCRIPTION", colDesc, y + 6);
   doc.text("QTY", colQty, y + 6, { align: "right" });
   doc.text("UNIT PRICE", colRate, y + 6, { align: "right" });
   doc.text("AMOUNT", colAmount, y + 6, { align: "right" });
   y += 12;
 
-  doc.setFont("helvetica", "normal");
+  doc.setFont(ff, "normal");
   doc.setTextColor(31, 41, 55);
   doc.setFontSize(10);
   let subtotal = 0;
@@ -168,7 +172,7 @@ export function generatePurchaseOrderPDF(data: PurchaseOrderData): jsPDF {
     color: [number, number, number] = [75, 85, 99],
   ) => {
     doc.setFontSize(10);
-    doc.setFont("helvetica", bold ? "bold" : "normal");
+    doc.setFont(ff, bold ? "bold" : "normal");
     doc.setTextColor(...color);
     doc.text(label, totalsLeftX, y);
     doc.text(value, totalsRightX, y, { align: "right" });
@@ -191,7 +195,7 @@ export function generatePurchaseOrderPDF(data: PurchaseOrderData): jsPDF {
   doc.line(totalsLeftX, y - 1, totalsRightX, y - 1);
   doc.setLineWidth(0.2);
   y += 3;
-  doc.setFont("helvetica", "bold");
+  doc.setFont(ff, "bold");
   doc.setFontSize(12);
   doc.setTextColor(37, 99, 235);
   doc.text("PO Total", totalsLeftX, y);
@@ -200,17 +204,17 @@ export function generatePurchaseOrderPDF(data: PurchaseOrderData): jsPDF {
 
   // Notes
   doc.setTextColor(31, 41, 55);
-  doc.setFont("helvetica", "normal");
+  doc.setFont(ff, "normal");
   doc.setFontSize(9);
   if (data.notes && data.notes.trim()) {
     if (y > pageHeight - 60) {
       doc.addPage();
       y = 20;
     }
-    doc.setFont("helvetica", "bold");
+    doc.setFont(ff, "bold");
     doc.text("Notes", mL, y);
     y += 5;
-    doc.setFont("helvetica", "normal");
+    doc.setFont(ff, "normal");
     doc.setTextColor(75, 85, 99);
     const lines = doc.splitTextToSize(data.notes, pageWidth - mL - mR);
     doc.text(lines, mL, y);
@@ -223,10 +227,10 @@ export function generatePurchaseOrderPDF(data: PurchaseOrderData): jsPDF {
       y = 20;
     }
     doc.setTextColor(31, 41, 55);
-    doc.setFont("helvetica", "bold");
+    doc.setFont(ff, "bold");
     doc.text("Terms & Conditions", mL, y);
     y += 5;
-    doc.setFont("helvetica", "normal");
+    doc.setFont(ff, "normal");
     doc.setTextColor(75, 85, 99);
     const lines = doc.splitTextToSize(data.terms, pageWidth - mL - mR);
     doc.text(lines, mL, y);

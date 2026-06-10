@@ -1,6 +1,7 @@
 import jsPDF from "jspdf";
 import type { SalarySlipData } from "@/components/SalarySlipForm";
 import { numberToIndianWords } from "./numberToWords";
+import { applyUnicodeFont, PDF_FONT_FAMILY } from "./pdfFont";
 
 function fmt(n: number): string {
   return new Intl.NumberFormat("en-IN", {
@@ -28,8 +29,11 @@ function formatPeriod(ym: string): string {
   return new Date(y, m - 1, 1).toLocaleDateString("en-IN", { month: "long", year: "numeric" });
 }
 
-export function generateSalarySlipPDF(data: SalarySlipData): jsPDF {
+export async function generateSalarySlipPDF(
+  data: SalarySlipData,
+): Promise<jsPDF> {
   const doc = new jsPDF({ unit: "mm", format: "a4" });
+  const ff = (await applyUnicodeFont(doc)) ? PDF_FONT_FAMILY : "helvetica";
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
   const mL = 18;
@@ -43,11 +47,11 @@ export function generateSalarySlipPDF(data: SalarySlipData): jsPDF {
   doc.rect(0, 0, pageWidth, 28, "F");
   doc.setTextColor(255);
   doc.setFontSize(11);
-  doc.setFont("helvetica", "bold");
+  doc.setFont(ff, "bold");
   doc.text("SALARY SLIP", mL, 12);
   doc.setFontSize(16);
   doc.text(data.companyName || "—", mL, 22);
-  doc.setFont("helvetica", "normal");
+  doc.setFont(ff, "normal");
   doc.setFontSize(10);
   doc.text(`For ${formatPeriod(data.payMonth)}`, pageWidth - mR, 12, { align: "right" });
   doc.setFontSize(9);
@@ -57,7 +61,7 @@ export function generateSalarySlipPDF(data: SalarySlipData): jsPDF {
 
   // Reset
   doc.setTextColor(31, 41, 55);
-  doc.setFont("helvetica", "normal");
+  doc.setFont(ff, "normal");
 
   let y = 36;
 
@@ -87,11 +91,11 @@ export function generateSalarySlipPDF(data: SalarySlipData): jsPDF {
     const yy = y + 6 + row * 6.5;
     doc.setFontSize(8);
     doc.setTextColor(107, 114, 128);
-    doc.setFont("helvetica", "normal");
+    doc.setFont(ff, "normal");
     doc.text(label, x, yy);
     doc.setFontSize(10);
     doc.setTextColor(31, 41, 55);
-    doc.setFont("helvetica", "bold");
+    doc.setFont(ff, "bold");
     doc.text(value || "—", x, yy + 4);
   };
 
@@ -123,7 +127,7 @@ export function generateSalarySlipPDF(data: SalarySlipData): jsPDF {
   doc.setFillColor(254, 226, 226); // red-100
   doc.rect(colMid + 2, y, colHalf - 2, 9, "F");
 
-  doc.setFont("helvetica", "bold");
+  doc.setFont(ff, "bold");
   doc.setFontSize(10);
   doc.setTextColor(6, 95, 70); // emerald-800
   doc.text("EARNINGS", mL + 4, y + 6);
@@ -137,7 +141,7 @@ export function generateSalarySlipPDF(data: SalarySlipData): jsPDF {
   // Two-column rows: longer of earnings/deductions decides table height
   const rowH = 6.5;
   const maxRows = Math.max(data.earnings.length, data.deductions.length);
-  doc.setFont("helvetica", "normal");
+  doc.setFont(ff, "normal");
   doc.setFontSize(9);
   for (let i = 0; i < maxRows; i++) {
     if (y > pageHeight - 60) {
@@ -170,7 +174,7 @@ export function generateSalarySlipPDF(data: SalarySlipData): jsPDF {
   doc.setFillColor(243, 244, 246);
   doc.rect(mL, y, colHalf - 2, 9, "F");
   doc.rect(colMid + 2, y, colHalf - 2, 9, "F");
-  doc.setFont("helvetica", "bold");
+  doc.setFont(ff, "bold");
   doc.setFontSize(10);
   doc.setTextColor(6, 95, 70);
   doc.text("Gross Earnings", mL + 4, y + 6);
@@ -186,12 +190,12 @@ export function generateSalarySlipPDF(data: SalarySlipData): jsPDF {
   doc.roundedRect(mL, y, contentW, 16, 2, 2, "F");
   doc.setTextColor(255);
   doc.setFontSize(11);
-  doc.setFont("helvetica", "bold");
+  doc.setFont(ff, "bold");
   doc.text("NET PAY", mL + 5, y + 7);
   doc.setFontSize(16);
   doc.text(`${moneyPrefix}${fmt(netPay)}`, pageWidth - mR - 5, y + 11, { align: "right" });
   doc.setFontSize(8);
-  doc.setFont("helvetica", "normal");
+  doc.setFont(ff, "normal");
   doc.text(formatPeriod(data.payMonth), mL + 5, y + 12);
 
   y += 22;
@@ -199,7 +203,7 @@ export function generateSalarySlipPDF(data: SalarySlipData): jsPDF {
   // Net pay in words (only sensible for INR)
   if (data.currencySymbol === "₹" && netPay > 0) {
     doc.setTextColor(31, 41, 55);
-    doc.setFont("helvetica", "italic");
+    doc.setFont(ff, "italic");
     doc.setFontSize(9);
     doc.text(`(In words: ${numberToIndianWords(Math.round(netPay))} Rupees Only)`, mL, y);
     y += 8;
@@ -207,7 +211,7 @@ export function generateSalarySlipPDF(data: SalarySlipData): jsPDF {
 
   // Notes
   if (data.notes && data.notes.trim()) {
-    doc.setFont("helvetica", "normal");
+    doc.setFont(ff, "normal");
     doc.setFontSize(8);
     doc.setTextColor(107, 114, 128);
     const lines = doc.splitTextToSize(data.notes, contentW);

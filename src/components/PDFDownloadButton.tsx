@@ -28,7 +28,7 @@ export default function PDFDownloadButton({ data, onValidationFail }: PDFDownloa
         import("./QRCodeSection"),
       ]);
       const qrDataURL = data.qrCodeData ? await generateQRDataURL(data.qrCodeData) : undefined;
-      const doc = generateInvoicePDF(data, qrDataURL);
+      const doc = await generateInvoicePDF(data, qrDataURL);
       doc.save(`${data.invoiceNumber || "invoice"}.pdf`);
       toast.success("Invoice downloaded successfully!", { id: loadingToast });
     } catch {

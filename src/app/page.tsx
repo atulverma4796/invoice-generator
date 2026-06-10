@@ -284,7 +284,7 @@ export default function Home() {
         import("@/components/QRCodeSection"),
       ]);
       const qrDataURL = invoice.qrCodeData ? await generateQRDataURL(invoice.qrCodeData) : undefined;
-      const doc = generateInvoicePDF(invoice, qrDataURL);
+      const doc = await generateInvoicePDF(invoice, qrDataURL);
       const pdfBase64 = doc.output("datauristring").split(",")[1];
       const res = await fetch("/api/send-invoice", {
         method: "POST",

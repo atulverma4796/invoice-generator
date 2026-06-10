@@ -31,10 +31,6 @@ const NAV_SECTIONS: NavSection[] = [
   {
     title: "Resources",
     links: [
-      { href: "/gallery", label: "Template Gallery" },
-      { href: "/invoice-template", label: "By Industry" },
-      { href: "/invoice-generator", label: "By Country" },
-      { href: "/how-to", label: "How-to Guides" },
       { href: "/blog", label: "Blog" },
     ],
   },

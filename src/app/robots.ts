@@ -50,20 +50,17 @@ const AI_BOTS = [
   "ICC-Crawler",
 ];
 
-// Paths to block from crawling while we work through AdSense "Low value
-// content" rejection. Keep in sync with the noindex metadata on the
-// corresponding pages — robots.txt prevents crawl, noindex prevents
-// indexing of already-known URLs, and they overlap intentionally
-// (belt-and-braces). Restore index-ability page-by-page only after each
-// has substantially unique editorial content.
-const TEMPLATED_PATHS = [
-  "/invoice-generator/",  // /invoice-generator + every /invoice-generator/<country>
-  "/invoice-template/",   // /invoice-template + every /invoice-template/<industry>
-  "/how-to/",             // /how-to + every /how-to/<topic>
-  "/gallery",             // previews-only showcase
-];
-
-const DISALLOW = ["/api/", "/templates", ...TEMPLATED_PATHS];
+// Do NOT add the noindex'd templated paths here. If a URL is blocked in
+// robots.txt, Googlebot never fetches the page and therefore never sees
+// the <meta name="robots" content="noindex"> tag — the URL ends up in
+// the "Indexed, though blocked by robots.txt" bucket without a snippet,
+// which is the worst of both worlds (it stays indexed, it looks broken,
+// and Google can no longer drop it because it can't read the directive).
+//
+// noindex de-indexes; robots.txt only prevents crawling. They are NOT
+// belt-and-braces — they actively conflict. Let Googlebot crawl the
+// templated paths so it can read the noindex and drop them.
+const DISALLOW = ["/api/"];
 
 export default function robots(): MetadataRoute.Robots {
   return {

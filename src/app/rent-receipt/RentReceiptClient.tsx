@@ -32,7 +32,7 @@ export default function RentReceiptClient() {
     try {
       const months = monthsBetween(data.startMonth, data.endMonth);
       const { generateRentReceiptPDF } = await import("@/lib/generateRentReceiptPDF");
-      const doc = generateRentReceiptPDF({ data, months });
+      const doc = await generateRentReceiptPDF({ data, months });
       const filename = `rent-receipts-${data.startMonth}-to-${data.endMonth}.pdf`;
       doc.save(filename);
       toast.success(`Downloaded ${months.length} receipt${months.length === 1 ? "" : "s"}`);

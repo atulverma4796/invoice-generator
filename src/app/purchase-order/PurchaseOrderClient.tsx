@@ -29,7 +29,7 @@ export default function PurchaseOrderClient() {
     setGenerating(true);
     try {
       const { generatePurchaseOrderPDF } = await import("@/lib/generatePurchaseOrderPDF");
-      const doc = generatePurchaseOrderPDF(data);
+      const doc = await generatePurchaseOrderPDF(data);
       doc.save(`purchase-order-${data.poNumber || "unnamed"}.pdf`);
       toast.success("Purchase order downloaded");
       trackDocDownload("purchase-order", {

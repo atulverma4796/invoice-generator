@@ -1,6 +1,7 @@
 import jsPDF from "jspdf";
 import { numberToIndianWords } from "./numberToWords";
 import type { RentReceiptData } from "@/components/RentReceiptForm";
+import { applyUnicodeFont, PDF_FONT_FAMILY } from "./pdfFont";
 
 interface ReceiptInput {
   data: RentReceiptData;
@@ -29,8 +30,11 @@ function inrFmt(n: number): string {
  * Renders one rent receipt per month into a single multi-page PDF (A4).
  * Each receipt fills one page so it can be printed and signed individually.
  */
-export function generateRentReceiptPDF({ data, months }: ReceiptInput): jsPDF {
+export async function generateRentReceiptPDF(
+  { data, months }: ReceiptInput,
+): Promise<jsPDF> {
   const doc = new jsPDF({ unit: "mm", format: "a4" });
+  const ff = (await applyUnicodeFont(doc)) ? PDF_FONT_FAMILY : "helvetica";
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
   const mL = 18;
@@ -51,27 +55,27 @@ export function generateRentReceiptPDF({ data, months }: ReceiptInput): jsPDF {
     doc.rect(mL, 18, contentWidth, 14, "F");
     doc.setTextColor(255);
     doc.setFontSize(18);
-    doc.setFont("helvetica", "bold");
+    doc.setFont(ff, "bold");
     doc.text("RENT RECEIPT", mL + 4, 27);
     doc.setFontSize(10);
-    doc.setFont("helvetica", "normal");
+    doc.setFont(ff, "normal");
     doc.text(`No. ${receiptNumber}`, pageWidth - mR - 4, 27, { align: "right" });
 
     // Body
     doc.setTextColor(31, 41, 55); // gray-800
     let y = 46;
     doc.setFontSize(11);
-    doc.setFont("helvetica", "normal");
+    doc.setFont(ff, "normal");
 
     // Issue date + month covered
-    doc.setFont("helvetica", "bold");
+    doc.setFont(ff, "bold");
     doc.text("Date of Issue:", mL, y);
-    doc.setFont("helvetica", "normal");
+    doc.setFont(ff, "normal");
     doc.text(issueDate, mL + 36, y);
 
-    doc.setFont("helvetica", "bold");
+    doc.setFont(ff, "bold");
     doc.text("For the month of:", pageWidth - mR - 70, y);
-    doc.setFont("helvetica", "normal");
+    doc.setFont(ff, "normal");
     doc.text(monthName, pageWidth - mR - 4, y, { align: "right" });
 
     y += 12;
@@ -83,13 +87,13 @@ export function generateRentReceiptPDF({ data, months }: ReceiptInput): jsPDF {
     doc.setTextColor(107, 114, 128);
     doc.text("AMOUNT RECEIVED", mL + 4, y + 7);
     doc.setFontSize(20);
-    doc.setFont("helvetica", "bold");
+    doc.setFont(ff, "bold");
     doc.setTextColor(37, 99, 235);
     doc.text(`Rs. ${inrFmt(amount)}`, pageWidth - mR - 4, y + 13, { align: "right" });
     y += 28;
 
     // Body paragraph
-    doc.setFont("helvetica", "normal");
+    doc.setFont(ff, "normal");
     doc.setFontSize(11);
     doc.setTextColor(31, 41, 55);
 
@@ -99,21 +103,21 @@ export function generateRentReceiptPDF({ data, months }: ReceiptInput): jsPDF {
 
     doc.text(para1, mL, y, { maxWidth: contentWidth });
     y += 6;
-    doc.setFont("helvetica", "bold");
+    doc.setFont(ff, "bold");
     doc.text(para2, mL, y, { maxWidth: contentWidth });
     y += 6;
-    doc.setFont("helvetica", "normal");
+    doc.setFont(ff, "normal");
     doc.text(para3, mL, y, { maxWidth: contentWidth });
     y += 8;
 
     // Property address (multi-line)
-    doc.setFont("helvetica", "italic");
+    doc.setFont(ff, "italic");
     const addressLines = doc.splitTextToSize(data.propertyAddress || "_________________", contentWidth);
     doc.text(addressLines, mL, y);
     y += 6 * addressLines.length + 6;
 
     // For period
-    doc.setFont("helvetica", "normal");
+    doc.setFont(ff, "normal");
     doc.text(`For the rent period: ${monthName}`, mL, y);
     y += 8;
 
@@ -132,12 +136,12 @@ export function generateRentReceiptPDF({ data, months }: ReceiptInput): jsPDF {
     doc.text("LANDLORD", mL, y);
     y += 6;
     doc.setFontSize(12);
-    doc.setFont("helvetica", "bold");
+    doc.setFont(ff, "bold");
     doc.setTextColor(31, 41, 55);
     doc.text(data.landlordName || "_________________", mL, y);
     y += 6;
     doc.setFontSize(10);
-    doc.setFont("helvetica", "normal");
+    doc.setFont(ff, "normal");
     doc.setTextColor(75, 85, 99);
     if (data.landlordPan) {
       doc.text(`PAN: ${data.landlordPan}`, mL, y);
@@ -161,11 +165,11 @@ export function generateRentReceiptPDF({ data, months }: ReceiptInput): jsPDF {
       doc.rect(stampX, stampY, 22, 18, "FD");
       doc.setFontSize(7);
       doc.setTextColor(220, 38, 38);
-      doc.setFont("helvetica", "bold");
+      doc.setFont(ff, "bold");
       doc.text("AFFIX", stampX + 11, stampY + 6, { align: "center" });
       doc.text("REVENUE", stampX + 11, stampY + 10, { align: "center" });
       doc.text("STAMP", stampX + 11, stampY + 14, { align: "center" });
-      doc.setFont("helvetica", "normal");
+      doc.setFont(ff, "normal");
     }
 
     // Footer

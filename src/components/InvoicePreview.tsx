@@ -32,8 +32,8 @@ export default function InvoicePreview({ data }: InvoicePreviewProps) {
     }
   }, [data.qrCodeData]);
   const subtotal = calculateSubtotal(data.lineItems);
-  const tax = calculateTax(subtotal, data.taxRate);
   const discount = calculateDiscount(subtotal, data.discountRate);
+  const tax = calculateTax(subtotal, data.taxRate, discount);
   const total = calculateTotal(subtotal, tax, discount) + (data.shippingFee || 0);
   const isLight = data.template === "minimal" || data.template === "pastel" || data.template === "monochrome";
   const isDark = data.template === "executive";

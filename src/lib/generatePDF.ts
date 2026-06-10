@@ -10,6 +10,7 @@ import {
   calculateDiscount,
   calculateTotal,
 } from "./calculations";
+import { applyUnicodeFont, PDF_FONT_FAMILY } from "./pdfFont";
 
 function hexToRgb(hex: string): [number, number, number] {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -31,8 +32,15 @@ function fmt(amount: number, sym: string): string {
   return `${sym} ${amount.toFixed(2)}`;
 }
 
-export function generateInvoicePDF(data: InvoiceData, qrDataURL?: string): jsPDF {
+export async function generateInvoicePDF(
+  data: InvoiceData,
+  qrDataURL?: string,
+): Promise<jsPDF> {
   const doc = new jsPDF("p", "mm", "a4");
+  // Load NotoSans (Latin + Greek + Cyrillic). If the network fetch
+  // fails we fall back to jsPDF's built-in helvetica — same garbled
+  // behavior we had before, but at least the PDF still generates.
+  const ff = (await applyUnicodeFont(doc)) ? PDF_FONT_FAMILY : "helvetica";
   const style = data.customStyle;
   const sym = getPdfCurrencySymbol(data.currency);
   const L = getPdfLabels(data.language);
@@ -73,11 +81,11 @@ export function generateInvoicePDF(data: InvoiceData, qrDataURL?: string): jsPDF
   const hColor: [number, number, number] = isLight ? primaryRgb : (isDark ? primaryRgb : [255, 255, 255]);
   doc.setTextColor(...hColor);
   doc.setFontSize(22);
-  doc.setFont("helvetica", "bold");
+  doc.setFont(ff, "bold");
   doc.text(L.invoice, headerLeftX, 18);
 
   doc.setFontSize(10);
-  doc.setFont("helvetica", "normal");
+  doc.setFont(ff, "normal");
   doc.text(`#${data.invoiceNumber}`, headerLeftX, 25);
   if (data.poNumber) {
     doc.setFontSize(8);
@@ -92,7 +100,7 @@ export function generateInvoicePDF(data: InvoiceData, qrDataURL?: string): jsPDF
     const badgeW = doc.getTextWidth(label) + 8;
     doc.setFillColor(...sc.bg);
     doc.roundedRect(pageWidth - mR - badgeW, 6, badgeW, 7, 2, 2, "F");
-    doc.setFont("helvetica", "bold");
+    doc.setFont(ff, "bold");
     doc.setTextColor(...sc.text);
     doc.text(label, pageWidth - mR - badgeW / 2, 11, { align: "center" });
   }
@@ -100,10 +108,10 @@ export function generateInvoicePDF(data: InvoiceData, qrDataURL?: string): jsPDF
   // Sender info (top right)
   doc.setTextColor(...hColor);
   doc.setFontSize(11);
-  doc.setFont("helvetica", "bold");
+  doc.setFont(ff, "bold");
   doc.text(data.senderName || "Your Business Name", pageWidth - mR, 18, { align: "right" });
   doc.setFontSize(8);
-  doc.setFont("helvetica", "normal");
+  doc.setFont(ff, "normal");
   let rY = 23;
   if (data.senderEmail) { doc.text(data.senderEmail, pageWidth - mR, rY, { align: "right" }); rY += 4; }
   if (data.senderPhone) { doc.text(data.senderPhone, pageWidth - mR, rY, { align: "right" }); rY += 4; }
@@ -115,7 +123,7 @@ export function generateInvoicePDF(data: InvoiceData, qrDataURL?: string): jsPDF
   let y = 52;
   doc.setFontSize(7);
   doc.setTextColor(156, 163, 175);
-  doc.setFont("helvetica", "bold");
+  doc.setFont(ff, "bold");
   doc.text(L.from.toUpperCase(), mL, y);
   doc.text(L.billTo.toUpperCase(), 80, y);
   doc.text(L.invoiceDate.toUpperCase(), pageWidth - mR, y, { align: "right" });
@@ -123,11 +131,11 @@ export function generateInvoicePDF(data: InvoiceData, qrDataURL?: string): jsPDF
   y += 5;
   doc.setTextColor(31, 41, 55);
   doc.setFontSize(9);
-  doc.setFont("helvetica", "bold");
+  doc.setFont(ff, "bold");
   doc.text(data.senderName || "\u2014", mL, y);
   doc.text(data.clientName || "\u2014", 80, y);
 
-  doc.setFont("helvetica", "normal");
+  doc.setFont(ff, "normal");
   doc.setFontSize(8);
   const invoiceDateStr = data.invoiceDate
     ? new Date(data.invoiceDate + "T00:00:00").toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })
@@ -150,9 +158,9 @@ export function generateInvoicePDF(data: InvoiceData, qrDataURL?: string): jsPDF
 
   doc.setFontSize(7);
   doc.setTextColor(156, 163, 175);
-  doc.setFont("helvetica", "bold");
+  doc.setFont(ff, "bold");
   doc.text(L.dueDate.toUpperCase(), pageWidth - mR, fromStartY, { align: "right" });
-  doc.setFont("helvetica", "normal");
+  doc.setFont(ff, "normal");
   doc.setFontSize(8);
   doc.setTextColor(31, 41, 55);
   const dueDateStr = data.dueDate
@@ -175,6 +183,9 @@ export function generateInvoicePDF(data: InvoiceData, qrDataURL?: string): jsPDF
     head: [[L.description, L.quantity, L.rate, L.amount]],
     body: tableRows,
     theme: "grid",
+    // styles.font cascades into head + body unless overridden — ensures
+    // non-Latin user descriptions render correctly in the items table.
+    styles: { font: ff },
     headStyles: {
       fillColor: [...primaryRgb] as [number, number, number],
       textColor: [255, 255, 255],
@@ -198,15 +209,25 @@ export function generateInvoicePDF(data: InvoiceData, qrDataURL?: string): jsPDF
       3: { cellWidth: contentW * 0.25, halign: "right" },
     },
     margin: { left: mL, right: mR },
-    showHead: "firstPage",
+    // Repeat the column header on every page so a multi-page items
+    // table is readable instead of just rows-with-no-labels on page 2+.
+    showHead: "everyPage",
   });
 
   // ──────────── Totals ────────────
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let tY = (doc as any).lastAutoTable.finalY + 8;
+  // If the items table ran long, the totals block (~40mm tall with
+  // tax/discount/shipping/late-fee lines) can run off the page edge.
+  // Force a new page so totals stay together and stay on-page.
+  const TOTALS_BLOCK_HEIGHT_MM = 50;
+  if (tY > pageHeight - TOTALS_BLOCK_HEIGHT_MM) {
+    doc.addPage();
+    tY = 20;
+  }
   const subtotal = calculateSubtotal(data.lineItems);
-  const tax = calculateTax(subtotal, data.taxRate);
   const discount = calculateDiscount(subtotal, data.discountRate);
+  const tax = calculateTax(subtotal, data.taxRate, discount);
   const total = calculateTotal(subtotal, tax, discount) + (data.shippingFee || 0);
 
   const totalsLabelX = pageWidth - 75;
@@ -233,11 +254,11 @@ export function generateInvoicePDF(data: InvoiceData, qrDataURL?: string): jsPDF
   tY += 2;
 
   doc.setFontSize(12);
-  doc.setFont("helvetica", "bold");
+  doc.setFont(ff, "bold");
   doc.setTextColor(...primaryRgb);
   doc.text(L.total.toUpperCase(), totalsLabelX, tY);
   doc.text(fmt(total, sym), totalsValueX, tY, { align: "right" });
-  doc.setFont("helvetica", "normal");
+  doc.setFont(ff, "normal");
 
   // Late fee notice
   if (data.lateFeeRate > 0) {
@@ -270,12 +291,12 @@ export function generateInvoicePDF(data: InvoiceData, qrDataURL?: string): jsPDF
     doc.roundedRect(mL, tY - 4, contentW, boxH, 2, 2, "F");
 
     doc.setFontSize(7);
-    doc.setFont("helvetica", "bold");
+    doc.setFont(ff, "bold");
     doc.setTextColor(156, 163, 175);
     doc.text(L.paymentInformation.toUpperCase(), mL + 5, tY);
     tY += 5;
 
-    doc.setFont("helvetica", "normal");
+    doc.setFont(ff, "normal");
     doc.setFontSize(7.5);
     doc.setTextColor(75, 85, 99);
     let pCol = 0;
@@ -305,12 +326,12 @@ export function generateInvoicePDF(data: InvoiceData, qrDataURL?: string): jsPDF
     // Terms first (standard invoice practice)
     if (hasTerms) {
       doc.setFontSize(8);
-      doc.setFont("helvetica", "bold");
+      doc.setFont(ff, "bold");
       doc.setTextColor(55, 65, 81);
       doc.text(L.termsAndConditions, mL, tY);
       tY += 4;
 
-      doc.setFont("helvetica", "normal");
+      doc.setFont(ff, "normal");
       doc.setFontSize(7.5);
       doc.setTextColor(107, 114, 128);
       const termLines = doc.splitTextToSize(data.terms, contentW);
@@ -321,12 +342,12 @@ export function generateInvoicePDF(data: InvoiceData, qrDataURL?: string): jsPDF
     // Notes at the bottom
     if (hasNotes) {
       doc.setFontSize(8);
-      doc.setFont("helvetica", "bold");
+      doc.setFont(ff, "bold");
       doc.setTextColor(55, 65, 81);
       doc.text(L.notes, mL, tY);
       tY += 4;
 
-      doc.setFont("helvetica", "normal");
+      doc.setFont(ff, "normal");
       doc.setFontSize(7.5);
       doc.setTextColor(107, 114, 128);
       const noteLines = doc.splitTextToSize(data.notes, contentW);
@@ -357,10 +378,10 @@ export function generateInvoicePDF(data: InvoiceData, qrDataURL?: string): jsPDF
       try {
         doc.addImage(qrDataURL, "PNG", mL, rowStartY, 28, 28);
         doc.setFontSize(8);
-        doc.setFont("helvetica", "bold");
+        doc.setFont(ff, "bold");
         doc.setTextColor(55, 65, 81);
         doc.text("Scan to Pay", mL + 32, rowStartY + 10);
-        doc.setFont("helvetica", "normal");
+        doc.setFont(ff, "normal");
         doc.setFontSize(6.5);
         doc.setTextColor(107, 114, 128);
         // Constrain QR text width so it doesn't overlap with signature area on the right
@@ -400,7 +421,7 @@ export function generateInvoicePDF(data: InvoiceData, qrDataURL?: string): jsPDF
       doc.setTextColor(150, 150, 150);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       doc.setGState(new (doc as any).GState({ opacity: 0.12 }));
-      doc.setFont("helvetica", "bold");
+      doc.setFont(ff, "bold");
       doc.text(data.watermark, pageWidth / 2, pageHeight / 2, { align: "center", angle: 30 });
       doc.restoreGraphicsState();
     }

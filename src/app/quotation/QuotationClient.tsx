@@ -29,7 +29,7 @@ export default function QuotationClient() {
     setGenerating(true);
     try {
       const { generateQuotationPDF } = await import("@/lib/generateQuotationPDF");
-      const doc = generateQuotationPDF(data);
+      const doc = await generateQuotationPDF(data);
       doc.save(`quotation-${data.quoteNumber || "unnamed"}.pdf`);
       toast.success("Quotation downloaded");
       trackDocDownload("quotation", {
