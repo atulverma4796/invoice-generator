@@ -128,8 +128,8 @@ const orgSchema = {
   "@type": "Organization",
   "name": "InvoiceGen",
   "url": SITE_URL,
-  "logo": `${SITE_URL}/icon.png`,
-  "contactPoint": { "@type": "ContactPoint", "contactType": "customer support", "url": `${SITE_URL}/#feedback` },
+  "logo": `${SITE_URL}/favicon-48.png`,
+  "contactPoint": { "@type": "ContactPoint", "contactType": "customer support", "email": "iimtatul102@gmail.com", "url": `${SITE_URL}/contact` },
 };
 
 export default function RootLayout({
@@ -298,6 +298,7 @@ export default function RootLayout({
                 <h4 className="text-sm font-semibold text-gray-800 mb-3">Company</h4>
                 <nav className="flex flex-col gap-2">
                   <a href="/about" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">About</a>
+                  <a href="/contact" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">Contact</a>
                   <a href="/privacy" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">Privacy</a>
                   <a href="/terms" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">Terms</a>
                 </nav>
@@ -313,7 +314,7 @@ export default function RootLayout({
                 <span className="text-gray-300" aria-hidden="true">·</span>
                 <a href="/terms" className="hover:text-blue-600 transition-colors">Terms</a>
                 <span className="text-gray-300" aria-hidden="true">·</span>
-                <a href="/#feedback" className="hover:text-blue-600 transition-colors">Contact</a>
+                <a href="/contact" className="hover:text-blue-600 transition-colors">Contact</a>
                 <span className="text-gray-300" aria-hidden="true">·</span>
                 <a href="mailto:iimtatul102@gmail.com" className="hover:text-blue-600 transition-colors">iimtatul102@gmail.com</a>
               </nav>

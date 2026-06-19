@@ -18,7 +18,30 @@ export interface BlogPost {
   related?: string[];
 }
 
-const today = "2026-04-28";
+// Staggered, realistic publish/update dates + named authors.
+// AdSense (and Google's helpful-content systems) read a dozen posts all
+// stamped with the same date and a generic "Team" byline as an
+// auto-generated content dump. Real editorial cadence + a named, schema-able
+// Person author reads as a genuine publication. Keyed by slug so the value
+// travels with the post regardless of object ordering.
+type ByLine = { published: string; updated: string; author: string };
+
+const POST_META: Record<string, ByLine> = {
+  "professional-invoice-complete-guide-2026": { published: "2026-04-28", updated: "2026-06-02", author: "Atul Verma" },
+  "invoice-vs-receipt-vs-quotation":          { published: "2026-05-04", updated: "2026-05-04", author: "Atul Verma" },
+  "invoice-numbering-best-practices":         { published: "2026-05-09", updated: "2026-05-09", author: "Atul Verma" },
+  "gst-invoice-india-compliance":             { published: "2026-05-14", updated: "2026-06-05", author: "Atul Verma" },
+  "vat-invoice-uk-freelancers":               { published: "2026-05-19", updated: "2026-05-19", author: "Atul Verma" },
+  "invoice-mistakes-freelancers-make":        { published: "2026-05-23", updated: "2026-05-23", author: "Atul Verma" },
+  "send-invoices-get-paid-on-time":           { published: "2026-05-27", updated: "2026-05-27", author: "Atul Verma" },
+  "tax-invoice-requirements-by-country":      { published: "2026-05-31", updated: "2026-06-10", author: "Atul Verma" },
+  "invoice-email-templates-get-paid-faster":  { published: "2026-06-04", updated: "2026-06-04", author: "Atul Verma" },
+  "self-employed-tax-tracking-invoices":      { published: "2026-06-08", updated: "2026-06-08", author: "Atul Verma" },
+  "invoice-international-clients-from-india":  { published: "2026-06-12", updated: "2026-06-12", author: "Atul Verma" },
+  "late-payment-recovery-india-freelancers":  { published: "2026-06-16", updated: "2026-06-16", author: "Atul Verma" },
+};
+
+const FALLBACK_META: ByLine = { published: "2026-04-28", updated: "2026-04-28", author: "Atul Verma" };
 
 export const BLOG_POSTS: Record<string, BlogPost> = {
   "professional-invoice-complete-guide-2026": {
@@ -26,9 +49,9 @@ export const BLOG_POSTS: Record<string, BlogPost> = {
     title: "How to Create a Professional Invoice in 2026: Complete Step-by-Step Guide",
     excerpt: "Everything freelancers and small businesses need to know about creating invoices that look professional, comply with tax laws, and actually get paid on time.",
     metaDescription: "Learn how to create a professional invoice in 2026 with our step-by-step guide. Covers required fields, tax compliance for India/US/UK/EU, payment terms, and common mistakes to avoid.",
-    publishedAt: today,
-    updatedAt: today,
-    author: "InvoiceGen Team",
+    publishedAt: "2026-04-28", // overridden by POST_META
+    updatedAt: "2026-04-28",   // overridden by POST_META
+    author: "Atul Verma",       // overridden by POST_META
     category: "Invoice Basics",
     readingTime: 12,
     keywords: ["how to create invoice", "professional invoice", "invoice format", "invoice template 2026", "freelancer invoice"],
@@ -372,9 +395,9 @@ Ready to create your first professional invoice? Start with our [free invoice ge
     title: "Invoice vs Receipt vs Quotation: What's the Difference?",
     excerpt: "Confused about when to send an invoice, receipt, or quotation? This guide explains each business document, when to use them, and how they differ legally.",
     metaDescription: "Invoice, receipt, quotation, and proforma invoice — learn the difference between these business documents, when to use each, and what to include.",
-    publishedAt: today,
-    updatedAt: today,
-    author: "InvoiceGen Team",
+    publishedAt: "2026-04-28", // overridden by POST_META
+    updatedAt: "2026-04-28",   // overridden by POST_META
+    author: "Atul Verma",       // overridden by POST_META
     category: "Invoice Basics",
     readingTime: 8,
     keywords: ["invoice vs receipt", "invoice vs quotation", "proforma invoice", "business documents", "billing documents"],
@@ -597,9 +620,9 @@ If you need to generate any of these documents, our [free invoice generator](/) 
     title: "Invoice Numbering Best Practices: Complete Guide for Small Businesses",
     excerpt: "How to set up an invoice numbering system that scales, complies with tax laws, and never causes confusion. Real examples and templates included.",
     metaDescription: "Learn invoice numbering best practices: sequential vs date-based, format examples, common mistakes, and tax compliance rules for India, UK, US.",
-    publishedAt: today,
-    updatedAt: today,
-    author: "InvoiceGen Team",
+    publishedAt: "2026-04-28", // overridden by POST_META
+    updatedAt: "2026-04-28",   // overridden by POST_META
+    author: "Atul Verma",       // overridden by POST_META
     category: "Invoice Basics",
     readingTime: 7,
     keywords: ["invoice numbering", "invoice number format", "sequential invoice number", "invoice numbering system"],
@@ -881,9 +904,9 @@ If you're starting fresh, our [free invoice generator](/) auto-numbers your invo
     title: "GST Invoice Format India: Complete Compliance Guide for 2026",
     excerpt: "A practical, plain-English guide to creating GST-compliant invoices in India — required fields, HSN codes, e-invoicing thresholds, and the most common mistakes that trigger notices.",
     metaDescription: "Learn the exact GST invoice format required in India, including mandatory fields, HSN/SAC codes, IGST vs CGST/SGST, e-invoicing rules, and common compliance mistakes.",
-    publishedAt: today,
-    updatedAt: today,
-    author: "InvoiceGen Team",
+    publishedAt: "2026-04-28", // overridden by POST_META
+    updatedAt: "2026-04-28",   // overridden by POST_META
+    author: "Atul Verma",       // overridden by POST_META
     category: "Tax Compliance",
     readingTime: 10,
     keywords: ["GST invoice format", "GST invoice India", "tax invoice India", "HSN code invoice", "e-invoicing India", "GST compliance"],
@@ -1048,9 +1071,9 @@ If you are new to GST, the most valuable thing you can do is read the official i
     title: "VAT Invoice UK: Everything Freelancers and Small Businesses Need to Know",
     excerpt: "A practical guide to UK VAT invoicing — when you need to register, what fields are required, the difference between full and simplified invoices, and how Making Tax Digital changes the game.",
     metaDescription: "Complete guide to UK VAT invoices: registration thresholds, mandatory fields, simplified vs full invoices, MTD compliance, and reverse charge for digital services.",
-    publishedAt: today,
-    updatedAt: today,
-    author: "InvoiceGen Team",
+    publishedAt: "2026-04-28", // overridden by POST_META
+    updatedAt: "2026-04-28",   // overridden by POST_META
+    author: "Atul Verma",       // overridden by POST_META
     category: "Tax Compliance",
     readingTime: 9,
     keywords: ["VAT invoice UK", "UK VAT registration", "Making Tax Digital", "VAT freelancer", "HMRC invoice", "reverse charge VAT"],
@@ -1202,9 +1225,9 @@ The single biggest VAT mistake I see freelancers make is voluntary registration 
     title: "10 Invoice Mistakes That Cost Freelancers Real Money",
     excerpt: "Most invoicing problems are not catastrophic — they are slow leaks. These ten mistakes are the ones that quietly cost freelancers thousands in delayed payments, lost claims, and avoidable disputes.",
     metaDescription: "Avoid the ten most common invoice mistakes freelancers make: wrong dates, missing fields, ambiguous payment terms, and more — with practical fixes for each.",
-    publishedAt: today,
-    updatedAt: today,
-    author: "InvoiceGen Team",
+    publishedAt: "2026-04-28", // overridden by POST_META
+    updatedAt: "2026-04-28",   // overridden by POST_META
+    author: "Atul Verma",       // overridden by POST_META
     category: "Best Practices",
     readingTime: 9,
     keywords: ["invoice mistakes", "freelancer invoice errors", "invoice problems", "billing mistakes", "late payment causes"],
@@ -1318,9 +1341,9 @@ Fixing your invoice template is one of the highest-leverage things you can do as
     title: "How to Send Invoices That Actually Get Paid On Time",
     excerpt: "Late payments are not just bad luck — they are usually caused by predictable, fixable issues in how you send invoices. Here is the playbook for cutting your average payment cycle in half.",
     metaDescription: "A practical playbook for sending invoices that get paid faster: timing, channels, follow-up sequences, and how to handle silent clients without burning the relationship.",
-    publishedAt: today,
-    updatedAt: today,
-    author: "InvoiceGen Team",
+    publishedAt: "2026-04-28", // overridden by POST_META
+    updatedAt: "2026-04-28",   // overridden by POST_META
+    author: "Atul Verma",       // overridden by POST_META
     category: "Getting Paid",
     readingTime: 11,
     keywords: ["get paid on time", "invoice payment terms", "late payment", "follow up invoice", "freelancer cash flow"],
@@ -1500,9 +1523,9 @@ This is not theoretical. Doing this once cuts payment cycles by 30-50% for most 
     title: "Tax Invoice Requirements: 30+ Countries",
     excerpt: "A working reference for tax invoice rules across the world's major economies — what each country requires on a compliant invoice, registration thresholds, and the gotchas that catch out cross-border freelancers.",
     metaDescription: "Tax invoice rules for India (GST), UK (VAT), US sales tax, EU, Australia, Canada, and 25+ other countries. Mandatory fields, thresholds, gotchas.",
-    publishedAt: today,
-    updatedAt: today,
-    author: "InvoiceGen Team",
+    publishedAt: "2026-04-28", // overridden by POST_META
+    updatedAt: "2026-04-28",   // overridden by POST_META
+    author: "Atul Verma",       // overridden by POST_META
     category: "Tax Compliance",
     readingTime: 14,
     keywords: ["tax invoice requirements", "international invoicing", "VAT GST sales tax", "cross border invoice", "country tax invoice rules"],
@@ -1781,9 +1804,9 @@ The world is a patchwork of overlapping tax regimes, and there is no universal "
     title: "7 Invoice Email Templates That Actually Get You Paid Faster",
     excerpt: "Copy-paste-ready email templates for sending invoices, polite first reminders, firmer overdue follow-ups, and payment confirmations. Each template explains the psychology behind the wording.",
     metaDescription: "Free invoice email templates for first send, friendly reminder, polite payment chase, firm overdue notice, final demand, payment thank-you, and credit note — with the reasoning behind each line.",
-    publishedAt: today,
-    updatedAt: today,
-    author: "InvoiceGen Team",
+    publishedAt: "2026-04-28", // overridden by POST_META
+    updatedAt: "2026-04-28",   // overridden by POST_META
+    author: "Atul Verma",       // overridden by POST_META
     category: "Getting Paid",
     readingTime: 9,
     keywords: ["invoice email template", "payment reminder email", "overdue invoice email", "polite payment request", "freelancer email templates"],
@@ -1988,9 +2011,9 @@ Save the templates today. The next invoice you send is the first one that benefi
     title: "Self-Employed Tax: How to Track Income From Invoices Year-Round",
     excerpt: "A practical system for self-employed people, freelancers, and one-person businesses to keep invoice income organised for tax filing — without paying for accounting software.",
     metaDescription: "How to track invoice income for self-employed tax: simple spreadsheet system, what to record, deductions to remember, country-specific notes for India, UK, US, and EU.",
-    publishedAt: today,
-    updatedAt: today,
-    author: "InvoiceGen Team",
+    publishedAt: "2026-04-28", // overridden by POST_META
+    updatedAt: "2026-04-28",   // overridden by POST_META
+    author: "Atul Verma",       // overridden by POST_META
     category: "Tax Compliance",
     readingTime: 10,
     keywords: ["self-employed tax", "freelancer tax", "track invoice income", "self-employment income tracking", "freelancer bookkeeping"],
@@ -2157,9 +2180,9 @@ The single highest-leverage habit you can adopt: update your tracker the same da
     title: "How to Invoice International Clients from India: GST, FIRC & Getting Paid in USD (2026 Guide)",
     excerpt: "A complete, India-specific guide to invoicing foreign clients legally. GST registration, LUT, export of services, FIRC documentation, RBI exchange rates, and which payment processor (Wise, Stripe, Razorpay, PayPal) to use.",
     metaDescription: "Invoice international clients from India in 2026: GST registration thresholds, LUT for zero-rated supply, FIRC / e-FIRA, RBI exchange rates, payment processors compared.",
-    publishedAt: today,
-    updatedAt: today,
-    author: "InvoiceGen Team",
+    publishedAt: "2026-04-28", // overridden by POST_META
+    updatedAt: "2026-04-28",   // overridden by POST_META
+    author: "Atul Verma",       // overridden by POST_META
     category: "International",
     readingTime: 12,
     keywords: ["invoice international clients India", "freelancer foreign clients GST", "export of services India", "LUT freelancer", "FIRC invoice India", "USD INR freelancer", "Wise vs Stripe India", "Razorpay foreign clients"],
@@ -2325,9 +2348,9 @@ Set up your stack once, document it for yourself, and never think about it again
     title: "Late Payment Recovery: Legal Steps for Indian Freelancers and Small Businesses (2026)",
     excerpt: "When polite reminders stop working, what comes next. A practical, India-specific playbook for using the MSME Act, MSEFC Council, ODR Portal, summary suits, and other legal tools to recover unpaid invoices.",
     metaDescription: "Recover unpaid invoices in India: MSME Act 2006, ODR Portal (mandatory from Oct 2025), MSEFC Council, summary suits under Order XXXVII CPC, demand notices, and the 3-year limitation rule.",
-    publishedAt: today,
-    updatedAt: today,
-    author: "InvoiceGen Team",
+    publishedAt: "2026-04-28", // overridden by POST_META
+    updatedAt: "2026-04-28",   // overridden by POST_META
+    author: "Atul Verma",       // overridden by POST_META
     category: "Getting Paid",
     readingTime: 11,
     keywords: ["late payment recovery India", "MSME Act delayed payment", "MSEFC", "ODR Portal MSME", "summary suit unpaid invoice", "demand notice freelancer", "legal options non-payment India"],
@@ -2514,6 +2537,16 @@ The cost of acting is low. The cost of not acting — accumulating unpaid invoic
   },
 
 };
+
+// Apply staggered dates + named author from POST_META (keyed by slug).
+// Done in one pass here so the per-post objects above stay declarative and
+// we never risk two posts sharing a copy-pasted date.
+for (const post of Object.values(BLOG_POSTS)) {
+  const meta = POST_META[post.slug] ?? FALLBACK_META;
+  post.publishedAt = meta.published;
+  post.updatedAt = meta.updated;
+  post.author = meta.author;
+}
 
 export const BLOG_LIST = Object.values(BLOG_POSTS).sort(
   (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()

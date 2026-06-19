@@ -235,11 +235,11 @@ export default async function BlogPostPage({
     description: post.metaDescription,
     datePublished: post.publishedAt,
     dateModified: post.updatedAt,
-    author: { "@type": "Organization", name: post.author },
+    author: { "@type": "Person", name: post.author, url: `${SITE_URL}/about` },
     publisher: {
       "@type": "Organization",
       name: "InvoiceGen",
-      logo: { "@type": "ImageObject", url: `${SITE_URL}/icon.png` },
+      logo: { "@type": "ImageObject", url: `${SITE_URL}/favicon-48.png` },
     },
     mainEntityOfPage: { "@type": "WebPage", "@id": `${SITE_URL}/blog/${slug}` },
     keywords: post.keywords.join(", "),
