@@ -5,7 +5,7 @@ import { applyUnicodeFont, PDF_FONT_FAMILY } from "./pdfFont";
 
 interface ReceiptInput {
   data: RentReceiptData;
-  months: string[]; // YYYY-MM, in order
+  groups: string[][]; // receipt groups; each is an ordered list of "YYYY-MM" months
 }
 
 function monthLabel(ym: string): string {
@@ -13,6 +13,13 @@ function monthLabel(ym: string): string {
   if (!y || !m) return ym;
   const d = new Date(y, m - 1, 1);
   return d.toLocaleDateString("en-IN", { month: "long", year: "numeric" });
+}
+
+function monthShort(ym: string): string {
+  const [y, m] = ym.split("-").map(Number);
+  if (!y || !m) return ym;
+  const d = new Date(y, m - 1, 1);
+  return d.toLocaleDateString("en-IN", { month: "short", year: "numeric" });
 }
 
 function lastDayOfMonth(ym: string): string {
@@ -27,11 +34,13 @@ function inrFmt(n: number): string {
 }
 
 /**
- * Renders one rent receipt per month into a single multi-page PDF (A4).
- * Each receipt fills one page so it can be printed and signed individually.
+ * Renders one rent receipt per group into a single multi-page PDF (A4).
+ * A group may be a single month (monthly split) or several months bundled
+ * (quarterly / half-yearly / whole-year). Each receipt fills one page so it
+ * can be printed and signed individually.
  */
 export async function generateRentReceiptPDF(
-  { data, months }: ReceiptInput,
+  { data, groups }: ReceiptInput,
 ): Promise<jsPDF> {
   const doc = new jsPDF({ unit: "mm", format: "a4" });
   const ff = (await applyUnicodeFont(doc)) ? PDF_FONT_FAMILY : "helvetica";
@@ -41,13 +50,17 @@ export async function generateRentReceiptPDF(
   const mR = 18;
   const contentWidth = pageWidth - mL - mR;
 
-  months.forEach((ym, idx) => {
+  groups.forEach((group, idx) => {
     if (idx > 0) doc.addPage();
 
+    const nMonths = group.length;
+    const firstYm = group[0];
+    const lastYm = group[nMonths - 1];
     const receiptNumber = `R-${String(data.receiptStartNumber + idx).padStart(3, "0")}`;
-    const monthName = monthLabel(ym);
-    const issueDate = lastDayOfMonth(ym);
-    const amount = data.monthlyRent;
+    const periodFull = nMonths === 1 ? monthLabel(firstYm) : `${monthLabel(firstYm)} to ${monthLabel(lastYm)}`;
+    const periodShort = nMonths === 1 ? monthShort(firstYm) : `${monthShort(firstYm)} – ${monthShort(lastYm)}`;
+    const issueDate = lastDayOfMonth(lastYm); // dated to the last month covered
+    const amount = data.monthlyRent * nMonths;
     const amountWords = numberToIndianWords(amount) + " Rupees Only";
 
     // Title bar
@@ -73,10 +86,13 @@ export async function generateRentReceiptPDF(
     doc.setFont(ff, "normal");
     doc.text(issueDate, mL + 36, y);
 
-    doc.setFont(ff, "bold");
-    doc.text("For the month of:", pageWidth - mR - 70, y);
     doc.setFont(ff, "normal");
-    doc.text(monthName, pageWidth - mR - 4, y, { align: "right" });
+    doc.text(
+      `${nMonths === 1 ? "For the month of" : "For the period"}: ${periodShort}`,
+      pageWidth - mR,
+      y,
+      { align: "right" },
+    );
 
     y += 12;
 
@@ -118,8 +134,16 @@ export async function generateRentReceiptPDF(
 
     // For period
     doc.setFont(ff, "normal");
-    doc.text(`For the rent period: ${monthName}`, mL, y);
-    y += 8;
+    doc.text(`For the rent period: ${periodFull}`, mL, y);
+    y += nMonths > 1 ? 6 : 8;
+    if (nMonths > 1) {
+      doc.setFontSize(9);
+      doc.setTextColor(107, 114, 128);
+      doc.text(`(${nMonths} months @ Rs. ${inrFmt(data.monthlyRent)} per month)`, mL, y);
+      doc.setFontSize(11);
+      doc.setTextColor(31, 41, 55);
+      y += 8;
+    }
 
     // Payment mode
     doc.text(`Paid via: ${data.paymentMode}`, mL, y);

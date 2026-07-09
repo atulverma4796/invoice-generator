@@ -5,6 +5,10 @@ import toast from "react-hot-toast";
 import { numberToIndianWords } from "@/lib/numberToWords";
 import SignaturePad from "@/components/SignaturePad";
 
+// How the selected period is split into receipts.
+// monthly = one receipt per month; the rest bundle several months into one receipt.
+export type ReceiptSplit = "monthly" | "quarterly" | "half-yearly" | "yearly";
+
 export interface RentReceiptData {
   tenantName: string;
   landlordName: string;
@@ -15,8 +19,24 @@ export interface RentReceiptData {
   periodMode: "fy" | "custom";
   startMonth: string; // YYYY-MM
   endMonth: string; // YYYY-MM
+  receiptSplit: ReceiptSplit;
   receiptStartNumber: number;
   landlordSignature: string; // PNG/JPEG data URL, empty when none
+}
+
+// Number of months bundled into each receipt for a given split (Infinity = whole range in one receipt).
+export function monthsPerReceipt(split: ReceiptSplit): number {
+  return split === "monthly" ? 1 : split === "quarterly" ? 3 : split === "half-yearly" ? 6 : Infinity;
+}
+
+// Split an ordered list of "YYYY-MM" months into receipt groups.
+export function groupMonthsIntoReceipts(months: string[], split: ReceiptSplit): string[][] {
+  if (months.length === 0) return [];
+  const size = monthsPerReceipt(split);
+  if (!isFinite(size)) return [months];
+  const groups: string[][] = [];
+  for (let i = 0; i < months.length; i += size) groups.push(months.slice(i, i + size));
+  return groups;
 }
 
 const STORAGE_KEY = "rent_receipt_form_v1";
@@ -59,6 +79,7 @@ export function defaultRentReceiptData(): RentReceiptData {
     periodMode: "fy",
     startMonth: start,
     endMonth: end,
+    receiptSplit: "monthly",
     receiptStartNumber: 1,
     landlordSignature: "",
   };
@@ -108,8 +129,13 @@ export default function RentReceiptForm({ data, setData, onGenerate, generating 
     () => monthsBetween(data.startMonth, data.endMonth),
     [data.startMonth, data.endMonth],
   );
-  const totalReceipts = months.length;
-  const totalAmount = totalReceipts * (data.monthlyRent || 0);
+  const groups = useMemo(
+    () => groupMonthsIntoReceipts(months, data.receiptSplit),
+    [months, data.receiptSplit],
+  );
+  const totalMonths = months.length;
+  const totalReceipts = groups.length;
+  const totalAmount = totalMonths * (data.monthlyRent || 0);
 
   const tenantRef = useRef<HTMLInputElement>(null);
   const landlordRef = useRef<HTMLInputElement>(null);
@@ -309,6 +335,32 @@ export default function RentReceiptForm({ data, setData, onGenerate, generating 
           </div>
         )}
       </div>
+
+      {/* How to split the period into receipts */}
+      {totalMonths > 1 && (
+        <div>
+          <label className="block text-xs font-medium text-gray-600 mb-1">Group receipts as</label>
+          <select
+            value={data.receiptSplit}
+            onChange={(e) => update("receiptSplit", e.target.value as ReceiptSplit)}
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          >
+            <option value="monthly">
+              Monthly — {totalMonths} separate receipts (one per month)
+            </option>
+            <option value="quarterly">
+              Quarterly — {Math.ceil(totalMonths / 3)} receipt{Math.ceil(totalMonths / 3) === 1 ? "" : "s"} (3 months each)
+            </option>
+            <option value="half-yearly">
+              Half-yearly — {Math.ceil(totalMonths / 6)} receipt{Math.ceil(totalMonths / 6) === 1 ? "" : "s"} (6 months each)
+            </option>
+            <option value="yearly">Single receipt — 1 receipt for the whole period</option>
+          </select>
+          <p className="text-[11px] text-gray-400 mt-1">
+            Bundled receipts show the period covered, the monthly rent, and the total for that span.
+          </p>
+        </div>
+      )}
 
       {/* Summary */}
       <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 rounded-xl p-4">
