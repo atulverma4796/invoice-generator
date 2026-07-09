@@ -3,6 +3,7 @@
 import { useState, useMemo, useRef } from "react";
 import toast from "react-hot-toast";
 import { numberToIndianWords } from "@/lib/numberToWords";
+import SignaturePad from "@/components/SignaturePad";
 
 export interface RentReceiptData {
   tenantName: string;
@@ -11,18 +12,43 @@ export interface RentReceiptData {
   propertyAddress: string;
   monthlyRent: number;
   paymentMode: "Cash" | "Cheque" | "Bank Transfer" | "UPI";
+  periodMode: "fy" | "custom";
   startMonth: string; // YYYY-MM
   endMonth: string; // YYYY-MM
   receiptStartNumber: number;
+  landlordSignature: string; // PNG/JPEG data URL, empty when none
 }
 
 const STORAGE_KEY = "rent_receipt_form_v1";
 
+// Indian financial year that a given date falls in (FY starts 1 April).
+export function currentFyStartYear(now = new Date()): number {
+  return now.getMonth() >= 3 ? now.getFullYear() : now.getFullYear() - 1;
+}
+
+// A financial year's month range, e.g. 2025 -> { start: "2025-04", end: "2026-03" }.
+export function fyRange(startYear: number): { start: string; end: string } {
+  return { start: `${startYear}-04`, end: `${startYear + 1}-03` };
+}
+
+// FY start-year derived from a "YYYY-MM" month (April onwards belongs to that year).
+export function fyStartFromMonth(ym: string): number {
+  const [y, m] = ym.split("-").map(Number);
+  if (!y || !m) return currentFyStartYear();
+  return m >= 4 ? y : y - 1;
+}
+
+// Selectable financial years: current FY back through the last several years (HRA claims are often filed for past years).
+export function financialYearOptions(now = new Date()): number[] {
+  const cur = currentFyStartYear(now);
+  const out: number[] = [];
+  for (let y = cur; y >= cur - 6; y--) out.push(y);
+  return out;
+}
+
 export function defaultRentReceiptData(): RentReceiptData {
-  const now = new Date();
-  const fy = now.getMonth() >= 3 ? now.getFullYear() : now.getFullYear() - 1; // Indian FY starts April
-  const start = `${fy}-04`;
-  const end = `${fy + 1}-03`;
+  const fy = currentFyStartYear();
+  const { start, end } = fyRange(fy);
   return {
     tenantName: "",
     landlordName: "",
@@ -30,9 +56,11 @@ export function defaultRentReceiptData(): RentReceiptData {
     propertyAddress: "",
     monthlyRent: 15000,
     paymentMode: "Bank Transfer",
+    periodMode: "fy",
     startMonth: start,
     endMonth: end,
     receiptStartNumber: 1,
+    landlordSignature: "",
   };
 }
 
@@ -195,25 +223,84 @@ export default function RentReceiptForm({ data, setData, onGenerate, generating 
       </div>
 
       {/* Period */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">From Month *</label>
-          <input
-            type="month"
-            value={data.startMonth}
-            onChange={(e) => update("startMonth", e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          />
+      <div>
+        <label className="block text-xs font-medium text-gray-600 mb-2">Receipt Period *</label>
+
+        {/* Whole financial year vs custom range toggle */}
+        <div className="inline-flex p-1 bg-gray-100 rounded-lg mb-3">
+          <button
+            type="button"
+            onClick={() =>
+              setData({
+                ...data,
+                periodMode: "fy",
+                ...fyRange(fyStartFromMonth(data.startMonth)),
+              })
+            }
+            className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-colors ${
+              data.periodMode === "fy"
+                ? "bg-white text-blue-700 shadow-sm"
+                : "text-gray-500 hover:text-gray-700"
+            }`}
+          >
+            Whole Financial Year
+          </button>
+          <button
+            type="button"
+            onClick={() => update("periodMode", "custom")}
+            className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-colors ${
+              data.periodMode === "custom"
+                ? "bg-white text-blue-700 shadow-sm"
+                : "text-gray-500 hover:text-gray-700"
+            }`}
+          >
+            Custom Range
+          </button>
         </div>
-        <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">To Month *</label>
-          <input
-            type="month"
-            value={data.endMonth}
-            onChange={(e) => update("endMonth", e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          />
-        </div>
+
+        {data.periodMode === "fy" ? (
+          <div>
+            <select
+              value={fyStartFromMonth(data.startMonth)}
+              onChange={(e) => {
+                const y = Number(e.target.value);
+                setData({ ...data, ...fyRange(y) });
+              }}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              {financialYearOptions().map((y) => (
+                <option key={y} value={y}>
+                  FY {y}–{String((y + 1) % 100).padStart(2, "0")} (Apr {y} – Mar {y + 1})
+                </option>
+              ))}
+            </select>
+            <p className="text-[11px] text-gray-400 mt-1">
+              Generates 12 monthly receipts, April {fyStartFromMonth(data.startMonth)} to March{" "}
+              {fyStartFromMonth(data.startMonth) + 1}.
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-medium text-gray-600 mb-1">From Month *</label>
+              <input
+                type="month"
+                value={data.startMonth}
+                onChange={(e) => update("startMonth", e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-gray-600 mb-1">To Month *</label>
+              <input
+                type="month"
+                value={data.endMonth}
+                onChange={(e) => update("endMonth", e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+        )}
       </div>
 
       <div>
@@ -230,6 +317,17 @@ export default function RentReceiptForm({ data, setData, onGenerate, generating 
         />
         <p className="text-[11px] text-gray-400 mt-1">
           Receipt numbers will increment from this value (e.g. R-001, R-002 …)
+        </p>
+      </div>
+
+      {/* Landlord signature (optional) — appears on every receipt */}
+      <div>
+        <SignaturePad
+          signature={data.landlordSignature}
+          onChange={(dataUrl) => update("landlordSignature", dataUrl)}
+        />
+        <p className="text-[11px] text-gray-400 mt-1">
+          Optional. The landlord&apos;s signature is placed above the signature line on every receipt.
         </p>
       </div>
 

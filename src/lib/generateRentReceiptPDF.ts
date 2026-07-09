@@ -150,6 +150,20 @@ export async function generateRentReceiptPDF(
 
     // Signature line
     const sigY = pageHeight - 50;
+
+    // Landlord's online signature (drawn/uploaded), placed just above the line.
+    if (data.landlordSignature) {
+      try {
+        const sigW = 40;
+        const sigH = 14;
+        const sigX = pageWidth - mR - 70; // left-aligned over the line, clear of the revenue stamp box
+        const fmt = /^data:image\/jpe?g/i.test(data.landlordSignature) ? "JPEG" : "PNG";
+        doc.addImage(data.landlordSignature, fmt, sigX, sigY - sigH - 1, sigW, sigH);
+      } catch {
+        // A malformed signature image must never break the whole PDF.
+      }
+    }
+
     doc.setDrawColor(156, 163, 175);
     doc.line(pageWidth - mR - 70, sigY, pageWidth - mR, sigY);
     doc.setFontSize(9);
