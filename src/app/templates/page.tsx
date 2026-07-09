@@ -225,11 +225,11 @@ export default function TemplatesPage() {
             <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-gray-900">
               My{" "}
               <span className="bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
-                Templates
+                Invoices
               </span>
             </h1>
             <p className="mt-3 text-gray-600 text-lg">
-              All your saved invoice templates in one place. Preview, edit, or create new ones.
+              All your saved invoices in one place. Preview, edit, or create new ones.
             </p>
           </div>
         </div>
@@ -246,9 +246,9 @@ export default function TemplatesPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m3.75 9v6m3-3H9m1.5-12H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">No templates saved yet</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">No invoices saved yet</h3>
               <p className="text-gray-500 mb-8 max-w-md mx-auto">
-                Create an invoice and save it as a template. Your saved templates will appear here for quick access.
+                Create an invoice and save it. Your saved invoices will appear here for quick access.
               </p>
               <a
                 href="/#generator"
@@ -266,9 +266,9 @@ export default function TemplatesPage() {
               <div className="flex items-center justify-between mb-8">
                 <div>
                   <h2 className="text-lg font-bold text-gray-900">
-                    {templates.length} Saved Template{templates.length !== 1 ? "s" : ""}
+                    {templates.length} Saved Invoice{templates.length !== 1 ? "s" : ""}
                   </h2>
-                  <p className="text-sm text-gray-500">Click Edit to load a template into the invoice generator</p>
+                  <p className="text-sm text-gray-500">Click Edit to load an invoice into the generator</p>
                 </div>
                 <a
                   href="/#generator"
