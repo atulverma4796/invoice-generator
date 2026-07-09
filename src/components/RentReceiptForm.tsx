@@ -310,23 +310,6 @@ export default function RentReceiptForm({ data, setData, onGenerate, generating 
         )}
       </div>
 
-      <div>
-        <label className="block text-xs font-medium text-gray-600 mb-1">
-          Starting Receipt Number
-        </label>
-        <input
-          type="number"
-          value={data.receiptStartNumber || 1}
-          onChange={(e) => update("receiptStartNumber", Math.max(1, Number(e.target.value) || 1))}
-          onFocus={(e) => e.target.select()}
-          min={1}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-        />
-        <p className="text-[11px] text-gray-400 mt-1">
-          Receipt numbers will increment from this value (e.g. R-001, R-002 …)
-        </p>
-      </div>
-
       {/* Summary */}
       <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 rounded-xl p-4">
         <div className="grid grid-cols-3 gap-3 text-center">
