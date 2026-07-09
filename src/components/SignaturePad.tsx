@@ -7,9 +7,10 @@ import type SignaturePadLib from "signature_pad";
 interface SignaturePadProps {
   signature: string;
   onChange: (dataUrl: string) => void;
+  label?: string;
 }
 
-export default function SignaturePad({ signature, onChange }: SignaturePadProps) {
+export default function SignaturePad({ signature, onChange, label = "Signature" }: SignaturePadProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const sigPadRef = useRef<SignaturePadLib | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -83,7 +84,7 @@ export default function SignaturePad({ signature, onChange }: SignaturePadProps)
     return (
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1.5">
-          Signature
+          {label}
         </label>
         <div className="relative group w-fit">
           <img
@@ -150,7 +151,7 @@ export default function SignaturePad({ signature, onChange }: SignaturePadProps)
   return (
     <div>
       <label className="block text-sm font-medium text-gray-700 mb-1.5">
-        Signature
+        {label}
       </label>
       <div className="flex gap-2">
         <button

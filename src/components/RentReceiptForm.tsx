@@ -132,7 +132,7 @@ export default function RentReceiptForm({ data, setData, onGenerate, generating 
   return (
     <div className="space-y-6">
       <div className="bg-blue-50 border border-blue-100 rounded-xl px-4 py-3 text-xs text-blue-800">
-        <strong>Tip:</strong> For HRA claim under Section 10(13A), revenue stamp + landlord signature is required if monthly rent exceeds ₹3,000 in cash. Bank transfers don&apos;t need stamps. PAN is required if annual rent exceeds ₹1 lakh.
+        <strong>Tip:</strong> For HRA claim under Section 10(13A), a revenue stamp + landlord signature is required on cash payments above ₹5,000. Bank transfers don&apos;t need stamps. Landlord PAN is required if annual rent exceeds ₹1 lakh.
       </div>
 
       {/* Tenant + Landlord */}
@@ -178,6 +178,13 @@ export default function RentReceiptForm({ data, setData, onGenerate, generating 
           className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm font-mono focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         />
       </div>
+
+      {/* Landlord signature (optional) — grouped with landlord identity, appears on every receipt */}
+      <SignaturePad
+        label="Landlord Signature (optional)"
+        signature={data.landlordSignature}
+        onChange={(dataUrl) => update("landlordSignature", dataUrl)}
+      />
 
       <div>
         <label className="block text-xs font-medium text-gray-600 mb-1">Property Address *</label>
@@ -317,17 +324,6 @@ export default function RentReceiptForm({ data, setData, onGenerate, generating 
         />
         <p className="text-[11px] text-gray-400 mt-1">
           Receipt numbers will increment from this value (e.g. R-001, R-002 …)
-        </p>
-      </div>
-
-      {/* Landlord signature (optional) — appears on every receipt */}
-      <div>
-        <SignaturePad
-          signature={data.landlordSignature}
-          onChange={(dataUrl) => update("landlordSignature", dataUrl)}
-        />
-        <p className="text-[11px] text-gray-400 mt-1">
-          Optional. The landlord&apos;s signature is placed above the signature line on every receipt.
         </p>
       </div>
 
