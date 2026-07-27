@@ -12,6 +12,13 @@ export interface IndustryData {
   // pages where CTR optimization matters (contractor, photography, etc.).
   seoTitle?: string;
   seoDescription?: string;
+  // Long-form, unique editorial content. Its PRESENCE is what makes a page
+  // safe to index — pages without it stay noindex (they'd read as thin,
+  // templated doorway pages, which triggered past AdSense rejections).
+  content?: { heading: string; body: string }[];
+  // Set true ONLY on pages that have genuine unique `content` above. Controls
+  // whether generateMetadata emits index:true. Everything else stays noindex.
+  indexable?: boolean;
 }
 
 export const INDUSTRIES: Record<string, IndustryData> = {
@@ -63,7 +70,29 @@ export const INDUSTRIES: Record<string, IndustryData> = {
       { q: "What should a contractor invoice include?", a: "Your business info, license number, client and project address, itemized labor and materials, taxes, total, and payment terms. Include change order references if applicable." },
       { q: "Should contractors charge sales tax on invoices?", a: "Depends on your state/country. Most US states don't tax labor but do tax materials. Check with your local tax authority — and use our country-aware tax fields to handle it correctly." },
       { q: "How do I invoice for a milestone payment?", a: "Add a line item like 'Milestone 1 of 3 — Foundation Complete' with the agreed amount. Reference the original contract or estimate number in the notes." },
+      { q: "How much deposit should a contractor ask for?", a: "A deposit of 10–33% upfront is common — enough to cover initial materials and secure your schedule. For larger jobs, structure the rest as progress payments tied to milestones rather than one payment at the end." },
+      { q: "Should I mark up materials on a contractor invoice?", a: "Yes — marking up materials (often 10–25%) is standard and covers your time sourcing, purchasing, and handling them. Bill the marked-up price as the line-item rate; you don't need to show your original cost." },
+      { q: "What are progress payments?", a: "Progress payments split a large job into stages — for example a deposit to start, a payment at the halfway point, and the balance on completion. They protect your cash flow and reduce the risk of a big unpaid balance at the end." },
     ],
+    content: [
+      {
+        heading: "What a contractor invoice should include",
+        body: "A solid contractor invoice covers both the money and the paperwork a client — and later the tax office — may need: your business name and contact details, your contractor license number where required, the client and the job/site address, an itemized breakdown of labor and materials, applicable tax, the total, and clear payment terms.\n\nItemizing matters. Clients are far more likely to pay promptly when they can see exactly what each charge is for, rather than a single 'services rendered' figure.",
+      },
+      {
+        heading: "Separate labor from materials — and why it matters",
+        body: "Always list labor (hours × rate) separately from materials and equipment. There are two good reasons. First, transparency: clients want to see what they're paying skilled hands for versus what went into supplies. Second, tax: in many US states labor isn't taxable but materials are, so combining them makes correct tax impossible.\n\nIf you mark up materials — most contractors do, to cover sourcing and handling — bill the marked-up price as your line item rather than showing your cost. Your margin on materials is a normal, expected part of the job.",
+      },
+      {
+        heading: "Change orders, milestones and progress billing",
+        body: "On anything bigger than a small job, don't wait until the end to invoice. Bill in progress payments tied to milestones — for example a deposit to start, a payment when the work is halfway or 'dried in', and the balance on completion. This protects your cash flow and limits your exposure if a client stops paying.\n\nWhen the scope changes, raise a change order and add it as its own clearly-labeled line item that references the original estimate or contract number. Never absorb extra work silently — a documented change order is how you get paid for it and how you avoid disputes.",
+      },
+      {
+        heading: "How contractors get paid on time",
+        body: "Ask for a deposit before you start, set short payment terms (Net 15 is common in the trades), and state the payment methods you accept on the invoice. Add a late-fee clause and, where your jurisdiction allows, note your lien rights — both encourage prompt payment.\n\nInclude your license number and, if you offer one, your workmanship warranty. These small details make the invoice look professional and reassure the client they're dealing with a legitimate, insured tradesperson.",
+      },
+    ],
+    indexable: true,
     seoTitle: "Free Contractor Invoice Template — PDF",
     seoDescription: "Free contractor invoice template with labor, materials, change orders, license number. PDF download, no signup. Built for tradespeople.",
   },
@@ -113,7 +142,29 @@ export const INDUSTRIES: Record<string, IndustryData> = {
       { q: "What should a photography invoice include?", a: "Shoot date, location, services rendered, number of images delivered, licensing terms, travel/expenses, and total. Include a copyright notice in the terms." },
       { q: "How do I invoice for image licensing?", a: "Add a separate line item for licensing with details (e.g. 'Commercial usage rights — 1 year, web only'). Specify any restrictions in the terms section." },
       { q: "Should photographers charge sales tax?", a: "Depends on your location. In many US states, photography services and prints are taxable. Use the country selector to apply your local tax rules automatically." },
+      { q: "How much deposit should a photographer charge?", a: "A non-refundable retainer of 25–50% of the total is standard, paid at booking to secure the date. The remaining balance is usually due before you deliver the final edited images." },
+      { q: "Do I keep copyright of the photos I invoice for?", a: "Yes — under most copyright law the photographer owns the images automatically unless you sign that right away. Your invoice should grant the client a usage license (personal or commercial) while you retain copyright. Spell this out in the terms." },
+      { q: "How do I invoice for a wedding vs a commercial shoot?", a: "Weddings are usually a flat package (coverage hours + editing + album) with a retainer and a balance due before delivery. Commercial shoots more often split into a creative/shoot fee plus a separate, larger licensing fee based on how the images will be used." },
     ],
+    content: [
+      {
+        heading: "What to put on a photography invoice",
+        body: "A clear photography invoice separates every part of the job so clients understand what they're paying for. The usual line items are: shoot or coverage time (per hour or a flat package), editing and retouching, prints or albums, image licensing or usage rights, travel and mileage, and add-ons like a second shooter, extra hours, or rush delivery.\n\nBreaking these out — instead of one lump sum — reduces disputes, makes upsells obvious, and shows the real value behind your rate. It also lets you apply tax correctly, since prints and physical products are often taxed differently from services.",
+      },
+      {
+        heading: "Deposits, retainers and the payment timeline",
+        body: "Most photographers bill in two stages. A non-refundable booking retainer (commonly 25–50%) secures the date and covers you if the client cancels. The balance is then due before you hand over the final gallery — never deliver the high-res images before you've been paid in full.\n\nFor weddings and large commercial jobs, milestone billing works well: a retainer at booking, a second payment near the shoot date, and the balance on delivery. State each due date clearly on the invoice so there's no ambiguity.",
+      },
+      {
+        heading: "Licensing and usage rights — the line item photographers forget",
+        body: "For commercial, brand, or product work, the licensing is often worth more than the shoot itself — yet it's the item most photographers leave off. Always itemize it: what the images may be used for (personal, editorial, commercial), where (web, print, social, ads), for how long, and whether the license is exclusive.\n\nUnless you explicitly transfer copyright, you keep it — so add a short copyright and usage clause to your terms. If a client later wants broader usage, that's a new licensing line item, not a freebie.",
+      },
+      {
+        heading: "How to get paid faster",
+        body: "Send the invoice promptly — a retainer invoice the moment the date is booked, and the balance invoice before delivery, not after. Keep payment terms short and explicit (for example, 'Balance due 3 days before the event'), list the methods you accept, and add a late-fee clause for overdue balances.\n\nA professional, itemized PDF simply gets paid faster than a texted total — it signals you run a real business and makes it easy for a client, or their accountant, to process.",
+      },
+    ],
+    indexable: true,
     seoTitle: "Photography Invoice Template — Free PDF",
     seoDescription: "Free photography invoice template for weddings, portraits, events. Shoot fees, editing, licensing, travel. PDF download, no signup.",
   },

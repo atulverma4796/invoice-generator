@@ -33,10 +33,10 @@ export async function generateMetadata({ params }: { params: Promise<{ industry:
     title,
     description,
     alternates: { canonical: `${SITE_URL}/invoice-template/${data.slug}` },
-    // Temporarily noindex — same template across 15 industry pages reads
-    // as doorway-pattern. Re-index per page only after substantially
-    // unique editorial content has been added.
-    robots: { index: false, follow: true },
+    // Pages stay noindex UNLESS they have substantial unique editorial
+    // content (data.indexable). The bare template across 15 industries reads
+    // as a doorway pattern; only enriched pages are safe to index.
+    robots: { index: data.indexable === true, follow: true },
     openGraph: {
       title: ogTitle,
       description,
@@ -162,8 +162,26 @@ export default async function IndustryPage({ params }: { params: Promise<{ indus
         </div>
       </section>
 
+      {/* Long-form editorial content — unique per industry, makes the page index-worthy */}
+      {data.content && data.content.length > 0 && (
+        <section className="py-12 bg-white">
+          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+            {data.content.map((s) => (
+              <div key={s.heading}>
+                <h2 className="text-2xl font-bold text-gray-900 mb-3">{s.heading}</h2>
+                <div className="space-y-3 text-[15px] leading-relaxed text-gray-600">
+                  {s.body.split("\n\n").map((p, i) => (
+                    <p key={i}>{p}</p>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* FAQs */}
-      <section className="py-12 bg-white">
+      <section className="py-12 bg-gray-50">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Frequently Asked Questions</h2>
           <p className="text-gray-600 mb-6">Everything you need to know about {data.name.toLowerCase()} invoicing:</p>
