@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
-const LAST_UPDATED = "April 28, 2026";
+const LAST_UPDATED = "September 4, 2026";
 
 export default function PrivacyPage() {
   return (
@@ -92,6 +92,13 @@ export default function PrivacyPage() {
               We may also use functional cookies and localStorage entries to remember your preferences
               (selected template, currency, language) between sessions. These are first-party only
               and do not track you across other sites.
+            </p>
+            <p className="mt-3">
+              When you download or email a document, we record a minimal operational event to
+              measure feature use and prevent abuse. It includes the document type, non-content
+              settings (such as currency and enabled features), browser category, and country code
+              supplied by our hosting provider. We do not collect invoice content, names, email
+              addresses, line-item text, exact totals, or a persistent identifier through this event.
             </p>
           </section>
 
