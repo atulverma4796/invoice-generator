@@ -1,6 +1,7 @@
 import jsPDF from "jspdf";
 import { numberToIndianWords } from "./numberToWords";
 import type { RentReceiptData } from "@/components/RentReceiptForm";
+import { needsRevenueStamp } from "@/components/RentReceiptForm";
 import { applyUnicodeFont, PDF_FONT_FAMILY } from "./pdfFont";
 
 interface ReceiptInput {
@@ -117,14 +118,18 @@ export async function generateRentReceiptPDF(
     const para2 = `Rs. ${inrFmt(amount)} (${amountWords})`;
     const para3 = `towards rent of the premises located at:`;
 
-    doc.text(para1, mL, y, { maxWidth: contentWidth });
-    y += 6;
+    // Each paragraph is wrapped and y advances per line, so a long tenant
+    // name or a crore-sized amount in words can't overprint the next line.
+    const para = (text: string, after: number) => {
+      const lines = doc.splitTextToSize(text, contentWidth) as string[];
+      doc.text(lines, mL, y);
+      y += 6 * lines.length + (after - 6);
+    };
+    para(para1, 6);
     doc.setFont(ff, "bold");
-    doc.text(para2, mL, y, { maxWidth: contentWidth });
-    y += 6;
+    para(para2, 6);
     doc.setFont(ff, "normal");
-    doc.text(para3, mL, y, { maxWidth: contentWidth });
-    y += 8;
+    para(para3, 8);
 
     // Property address (multi-line)
     doc.setFont(ff, "italic");
@@ -162,8 +167,9 @@ export async function generateRentReceiptPDF(
     doc.setFontSize(12);
     doc.setFont(ff, "bold");
     doc.setTextColor(31, 41, 55);
-    doc.text(data.landlordName || "_________________", mL, y);
-    y += 6;
+    const landlordLines = (doc.splitTextToSize(data.landlordName || "_________________", contentWidth - 75) as string[]);
+    doc.text(landlordLines, mL, y);
+    y += 6 * landlordLines.length;
     doc.setFontSize(10);
     doc.setFont(ff, "normal");
     doc.setTextColor(75, 85, 99);
@@ -194,8 +200,9 @@ export async function generateRentReceiptPDF(
     doc.setTextColor(107, 114, 128);
     doc.text("Landlord Signature", pageWidth - mR - 35, sigY + 5, { align: "center" });
 
-    // Revenue stamp box (only for cash > 5000)
-    if (data.paymentMode === "Cash" && data.monthlyRent > 5000) {
+    // Revenue stamp box — cash receipts above ₹5,000 (judged on THIS
+    // receipt's amount, so bundled quarterly/yearly receipts count in full).
+    if (needsRevenueStamp(data.paymentMode, amount)) {
       const stampX = pageWidth - mR - 30;
       const stampY = sigY - 25;
       doc.setDrawColor(220, 38, 38);

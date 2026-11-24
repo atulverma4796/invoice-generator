@@ -1,5 +1,7 @@
 import jsPDF from "jspdf";
-import type { SalarySlipData } from "@/components/SalarySlipForm";
+import type { SalarySlipData, PayLine } from "@/components/SalarySlipForm";
+import { computeSalaryTotals } from "@/components/SalarySlipForm";
+import { drawWrappedText, wrap } from "./pdfHelpers";
 import { numberToIndianWords } from "./numberToWords";
 import { applyUnicodeFont, PDF_FONT_FAMILY } from "./pdfFont";
 
@@ -41,6 +43,19 @@ export async function generateSalarySlipPDF(
   const contentW = pageWidth - mL - mR;
   // jsPDF's default font does not render the rupee glyph ₹; use "Rs." for INR.
   const moneyPrefix = data.currencySymbol === "₹" ? "Rs. " : `${data.currencySymbol} `;
+  const totals = computeSalaryTotals(data);
+
+  // Shrink a single-line value until it fits `maxW` (min 6.5pt), so long
+  // names never spill into the neighbouring column of a fixed-size box.
+  const fitFontSize = (text: string, maxW: number, start: number) => {
+    let fs = start;
+    doc.setFontSize(fs);
+    while (fs > 6.5 && doc.getTextWidth(text) > maxW) {
+      fs -= 0.5;
+      doc.setFontSize(fs);
+    }
+    return fs;
+  };
 
   // Header band
   doc.setFillColor(37, 99, 235);
@@ -49,14 +64,20 @@ export async function generateSalarySlipPDF(
   doc.setFontSize(11);
   doc.setFont(ff, "bold");
   doc.text("SALARY SLIP", mL, 12);
-  doc.setFontSize(16);
-  doc.text(data.companyName || "—", mL, 22);
+  doc.setFont(ff, "normal");
+  doc.setFontSize(9);
+  const emailW = data.companyEmail ? doc.getTextWidth(data.companyEmail) : 0;
+  doc.setFont(ff, "bold");
+  const companyMaxW = contentW - Math.min(emailW, contentW / 2) - 6;
+  const companyName = data.companyName || "—";
+  fitFontSize(companyName, companyMaxW, 16);
+  doc.text(wrap(doc, companyName, companyMaxW)[0] ?? "", mL, 22);
   doc.setFont(ff, "normal");
   doc.setFontSize(10);
   doc.text(`For ${formatPeriod(data.payMonth)}`, pageWidth - mR, 12, { align: "right" });
   doc.setFontSize(9);
   if (data.companyEmail) {
-    doc.text(data.companyEmail, pageWidth - mR, 22, { align: "right" });
+    doc.text(wrap(doc, data.companyEmail, contentW / 2)[0] ?? "", pageWidth - mR, 22, { align: "right" });
   }
 
   // Reset
@@ -78,7 +99,9 @@ export async function generateSalarySlipPDF(
 
   // Employee details box
   doc.setFillColor(243, 244, 246);
-  doc.roundedRect(mL, y, contentW, 32, 2, 2, "F");
+  // 4 rows × 9mm pitch: label + value + breathing room (6.5 made labels
+  // touch the value above).
+  doc.roundedRect(mL, y, contentW, 41, 2, 2, "F");
   const halfW = contentW / 2;
 
   const drawField = (
@@ -88,15 +111,17 @@ export async function generateSalarySlipPDF(
     row: 0 | 1 | 2 | 3,
   ) => {
     const x = mL + 4 + col * (halfW - 4);
-    const yy = y + 6 + row * 6.5;
+    const yy = y + 6 + row * 9;
     doc.setFontSize(8);
     doc.setTextColor(107, 114, 128);
     doc.setFont(ff, "normal");
     doc.text(label, x, yy);
-    doc.setFontSize(10);
     doc.setTextColor(31, 41, 55);
     doc.setFont(ff, "bold");
-    doc.text(value || "—", x, yy + 4);
+    const v = value || "—";
+    const maxW = halfW - 10;
+    fitFontSize(v, maxW, 10);
+    doc.text(wrap(doc, v, maxW)[0] ?? "", x, yy + 4);
   };
 
   drawField("Employee Name", data.employeeName, 0, 0);
@@ -108,12 +133,12 @@ export async function generateSalarySlipPDF(
   drawField("Bank", data.bankName, 0, 3);
   drawField("Account #", data.bankAccount, 1, 3);
 
-  y += 38;
+  y += 47;
 
   // Working days line
   doc.setFontSize(9);
   doc.setTextColor(75, 85, 99);
-  const lopDays = Math.max(0, data.workingDays - data.presentDays - data.paidLeave);
+  const lopDays = totals.lopDays;
   const wdLine = `Working Days: ${data.workingDays}    Present: ${data.presentDays}    Paid Leave: ${data.paidLeave}    LOP: ${lopDays}`;
   doc.text(wdLine, mL, y);
   y += 8;
@@ -138,38 +163,55 @@ export async function generateSalarySlipPDF(
 
   y += 12;
 
-  // Two-column rows: longer of earnings/deductions decides table height
+  // Unpaid days are deducted pro-rata as their own visible line.
+  const deductions: PayLine[] = [...data.deductions];
+  if (totals.lopDeduction > 0) {
+    deductions.push({
+      id: "__lop__",
+      label: `Loss of Pay (${totals.lopDays} day${totals.lopDays === 1 ? "" : "s"})`,
+      amount: totals.lopDeduction,
+    });
+  }
+
+  // Two-column rows: longer of earnings/deductions decides table height.
+  // Labels wrap inside their half so they never run under the amount.
   const rowH = 6.5;
-  const maxRows = Math.max(data.earnings.length, data.deductions.length);
+  const labelW = colHalf - 40;
+  const maxRows = Math.max(data.earnings.length, deductions.length);
   doc.setFont(ff, "normal");
   doc.setFontSize(9);
   for (let i = 0; i < maxRows; i++) {
-    if (y > pageHeight - 60) {
+    const e = data.earnings[i];
+    const d = deductions[i];
+    const eLines = e ? wrap(doc, e.label || "—", labelW) : [];
+    const dLines = d ? wrap(doc, d.label || "—", labelW) : [];
+    const extra = 4 * (Math.max(eLines.length, dLines.length, 1) - 1);
+    if (y + extra > pageHeight - 40) {
       doc.addPage();
       y = 20;
     }
-    const e = data.earnings[i];
-    const d = data.deductions[i];
     doc.setTextColor(31, 41, 55);
     if (e) {
-      doc.text(e.label || "—", mL + 4, y);
+      doc.text(eLines, mL + 4, y);
       doc.text(`${moneyPrefix}${fmt(e.amount || 0)}`, mL + colHalf - 6, y, { align: "right" });
     }
     if (d) {
-      doc.text(d.label || "—", colMid + 6, y);
+      doc.text(dLines, colMid + 6, y);
       doc.text(`${moneyPrefix}${fmt(d.amount || 0)}`, pageWidth - mR - 4, y, { align: "right" });
     }
-    y += rowH;
+    y += rowH + extra;
     doc.setDrawColor(229, 231, 235);
     doc.line(mL, y - 2, colMid - 2, y - 2);
     doc.line(colMid + 2, y - 2, pageWidth - mR, y - 2);
   }
 
-  // Totals row
+  // Totals row + net pay band + words need ~60mm; keep them together.
   y += 2;
-  const grossEarnings = data.earnings.reduce((s, l) => s + (l.amount || 0), 0);
-  const totalDeductions = data.deductions.reduce((s, l) => s + (l.amount || 0), 0);
-  const netPay = grossEarnings - totalDeductions;
+  if (y > pageHeight - 60) {
+    doc.addPage();
+    y = 20;
+  }
+  const { grossEarnings, totalDeductions, netPay } = totals;
 
   doc.setFillColor(243, 244, 246);
   doc.rect(mL, y, colHalf - 2, 9, "F");
@@ -205,8 +247,11 @@ export async function generateSalarySlipPDF(
     doc.setTextColor(31, 41, 55);
     doc.setFont(ff, "italic");
     doc.setFontSize(9);
-    doc.text(`(In words: ${numberToIndianWords(Math.round(netPay))} Rupees Only)`, mL, y);
-    y += 8;
+    y = drawWrappedText(doc, `(In words: ${numberToIndianWords(Math.round(netPay))} Rupees Only)`, mL, y, {
+      maxWidth: contentW,
+      lineHeight: 4.5,
+      bottomMargin: 18,
+    }) + 3.5;
   }
 
   // Notes
@@ -214,9 +259,7 @@ export async function generateSalarySlipPDF(
     doc.setFont(ff, "normal");
     doc.setFontSize(8);
     doc.setTextColor(107, 114, 128);
-    const lines = doc.splitTextToSize(data.notes, contentW);
-    doc.text(lines, mL, y);
-    y += 4 * lines.length + 4;
+    y = drawWrappedText(doc, data.notes, mL, y, { maxWidth: contentW, lineHeight: 4, bottomMargin: 18 }) + 4;
   }
 
   // Footer

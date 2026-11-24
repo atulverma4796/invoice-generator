@@ -64,6 +64,38 @@ const CURRENCY_RULES: Record<string, CountryRule> = {
     notes: "EU: VAT ID is required for intra-community supplies. Both seller and buyer VAT numbers must appear on cross-border B2B invoices.",
   },
 
+  // ── EU members outside the Eurozone — same EU VAT invoicing rules ──
+  CZK: {
+    taxIdLabel: "DIČ (VAT Number)",
+    taxIdRequired: true,
+    senderAddressRequired: true,
+    clientAddressRequired: true,
+    clientTaxIdRequired: true,
+    clientTaxIdLabel: "Client DIČ / VAT Number",
+    taxRateRequired: true,
+    notes: "Czechia: DIČ (CZ VAT number) required if VAT-registered. Standard rate is 21%.",
+  },
+  HUF: {
+    taxIdLabel: "Adószám (VAT Number)",
+    taxIdRequired: true,
+    senderAddressRequired: true,
+    clientAddressRequired: true,
+    clientTaxIdRequired: true,
+    clientTaxIdLabel: "Client Adószám / VAT Number",
+    taxRateRequired: true,
+    notes: "Hungary: Tax number (adószám) required. Standard VAT (ÁFA) rate is 27%. Real-time invoice reporting (NAV Online Számla) applies.",
+  },
+  RON: {
+    taxIdLabel: "CUI / CIF (VAT Number)",
+    taxIdRequired: true,
+    senderAddressRequired: true,
+    clientAddressRequired: true,
+    clientTaxIdRequired: true,
+    clientTaxIdLabel: "Client CUI / VAT Number",
+    taxRateRequired: true,
+    notes: "Romania: CUI/CIF required. Standard VAT (TVA) rate is 21%. B2B e-invoicing (RO e-Factura) is mandatory.",
+  },
+
   // ── United States (Sales Tax) ──
   USD: {
     taxIdLabel: "EIN / Tax ID",
@@ -441,13 +473,27 @@ export function validateInvoice(data: InvoiceData): ValidationErrors {
   }
 
   // ── Country-specific: Tax IDs ──
-  if (rule.taxIdRequired && !data.senderTaxId.trim()) {
+  // Only required when tax is actually charged — tax-exempt sellers,
+  // zero-rated supplies and unregistered small suppliers (e.g. Canada
+  // under CAD 30k) legitimately invoice without a registration number.
+  if (rule.taxIdRequired && data.taxRate > 0 && !data.senderTaxId.trim()) {
     errors.senderTaxId = `${rule.taxIdLabel} is required`;
   }
 
   // ── Country-specific: tax rate ──
-  if (rule.taxRateRequired && data.taxRate <= 0) {
-    errors.taxRate = "Tax rate is required for " + data.currency + " invoices";
+  // 0% is valid everywhere (exempt / zero-rated / not registered).
+  if (data.taxRate < 0 || data.taxRate > 100) {
+    errors.taxRate = "Tax rate must be between 0 and 100";
+  }
+
+  // ── Discount & shipping ──
+  // A discount over 100% (or a negative one) produces a negative / inflated
+  // total; the <input min/max> attributes don't stop typed values.
+  if (data.discountRate < 0 || data.discountRate > 100) {
+    errors.discountRate = "Discount must be between 0 and 100";
+  }
+  if (data.shippingFee < 0) {
+    errors.shippingFee = "Shipping cannot be negative";
   }
 
   // ── Line items ──
@@ -486,7 +532,7 @@ export interface Country {
 
 export const COUNTRIES: Country[] = [
   { name: "Afghanistan", code: "AF", currency: "USD" },
-  { name: "Albania", code: "AL", currency: "EUR" },
+  { name: "Albania", code: "AL", currency: "ALL" },
   { name: "Algeria", code: "DZ", currency: "USD" },
   { name: "Argentina", code: "AR", currency: "ARS" },
   { name: "Armenia", code: "AM", currency: "USD" },
@@ -498,7 +544,7 @@ export const COUNTRIES: Country[] = [
   { name: "Belarus", code: "BY", currency: "USD" },
   { name: "Belgium", code: "BE", currency: "EUR" },
   { name: "Bolivia", code: "BO", currency: "USD" },
-  { name: "Bosnia and Herzegovina", code: "BA", currency: "EUR" },
+  { name: "Bosnia and Herzegovina", code: "BA", currency: "BAM" },
   { name: "Brazil", code: "BR", currency: "BRL" },
   { name: "Brunei", code: "BN", currency: "SGD" },
   { name: "Bulgaria", code: "BG", currency: "EUR" },
@@ -511,7 +557,7 @@ export const COUNTRIES: Country[] = [
   { name: "Costa Rica", code: "CR", currency: "USD" },
   { name: "Croatia", code: "HR", currency: "EUR" },
   { name: "Cyprus", code: "CY", currency: "EUR" },
-  { name: "Czech Republic", code: "CZ", currency: "EUR" },
+  { name: "Czech Republic", code: "CZ", currency: "CZK" },
   { name: "Denmark", code: "DK", currency: "DKK" },
   { name: "Dominican Republic", code: "DO", currency: "USD" },
   { name: "Ecuador", code: "EC", currency: "USD" },
@@ -527,15 +573,15 @@ export const COUNTRIES: Country[] = [
   { name: "Greece", code: "GR", currency: "EUR" },
   { name: "Guatemala", code: "GT", currency: "USD" },
   { name: "Honduras", code: "HN", currency: "USD" },
-  { name: "Hong Kong", code: "HK", currency: "USD" },
-  { name: "Hungary", code: "HU", currency: "EUR" },
-  { name: "Iceland", code: "IS", currency: "EUR" },
+  { name: "Hong Kong", code: "HK", currency: "HKD" },
+  { name: "Hungary", code: "HU", currency: "HUF" },
+  { name: "Iceland", code: "IS", currency: "ISK" },
   { name: "India", code: "IN", currency: "INR" },
   { name: "Indonesia", code: "ID", currency: "IDR" },
   { name: "Iran", code: "IR", currency: "USD" },
   { name: "Iraq", code: "IQ", currency: "USD" },
   { name: "Ireland", code: "IE", currency: "EUR" },
-  { name: "Israel", code: "IL", currency: "USD" },
+  { name: "Israel", code: "IL", currency: "ILS" },
   { name: "Italy", code: "IT", currency: "EUR" },
   { name: "Jamaica", code: "JM", currency: "USD" },
   { name: "Japan", code: "JP", currency: "JPY" },
@@ -550,17 +596,17 @@ export const COUNTRIES: Country[] = [
   { name: "Malaysia", code: "MY", currency: "MYR" },
   { name: "Malta", code: "MT", currency: "EUR" },
   { name: "Mexico", code: "MX", currency: "MXN" },
-  { name: "Moldova", code: "MD", currency: "EUR" },
+  { name: "Moldova", code: "MD", currency: "MDL" },
   { name: "Mongolia", code: "MN", currency: "USD" },
   { name: "Morocco", code: "MA", currency: "USD" },
   { name: "Mozambique", code: "MZ", currency: "USD" },
   { name: "Myanmar", code: "MM", currency: "USD" },
-  { name: "Nepal", code: "NP", currency: "INR" },
+  { name: "Nepal", code: "NP", currency: "NPR" },
   { name: "Netherlands", code: "NL", currency: "EUR" },
   { name: "New Zealand", code: "NZ", currency: "NZD" },
   { name: "Nicaragua", code: "NI", currency: "USD" },
   { name: "Nigeria", code: "NG", currency: "NGN" },
-  { name: "North Macedonia", code: "MK", currency: "EUR" },
+  { name: "North Macedonia", code: "MK", currency: "MKD" },
   { name: "Norway", code: "NO", currency: "NOK" },
   { name: "Oman", code: "OM", currency: "USD" },
   { name: "Pakistan", code: "PK", currency: "PKR" },
@@ -572,12 +618,12 @@ export const COUNTRIES: Country[] = [
   { name: "Poland", code: "PL", currency: "PLN" },
   { name: "Portugal", code: "PT", currency: "EUR" },
   { name: "Qatar", code: "QA", currency: "USD" },
-  { name: "Romania", code: "RO", currency: "EUR" },
+  { name: "Romania", code: "RO", currency: "RON" },
   { name: "Russia", code: "RU", currency: "USD" },
   { name: "Rwanda", code: "RW", currency: "USD" },
   { name: "Saudi Arabia", code: "SA", currency: "SAR" },
   { name: "Senegal", code: "SN", currency: "USD" },
-  { name: "Serbia", code: "RS", currency: "EUR" },
+  { name: "Serbia", code: "RS", currency: "RSD" },
   { name: "Singapore", code: "SG", currency: "SGD" },
   { name: "Slovakia", code: "SK", currency: "EUR" },
   { name: "Slovenia", code: "SI", currency: "EUR" },
@@ -587,7 +633,7 @@ export const COUNTRIES: Country[] = [
   { name: "Sri Lanka", code: "LK", currency: "USD" },
   { name: "Sweden", code: "SE", currency: "SEK" },
   { name: "Switzerland", code: "CH", currency: "CHF" },
-  { name: "Taiwan", code: "TW", currency: "USD" },
+  { name: "Taiwan", code: "TW", currency: "TWD" },
   { name: "Tanzania", code: "TZ", currency: "USD" },
   { name: "Thailand", code: "TH", currency: "THB" },
   { name: "Trinidad and Tobago", code: "TT", currency: "USD" },

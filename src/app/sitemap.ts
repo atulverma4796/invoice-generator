@@ -13,6 +13,7 @@
 
 import { MetadataRoute } from "next";
 import { BLOG_LIST } from "@/lib/blogPosts";
+import { INDUSTRY_LIST } from "@/lib/industries";
 
 const BASE_URL = "https://freeinvoicegen.org";
 // Update this value only when a static tool or editorial page materially changes.
@@ -46,5 +47,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  return [...toolPages, ...editorialPages, ...blogPages];
+  // (Hub is noindex — not listed.) ONLY the industry pages flagged `indexable`
+  // (enriched with unique editorial content). Must stay in lockstep with the
+  // page-level robots meta in src/app/invoice-template/** — enforced by
+  // tests/seo/sitemap.test.ts.
+  const templatePages: MetadataRoute.Sitemap = [
+    ...INDUSTRY_LIST.filter((i) => i.indexable === true).map((i) => ({
+      url: `${BASE_URL}/invoice-template/${i.slug}`,
+      lastModified: STATIC_LAST_MODIFIED,
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    })),
+  ];
+
+  return [...toolPages, ...editorialPages, ...templatePages, ...blogPages];
 }

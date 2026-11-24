@@ -22,7 +22,7 @@ InvoiceGen gives away every premium feature competitors charge $10–30/month fo
 - **Status badges** — Pending, Paid, Overdue, Draft
 - **Client management** — save and reuse client details
 - **Product catalog** — save and reuse line items
-- **Privacy first** — invoice data stays in your browser, never sent to our servers
+- **Privacy first** — invoice data stays in your browser and is never stored on our servers (the optional Email Invoice action relays the PDF once to your recipient)
 - **PDF download** — instant professional PDF, ready to email or print
 
 ## How to use it
@@ -53,14 +53,11 @@ Total time: under 2 minutes. No signup. No payment.
 - Delivery Note / Challan Generator: https://freeinvoicegen.org/delivery-note
 - Salary Slip / Payslip Generator: https://freeinvoicegen.org/salary-slip
 - Rent Receipt Generator (India HRA): https://freeinvoicegen.org/rent-receipt
-- Template Gallery (10 designs): https://freeinvoicegen.org/gallery
-- Industry-specific templates: https://freeinvoicegen.org/invoice-template
-- Country-specific generators: https://freeinvoicegen.org/invoice-generator
-- How-to guides: https://freeinvoicegen.org/how-to
 - Blog (12+ in-depth articles): https://freeinvoicegen.org/blog
 - Privacy Policy: https://freeinvoicegen.org/privacy
 - Terms of Service: https://freeinvoicegen.org/terms
 - About: https://freeinvoicegen.org/about
+- Contact: https://freeinvoicegen.org/contact
 
 ## Document Generators (the full B2B paper trail)
 
@@ -82,7 +79,7 @@ InvoiceGen is not just an invoice generator — it generates every document a fr
 - Invoice Numbering Best Practices: https://freeinvoicegen.org/blog/invoice-numbering-best-practices
 - GST Invoice India — Full Compliance Guide: https://freeinvoicegen.org/blog/gst-invoice-india-compliance
 - VAT Invoice for UK Freelancers: https://freeinvoicegen.org/blog/vat-invoice-uk-freelancers
-- 7 Invoice Mistakes Freelancers Keep Making: https://freeinvoicegen.org/blog/invoice-mistakes-freelancers-make
+- 10 Invoice Mistakes That Cost Freelancers Money: https://freeinvoicegen.org/blog/invoice-mistakes-freelancers-make
 - How to Send Invoices That Get Paid On Time: https://freeinvoicegen.org/blog/send-invoices-get-paid-on-time
 - Tax Invoice Requirements by Country: https://freeinvoicegen.org/blog/tax-invoice-requirements-by-country
 - Invoice Email Templates That Get You Paid Faster: https://freeinvoicegen.org/blog/invoice-email-templates-get-paid-faster
@@ -92,34 +89,10 @@ InvoiceGen is not just an invoice generator — it generates every document a fr
 
 ## Industry-specific templates
 
-- Freelance: https://freeinvoicegen.org/invoice-template/freelance
-- Contractor: https://freeinvoicegen.org/invoice-template/contractor
-- Consulting: https://freeinvoicegen.org/invoice-template/consulting
-- Photography: https://freeinvoicegen.org/invoice-template/photography
-- Graphic Design: https://freeinvoicegen.org/invoice-template/graphic-design
-- Web Design: https://freeinvoicegen.org/invoice-template/web-design
-- Construction: https://freeinvoicegen.org/invoice-template/construction
-- Cleaning: https://freeinvoicegen.org/invoice-template/cleaning
-- Plumbing: https://freeinvoicegen.org/invoice-template/plumbing
-- Landscaping: https://freeinvoicegen.org/invoice-template/landscaping
-- Catering: https://freeinvoicegen.org/invoice-template/catering
-- Tutoring: https://freeinvoicegen.org/invoice-template/tutoring
-- Electrician: https://freeinvoicegen.org/invoice-template/electrician
-- Painting: https://freeinvoicegen.org/invoice-template/painting
-- Videography: https://freeinvoicegen.org/invoice-template/videography
+- Contractor invoice template (in-depth guide): https://freeinvoicegen.org/invoice-template/contractor
+- Photography invoice template (in-depth guide): https://freeinvoicegen.org/invoice-template/photography
 
-## Country-specific generators
-
-- India (GST, GSTIN): https://freeinvoicegen.org/invoice-generator/india
-- United Kingdom (VAT): https://freeinvoicegen.org/invoice-generator/uk
-- United States: https://freeinvoicegen.org/invoice-generator/usa
-- Canada (GST/HST): https://freeinvoicegen.org/invoice-generator/canada
-- Australia (GST, ABN): https://freeinvoicegen.org/invoice-generator/australia
-- UAE (VAT, TRN): https://freeinvoicegen.org/invoice-generator/uae
-- Singapore (GST): https://freeinvoicegen.org/invoice-generator/singapore
-- Germany (USt): https://freeinvoicegen.org/invoice-generator/germany
-- Brazil (PIX, CNPJ): https://freeinvoicegen.org/invoice-generator/brazil
-- South Africa (VAT): https://freeinvoicegen.org/invoice-generator/south-africa
+Presets for other trades and country tax rules (GST, VAT, sales tax, ABN, TRN, etc.) are built into the main generator at https://freeinvoicegen.org — it auto-detects the user's country.
 
 ## Pricing
 

@@ -1,6 +1,7 @@
 import jsPDF from "jspdf";
 import type { DeliveryNoteData } from "@/components/DeliveryNoteForm";
 import { applyUnicodeFont, PDF_FONT_FAMILY } from "./pdfFont";
+import { drawWrappedText, wrap } from "./pdfHelpers";
 
 function isoToReadable(iso: string): string {
   if (!iso) return "";
@@ -59,8 +60,9 @@ export async function generateDeliveryNotePDF(
     y += 5;
     doc.setFontSize(11);
     doc.setTextColor(31, 41, 55);
-    doc.text(data.referenceNumber, mL, y);
-    y += 7;
+    const refLines = wrap(doc, data.referenceNumber, pageWidth - mL - mR);
+    doc.text(refLines, mL, y);
+    y += 5 * (refLines.length - 1) + 7;
   }
 
   // Consignor / Consignee
@@ -72,31 +74,43 @@ export async function generateDeliveryNotePDF(
   doc.setFontSize(11);
   doc.setTextColor(31, 41, 55);
   doc.setFont(ff, "bold");
-  doc.text(data.consignorName || "—", mL, y);
-  doc.text(data.consigneeName || "—", pageWidth / 2 + 4, y);
-  y += 5;
+  // Each column is wrapped to its own width so long names/addresses can't
+  // run into the other column or off the page.
+  const partyW = pageWidth / 2 - mL - 6;
+  const toX = pageWidth / 2 + 4;
+  const fromName = wrap(doc, data.consignorName || "—", partyW);
+  const toName = wrap(doc, data.consigneeName || "—", partyW);
+  fromName.forEach((l, i) => doc.text(l, mL, y + i * 5));
+  toName.forEach((l, i) => doc.text(l, toX, y + i * 5));
+  y += 5 * Math.max(fromName.length, toName.length);
   doc.setFont(ff, "normal");
   doc.setFontSize(9);
   doc.setTextColor(75, 85, 99);
 
-  const fromLines: string[] = [];
-  if (data.consignorAddress) fromLines.push(...data.consignorAddress.split("\n"));
-  if (data.consignorPhone) fromLines.push(`Phone: ${data.consignorPhone}`);
-  if (data.consignorTaxId) fromLines.push(`Tax ID: ${data.consignorTaxId}`);
-
-  const toLines: string[] = [];
-  if (data.consigneeAddress) toLines.push(...data.consigneeAddress.split("\n"));
-  if (data.consigneePhone) toLines.push(`Phone: ${data.consigneePhone}`);
+  const wrapAll = (parts: string[]) => parts.flatMap((p) => p.split("\n")).flatMap((p) => wrap(doc, p, partyW));
+  const fromLines = wrapAll([
+    data.consignorAddress,
+    data.consignorPhone ? `Phone: ${data.consignorPhone}` : "",
+    data.consignorTaxId ? `Tax ID: ${data.consignorTaxId}` : "",
+  ].filter(Boolean));
+  const toLines = wrapAll([
+    data.consigneeAddress,
+    data.consigneePhone ? `Phone: ${data.consigneePhone}` : "",
+  ].filter(Boolean));
 
   const maxLines = Math.max(fromLines.length, toLines.length);
   for (let i = 0; i < maxLines; i++) {
     if (fromLines[i]) doc.text(fromLines[i], mL, y);
-    if (toLines[i]) doc.text(toLines[i], pageWidth / 2 + 4, y);
+    if (toLines[i]) doc.text(toLines[i], toX, y);
     y += 5;
   }
   y += 3;
 
   // Transport box
+  if (y + 24 > pageHeight - 30) {
+    doc.addPage();
+    y = 20;
+  }
   const transportY = y;
   doc.setFillColor(243, 244, 246);
   doc.roundedRect(mL, transportY, pageWidth - mL - mR, 18, 2, 2, "F");
@@ -113,9 +127,12 @@ export async function generateDeliveryNotePDF(
   const tcol3 = mL + 4 + colW * 2;
 
   doc.setFont(ff, "bold");
-  doc.text(data.transportMode || "—", tcol1, transportY + 12);
-  doc.text(data.vehicleNumber || "—", tcol2, transportY + 12);
-  doc.text(data.driverName || "—", tcol3, transportY + 12);
+  // One line per cell inside the fixed-height box; overly long values are
+  // clipped to the column rather than spilling into the next one.
+  const cell = (s: string) => wrap(doc, s, colW - 4)[0] ?? "";
+  doc.text(cell(data.transportMode || "—"), tcol1, transportY + 12);
+  doc.text(cell(data.vehicleNumber || "—"), tcol2, transportY + 12);
+  doc.text(cell(data.driverName || "—"), tcol3, transportY + 12);
 
   doc.setFont(ff, "normal");
   doc.setFontSize(8);
@@ -133,30 +150,35 @@ export async function generateDeliveryNotePDF(
   const colQty = tableX + tableW - 60;
   const colUnit = tableX + tableW - 20;
 
-  doc.setFillColor(243, 244, 246);
-  doc.rect(tableX, y, tableW, 9, "F");
-  doc.setFontSize(9);
-  doc.setTextColor(75, 85, 99);
-  doc.setFont(ff, "bold");
-  doc.text("DESCRIPTION", colDesc, y + 6);
-  doc.text("QTY", colQty, y + 6, { align: "right" });
-  doc.text("UNIT", colUnit, y + 6, { align: "right" });
-  y += 12;
+  // Table header — redrawn at the top of every continuation page.
+  const drawTableHeader = () => {
+    doc.setFillColor(243, 244, 246);
+    doc.rect(tableX, y, tableW, 9, "F");
+    doc.setFontSize(9);
+    doc.setTextColor(75, 85, 99);
+    doc.setFont(ff, "bold");
+    doc.text("DESCRIPTION", colDesc, y + 6);
+    doc.text("QTY", colQty, y + 6, { align: "right" });
+    doc.text("UNIT", colUnit, y + 6, { align: "right" });
+    y += 12;
+    doc.setFont(ff, "normal");
+    doc.setTextColor(31, 41, 55);
+    doc.setFontSize(10);
+  };
+  drawTableHeader();
 
-  doc.setFont(ff, "normal");
-  doc.setTextColor(31, 41, 55);
-  doc.setFontSize(10);
   let totalItems = 0;
   let totalQuantity = 0;
   for (const it of data.items) {
     if (!it.description.trim() && it.quantity === 0) continue;
-    if (y > pageHeight - 80) {
+    const descLines = doc.splitTextToSize(it.description || "—", tableW - 80);
+    if (y + 5 * descLines.length > pageHeight - 20) {
       doc.addPage();
       y = 20;
+      drawTableHeader();
     }
     totalItems++;
     totalQuantity += it.quantity || 0;
-    const descLines = doc.splitTextToSize(it.description || "—", tableW - 80);
     doc.text(descLines, colDesc, y);
     doc.text(String(it.quantity || 0), colQty, y, { align: "right" });
     doc.text(it.unit || "", colUnit, y, { align: "right" });
@@ -188,13 +210,17 @@ export async function generateDeliveryNotePDF(
     y += 5;
     doc.setFont(ff, "normal");
     doc.setTextColor(75, 85, 99);
-    const lines = doc.splitTextToSize(data.notes, pageWidth - mL - mR);
-    doc.text(lines, mL, y);
-    y += 5 * lines.length + 4;
+    y = drawWrappedText(doc, data.notes, mL, y, { maxWidth: pageWidth - mL - mR, lineHeight: 5, bottomMargin: 20 }) + 4;
   }
 
-  // Signature blocks: dispatched by + received by
-  const sigY = Math.max(y + 6, pageHeight - 50);
+  // Signature blocks: dispatched by + received by. They sit near the page
+  // bottom; if content already reaches that zone they move to a new page
+  // instead of being pushed past the bottom edge.
+  if (y + 6 > pageHeight - 50) {
+    doc.addPage();
+    y = 20;
+  }
+  const sigY = pageHeight - 50;
   const halfW = (pageWidth - mL - mR - 20) / 2;
   doc.setDrawColor(156, 163, 175);
   doc.line(mL, sigY, mL + halfW, sigY);

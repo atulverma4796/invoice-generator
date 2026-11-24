@@ -42,10 +42,11 @@ function getDeviceInfo() {
   else if (ua.includes("Firefox/")) browser = "Firefox";
   else if (ua.includes("Safari/")) browser = "Safari";
   let os = "Unknown";
+  // iOS UAs contain "like Mac OS X", so test iPhone/iPad BEFORE "Mac OS".
   if (ua.includes("Windows")) os = "Windows";
+  else if (ua.includes("iPhone") || ua.includes("iPad")) os = "iOS";
   else if (ua.includes("Mac OS")) os = "macOS";
   else if (ua.includes("Android")) os = "Android";
-  else if (ua.includes("iPhone") || ua.includes("iPad")) os = "iOS";
   else if (ua.includes("Linux")) os = "Linux";
   return {
     browser,

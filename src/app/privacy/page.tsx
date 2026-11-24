@@ -6,7 +6,7 @@ const SITE_URL = "https://freeinvoicegen.org";
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description:
-    "InvoiceGen privacy policy. Detailed disclosure of how we handle data, cookies, advertising (Google AdSense), analytics, third-party services, and your rights under GDPR and CCPA.",
+    "How InvoiceGen handles data, cookies, advertising (Google AdSense), analytics and third-party services, and your rights under GDPR and CCPA.",
   alternates: { canonical: `${SITE_URL}/privacy` },
   robots: { index: true, follow: true },
 };

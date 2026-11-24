@@ -11,6 +11,7 @@ import {
   checkRateLimit,
   escapeHtml,
   isAllowedOrigin,
+  toHeaderSafe,
 } from "@/lib/api-security";
 
 const MAX_REQUEST_BYTES = 64 * 1024; // 64 KB is plenty for feedback text
@@ -60,6 +61,14 @@ export async function POST(req: NextRequest) {
       { status: 400 },
     );
   }
+  // `null`, arrays and primitives are valid JSON but not a payload object;
+  // without this guard `body.to` on null throws → unhandled 500.
+  if (!body || typeof body !== "object" || Array.isArray(body)) {
+    return NextResponse.json(
+      { error: "Invalid JSON body" },
+      { status: 400 },
+    );
+  }
 
   const rawName = typeof body.name === "string" ? body.name.trim() : "";
   const rawType = typeof body.type === "string" ? body.type.trim() : "";
@@ -75,7 +84,8 @@ export async function POST(req: NextRequest) {
 
   // Cap visible-string lengths so a 100 KB "name" can't bloat the
   // outgoing email or the subject header.
-  const name = (rawName || "Anonymous").slice(0, 80);
+  // Header-safe: name lands in the Subject line.
+  const name = (toHeaderSafe(rawName) || "Anonymous").slice(0, 80);
   const type = ALLOWED_TYPES.has(rawType) ? rawType : "Feedback";
   const message = rawMessage.slice(0, 5000);
 

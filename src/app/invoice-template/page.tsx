@@ -8,10 +8,14 @@ export const metadata: Metadata = {
   title: "Free Invoice Templates - 15+ Industry Templates, PDF Download",
   description: "Browse 15+ free professional invoice templates for freelancers, contractors, photographers, consultants, designers, and more. No signup, instant PDF download.",
   alternates: { canonical: `${SITE_URL}/invoice-template` },
-  // Hub for the industry template pages. Re-indexed 2026-07: AdSense is
-  // approved and the enriched children (photography, contractor) now carry
-  // unique editorial content. Thin child pages stay noindex individually.
-  robots: { index: true, follow: true },
+  // Hub for the industry template pages. NOINDEX + removed from global nav
+  // (2026-11-24): AdSense rejected freeinvoicegen.org 3 times for "low
+  // value"/doorway patterns, and this hub is a bare grid of 15 links, 13 of
+  // them noindex thin templates. `follow` stays so the enriched children
+  // (contractor, photography — indexable, in sitemap) still get crawled.
+  // Re-index only after it has real editorial content
+  // (see tests/seo/doorway.test.ts).
+  robots: { index: false, follow: true },
   openGraph: {
     title: "Free Invoice Templates - 15+ Industry Templates",
     description: "15+ professional invoice templates for every industry. 100% free, no signup, instant PDF.",

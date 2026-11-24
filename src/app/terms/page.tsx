@@ -6,7 +6,7 @@ const SITE_URL = "https://freeinvoicegen.org";
 export const metadata: Metadata = {
   title: "Terms of Service",
   description:
-    "InvoiceGen terms of service. By using our free invoice generator you agree to these terms. Covers acceptable use, intellectual property, disclaimers, limitations of liability, and dispute resolution.",
+    "InvoiceGen terms of service: acceptable use, intellectual property, disclaimers, limitation of liability and dispute resolution for our free tools.",
   alternates: { canonical: `${SITE_URL}/terms` },
   robots: { index: true, follow: true },
 };

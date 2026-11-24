@@ -114,6 +114,20 @@ export const CURRENCIES = [
   { code: "EGP", symbol: "E\u00A3", name: "Egyptian Pound" },
   { code: "PKR", symbol: "\u20A8", name: "Pakistani Rupee" },
   { code: "BDT", symbol: "\u09F3", name: "Bangladeshi Taka" },
+  // Added so these countries stop being mapped to EUR/INR/USD in COUNTRIES.
+  { code: "CZK", symbol: "K\u010D", name: "Czech Koruna" },
+  { code: "HUF", symbol: "Ft", name: "Hungarian Forint" },
+  { code: "RON", symbol: "lei", name: "Romanian Leu" },
+  { code: "RSD", symbol: "din.", name: "Serbian Dinar" },
+  { code: "ISK", symbol: "kr", name: "Icelandic Kr\u00F3na" },
+  { code: "ALL", symbol: "L", name: "Albanian Lek" },
+  { code: "BAM", symbol: "KM", name: "Bosnia-Herzegovina Convertible Mark" },
+  { code: "MKD", symbol: "\u0434\u0435\u043D", name: "Macedonian Denar" },
+  { code: "MDL", symbol: "L", name: "Moldovan Leu" },
+  { code: "NPR", symbol: "Rs", name: "Nepalese Rupee" },
+  { code: "HKD", symbol: "HK$", name: "Hong Kong Dollar" },
+  { code: "TWD", symbol: "NT$", name: "New Taiwan Dollar" },
+  { code: "ILS", symbol: "\u20AA", name: "Israeli New Shekel" },
 ];
 
 // Predefined T&C mapped to watermark status
@@ -200,6 +214,10 @@ const PDF_SAFE_SYMBOLS: Record<string, string> = {
   TRY: "TL",
   PKR: "Rs.",
   BDT: "Tk",
+  CZK: "Kc",
+  MKD: "den",
+  NPR: "Rs.",
+  ILS: "ILS",
 };
 
 export function getPdfCurrencySymbol(code: string): string {

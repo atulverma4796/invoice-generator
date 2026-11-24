@@ -11,6 +11,7 @@ import {
   calculateDiscount,
   calculateTotal,
 } from "@/lib/calculations";
+import { invoiceHeaderColors } from "@/lib/pdfHelpers";
 
 interface TemplatePreviewCardProps {
   templateId: TemplateId;
@@ -102,17 +103,14 @@ function MiniPreview({ data }: { data: InvoiceData }) {
   const tax = calculateTax(subtotal, data.taxRate, discount);
   const total = calculateTotal(subtotal, tax, discount) + (data.shippingFee || 0);
 
-  const isLight = data.template === "minimal" || data.template === "pastel" || data.template === "monochrome";
   const isDark = data.template === "executive";
   const templateConfig = TEMPLATES[data.template];
-  const headerBg = isLight
-    ? data.template === "pastel" ? "#f5f0e8"
-    : data.template === "monochrome" ? "#ffffff"
-    : "#f9fafb"
-    : (templateConfig?.headerBg || style.primaryColor);
-  const headerText = isLight
-    ? (data.template === "monochrome" ? "#000000" : style.primaryColor)
-    : (isDark ? "#d4a843" : "#ffffff");
+  // Same luminance-based header colours as the full preview and the PDF.
+  const { bg: headerBg, text: headerText } = invoiceHeaderColors(
+    data.template,
+    templateConfig?.headerBg || style.primaryColor,
+    style.primaryColor,
+  );
   const bodyBg = data.template === "pastel" ? "#faf8f4" : isDark ? "#1c1c1e" : "#ffffff";
   const bodyText = isDark ? "#e5e5e5" : "#1f2937";
   const mutedText = isDark ? "#9ca3af" : "#6b7280";

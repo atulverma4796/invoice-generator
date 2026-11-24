@@ -16,6 +16,7 @@ import {
   escapeHtml,
   isAllowedOrigin,
   sanitizeFilename,
+  toHeaderSafe,
 } from "@/lib/api-security";
 
 // Safe enough for a single attachment without triggering Gmail's
@@ -28,6 +29,13 @@ const MAX_PDF_BYTES = 5 * 1024 * 1024; // 5 MB
 // we still re-validate server-side because client-side validation can
 // be bypassed by anyone calling the API directly.
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+// Characters that are legal in RFC 5322 display syntax but let a single
+// string expand into multiple / rewritten recipients ("a@x.com, b@y.com",
+// "<a@x.com>", "x@y.com (comment)") — never valid in a bare address field.
+const ADDRESS_META_RE = /[,;<>()"\\[\]:]/;
+function isSingleEmail(value: string): boolean {
+  return EMAIL_RE.test(value) && !ADDRESS_META_RE.test(value) && value.length <= 254;
+}
 
 export async function POST(req: NextRequest) {
   // Layer 1: origin allowlist. Stops the trivial cross-site script
@@ -76,6 +84,14 @@ export async function POST(req: NextRequest) {
       { status: 400 },
     );
   }
+  // `null`, arrays and primitives are valid JSON but not a payload object;
+  // without this guard `body.to` on null throws → unhandled 500.
+  if (!body || typeof body !== "object" || Array.isArray(body)) {
+    return NextResponse.json(
+      { error: "Invalid JSON body" },
+      { status: 400 },
+    );
+  }
 
   const to = typeof body.to === "string" ? body.to.trim() : "";
   const senderName =
@@ -95,13 +111,13 @@ export async function POST(req: NextRequest) {
   }
   // Reject multi-address `to` outright — a single relay request
   // sending to 50 recipients is a clear abuse signal.
-  if (!EMAIL_RE.test(to) || to.includes(",") || to.includes(";")) {
+  if (!isSingleEmail(to)) {
     return NextResponse.json(
       { error: "Recipient email is invalid" },
       { status: 400 },
     );
   }
-  if (senderEmail && !EMAIL_RE.test(senderEmail)) {
+  if (senderEmail && !isSingleEmail(senderEmail)) {
     return NextResponse.json(
       { error: "Reply-to email is invalid" },
       { status: 400 },
@@ -122,8 +138,9 @@ export async function POST(req: NextRequest) {
 
   // Length caps on user-visible strings — keeps email subject + display
   // name reasonable and curtails giant-string DoS attempts.
-  const fromName = (senderName || "InvoiceGen").slice(0, 80);
-  const invNum = (invoiceNumber || "Invoice").slice(0, 60);
+  // Header-safe first: these land in Subject / From display name.
+  const fromName = (toHeaderSafe(senderName) || "InvoiceGen").slice(0, 80);
+  const invNum = (toHeaderSafe(invoiceNumber) || "Invoice").slice(0, 60);
 
   // Pre-escape every user-interpolated value before it lands in HTML.
   // The text/plain body is fine without escaping but we still cap

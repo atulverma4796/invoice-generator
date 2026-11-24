@@ -93,6 +93,38 @@ export function defaultSalarySlipData(): SalarySlipData {
   };
 }
 
+const r2 = (n: number) => Math.round((n + Number.EPSILON) * 100) / 100;
+
+export interface SalaryTotals {
+  grossEarnings: number;
+  /** Unpaid days = working − present − paid leave (never negative). */
+  lopDays: number;
+  /** Loss-of-pay deduction: gross × lopDays / workingDays. */
+  lopDeduction: number;
+  /** Sum of the deduction lines the user entered (PF, PT, TDS…). */
+  listedDeductions: number;
+  totalDeductions: number;
+  netPay: number;
+}
+
+/**
+ * Single source of truth for payslip totals (form + PDF).
+ * Earnings are entered as full-month amounts; unpaid (LOP) days are
+ * deducted pro-rata so the slip pays only for days actually paid.
+ */
+export function computeSalaryTotals(
+  data: Pick<SalarySlipData, "earnings" | "deductions" | "workingDays" | "presentDays" | "paidLeave">,
+): SalaryTotals {
+  const grossEarnings = r2(data.earnings.reduce((s, l) => s + (l.amount || 0), 0));
+  const listedDeductions = r2(data.deductions.reduce((s, l) => s + (l.amount || 0), 0));
+  const wd = Math.max(0, data.workingDays || 0);
+  const lopDays = wd > 0 ? Math.min(wd, Math.max(0, wd - (data.presentDays || 0) - (data.paidLeave || 0))) : 0;
+  const lopDeduction = wd > 0 ? r2((grossEarnings * lopDays) / wd) : 0;
+  const totalDeductions = r2(listedDeductions + lopDeduction);
+  const netPay = r2(grossEarnings - totalDeductions);
+  return { grossEarnings, lopDays, lopDeduction, listedDeductions, totalDeductions, netPay };
+}
+
 function formatPeriod(ym: string): string {
   const [y, m] = ym.split("-").map(Number);
   if (!y || !m) return ym;
@@ -120,12 +152,11 @@ export default function SalarySlipForm({ data, setData, onGenerate, generating }
     el.scrollIntoView({ behavior: "smooth", block: "center" });
   };
 
-  const totals = useMemo(() => {
-    const grossEarnings = data.earnings.reduce((s, l) => s + (l.amount || 0), 0);
-    const totalDeductions = data.deductions.reduce((s, l) => s + (l.amount || 0), 0);
-    const netPay = grossEarnings - totalDeductions;
-    return { grossEarnings, totalDeductions, netPay };
-  }, [data.earnings, data.deductions]);
+  const totals = useMemo(
+    () => computeSalaryTotals(data),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [data.earnings, data.deductions, data.workingDays, data.presentDays, data.paidLeave],
+  );
 
   const update = <K extends keyof SalarySlipData>(field: K, value: SalarySlipData[K]) => {
     setData({ ...data, [field]: value });
@@ -233,6 +264,12 @@ export default function SalarySlipForm({ data, setData, onGenerate, generating }
           />
         </div>
       </div>
+      {totals.lopDays > 0 && (
+        <p className="-mt-3 text-[11px] text-gray-500">
+          Enter earnings as full-month amounts. {totals.lopDays} unpaid day{totals.lopDays === 1 ? "" : "s"} (LOP) will be
+          deducted pro-rata.
+        </p>
+      )}
 
       {/* Company */}
       <div className="space-y-3">
@@ -448,6 +485,14 @@ export default function SalarySlipForm({ data, setData, onGenerate, generating }
               </div>
             ))}
           </div>
+          {totals.lopDeduction > 0 && (
+            <div className="mt-2 flex justify-between text-sm text-red-700" data-testid="lop-deduction">
+              <span>Loss of Pay ({totals.lopDays} day{totals.lopDays === 1 ? "" : "s"})</span>
+              <span className="font-medium">
+                {data.currencySymbol}{totals.lopDeduction.toLocaleString("en-IN", { maximumFractionDigits: 2 })}
+              </span>
+            </div>
+          )}
           <div className="mt-3 pt-3 border-t border-red-200 flex justify-between text-sm">
             <span className="font-semibold text-red-800">Total Deductions</span>
             <span className="font-bold text-red-800">
@@ -476,7 +521,7 @@ export default function SalarySlipForm({ data, setData, onGenerate, generating }
         </div>
         {totals.netPay > 0 && data.currencySymbol === "₹" && (
           <p className="mt-3 text-xs text-blue-200 italic">
-            {numberToIndianWords(totals.netPay)} Rupees Only
+            {numberToIndianWords(Math.round(totals.netPay))} Rupees Only
           </p>
         )}
       </div>

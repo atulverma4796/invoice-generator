@@ -22,7 +22,7 @@ const SITE_URL = "https://freeinvoicegen.org";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Free Invoice, Quotation, Salary Slip & More — No Signup | freeinvoicegen.org",
+    default: "Free Invoice Generator — No Signup, Instant PDF | InvoiceGen",
     template: "%s | freeinvoicegen.org",
   },
   description:
@@ -223,7 +223,6 @@ export default function RootLayout({
                   </div>
                 </div>
 
-                <a href="/invoice-template" className="hover:text-blue-600 transition-colors">Templates</a>
                 <a href="/blog" className="hover:text-blue-600 transition-colors">Blog</a>
                 <a href="/templates" className="hover:text-amber-600 transition-colors">My Invoices</a>
               </nav>
@@ -288,7 +287,6 @@ export default function RootLayout({
                 <nav className="flex flex-col gap-2">
                   <a href="/#features" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">Features</a>
                   <a href="/#faq" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">FAQ</a>
-                  <a href="/invoice-template" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">Invoice Templates</a>
                   <a href="/blog" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">Blog</a>
                   <a href="/templates" className="text-sm text-gray-500 hover:text-amber-600 transition-colors">My Invoices</a>
                   <a href="/#feedback" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">Feedback</a>

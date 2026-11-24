@@ -11,13 +11,17 @@ import {
   calculateTotal,
 } from "./calculations";
 import { applyUnicodeFont, PDF_FONT_FAMILY } from "./pdfFont";
-
-function hexToRgb(hex: string): [number, number, number] {
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result
-    ? [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)]
-    : [0, 0, 0];
-}
+import {
+  hexToRgb,
+  invoiceHeaderColors,
+  readableTextOn,
+  formatAmount,
+  toPdfImage,
+  fitImage,
+  drawWrappedText,
+  wrap,
+  clientTaxIdDisplayLabel,
+} from "./pdfHelpers";
 
 const STATUS_PDF_COLORS: Record<string, { bg: [number, number, number]; text: [number, number, number] }> = {
   draft: { bg: [243, 244, 246], text: [55, 65, 81] },
@@ -28,9 +32,6 @@ const STATUS_PDF_COLORS: Record<string, { bg: [number, number, number]; text: [n
 
 const DEFAULT_STATUS_PDF = { bg: [237, 233, 254] as [number, number, number], text: [109, 40, 217] as [number, number, number] };
 
-function fmt(amount: number, sym: string): string {
-  return `${sym} ${amount.toFixed(2)}`;
-}
 
 export async function generateInvoicePDF(
   data: InvoiceData,
@@ -45,12 +46,15 @@ export async function generateInvoicePDF(
   const sym = getPdfCurrencySymbol(data.currency);
   const L = getPdfLabels(data.language);
   const taxLabel = data.taxLabel || "Tax";
+  // Grouped thousands + the currency's own decimals (JPY/KRW have none).
+  const fmt = (amount: number, s: string) => `${s} ${formatAmount(amount, data.currency)}`;
   const primaryRgb = hexToRgb(style.primaryColor);
-  const isLight = data.template === "minimal";
-  const isDark = data.template === "executive";
   const templateConfig = TEMPLATES[data.template];
   const headerBgHex = templateConfig?.headerBg || style.primaryColor;
   const headerBgRgb = hexToRgb(headerBgHex);
+  // Shared with InvoicePreview: luminance-based, so pale headers (Minimal,
+  // Pastel, Mono) get dark/brand text instead of invisible white.
+  const headerColors = invoiceHeaderColors(data.template, headerBgHex, style.primaryColor);
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
   const mL = 15;
@@ -58,31 +62,33 @@ export async function generateInvoicePDF(
   const contentW = pageWidth - mL - mR;
 
   // Header Background
-  if (!isLight) {
-    doc.setFillColor(...headerBgRgb);
-    doc.rect(0, 0, pageWidth, 42, "F");
-  } else {
-    doc.setFillColor(249, 250, 251);
-    doc.rect(0, 0, pageWidth, 42, "F");
-  }
+  doc.setFillColor(...headerBgRgb);
+  doc.rect(0, 0, pageWidth, 42, "F");
 
-  // Logo
+  // Logo — PNG/JPEG/WebP embedded in their real format; SVG is rasterised
+  // in the browser (jsPDF can't embed SVG) and skipped where no canvas
+  // exists. Aspect ratio is preserved inside a 20x20mm box.
   let headerLeftX = mL;
   if (data.logo) {
-    try {
-      doc.addImage(data.logo, "PNG", mL, 8, 20, 20);
-      headerLeftX = mL + 23;
-    } catch {
-      // skip
+    const img = await toPdfImage(data.logo);
+    if (img) {
+      try {
+        const { w, h } = fitImage(doc, img.data, 20, 20);
+        doc.addImage(img.data, img.format, mL, 8 + (20 - h) / 2, w, h);
+        headerLeftX = mL + w + 3;
+      } catch {
+        // A malformed image must never break the whole PDF.
+      }
     }
   }
 
-  // Header Text — gold on dark for Executive, white on primary for others, primary on light bg for Minimal
-  const hColor: [number, number, number] = isLight ? primaryRgb : (isDark ? primaryRgb : [255, 255, 255]);
+  // Header Text — colour chosen for contrast against the header background
+  const hColor: [number, number, number] = hexToRgb(headerColors.text);
   doc.setTextColor(...hColor);
   doc.setFontSize(22);
   doc.setFont(ff, "bold");
   doc.text(L.invoice, headerLeftX, 18);
+  const titleRight = headerLeftX + doc.getTextWidth(L.invoice);
 
   doc.setFontSize(10);
   doc.setFont(ff, "normal");
@@ -107,15 +113,27 @@ export async function generateInvoicePDF(
 
   // Sender info (top right)
   doc.setTextColor(...hColor);
+  // Wrapped to the space right of the title so long names can't collide
+  // with it; capped so everything stays inside the 42mm header band.
+  const senderBlockW = pageWidth - mR - Math.max(titleRight + 8, pageWidth * 0.45);
   doc.setFontSize(11);
   doc.setFont(ff, "bold");
-  doc.text(data.senderName || "Your Business Name", pageWidth - mR, 18, { align: "right" });
+  let rY = 18;
+  wrap(doc, data.senderName || "Your Business Name", senderBlockW).slice(0, 2).forEach((line) => {
+    doc.text(line, pageWidth - mR, rY, { align: "right" });
+    rY += 4.5;
+  });
+  rY += 0.5;
   doc.setFontSize(8);
   doc.setFont(ff, "normal");
-  let rY = 23;
-  if (data.senderEmail) { doc.text(data.senderEmail, pageWidth - mR, rY, { align: "right" }); rY += 4; }
-  if (data.senderPhone) { doc.text(data.senderPhone, pageWidth - mR, rY, { align: "right" }); rY += 4; }
-  if (data.senderWebsite) { doc.text(data.senderWebsite, pageWidth - mR, rY, { align: "right" }); }
+  for (const v of [data.senderEmail, data.senderPhone, data.senderWebsite]) {
+    if (!v) continue;
+    for (const line of wrap(doc, v, senderBlockW)) {
+      if (rY > 40) break;
+      doc.text(line, pageWidth - mR, rY, { align: "right" });
+      rY += 4;
+    }
+  }
 
   doc.setTextColor(0, 0, 0);
 
@@ -129,11 +147,17 @@ export async function generateInvoicePDF(
   doc.text(L.invoiceDate.toUpperCase(), pageWidth - mR, y, { align: "right" });
 
   y += 5;
+  // Column widths: From = mL..80, Bill To = 80..(date column, 42mm wide).
+  const clientX = 80;
+  const fromW = clientX - mL - 5;
+  const clientW = pageWidth - mR - 42 - clientX;
   doc.setTextColor(31, 41, 55);
   doc.setFontSize(9);
   doc.setFont(ff, "bold");
-  doc.text(data.senderName || "\u2014", mL, y);
-  doc.text(data.clientName || "\u2014", 80, y);
+  const senderNameLines = wrap(doc, data.senderName || "\u2014", fromW);
+  const clientNameLines = wrap(doc, data.clientName || "\u2014", clientW);
+  senderNameLines.forEach((line, i) => doc.text(line, mL, y + i * 4));
+  clientNameLines.forEach((line, i) => doc.text(line, clientX, y + i * 4));
 
   doc.setFont(ff, "normal");
   doc.setFontSize(8);
@@ -142,18 +166,24 @@ export async function generateInvoicePDF(
     : "\u2014";
   doc.text(invoiceDateStr, pageWidth - mR, y, { align: "right" });
 
-  y += 4;
+  y += 4 * Math.max(senderNameLines.length, clientNameLines.length);
   doc.setTextColor(107, 114, 128);
   const fromStartY = y;
-  if (data.senderAddress) {
-    data.senderAddress.split("\n").forEach((line) => { doc.text(line, mL, y); y += 3.5; });
-  }
-  if (data.senderTaxId) { doc.text(`${L.taxId}: ${data.senderTaxId}`, mL, y); y += 3.5; }
+  const drawColumn = (text: string, x: number, w: number, startY: number): number => {
+    let yy = startY;
+    for (const para of text.split("\n")) {
+      for (const line of wrap(doc, para, w)) { doc.text(line, x, yy); yy += 3.5; }
+    }
+    return yy;
+  };
+  if (data.senderAddress) y = drawColumn(data.senderAddress, mL, fromW, y);
+  if (data.senderTaxId) y = drawColumn(`${L.taxId}: ${data.senderTaxId}`, mL, fromW, y);
 
   let clientY = fromStartY;
-  if (data.clientEmail) { doc.text(data.clientEmail, 80, clientY); clientY += 3.5; }
-  if (data.clientAddress) {
-    data.clientAddress.split("\n").forEach((line) => { doc.text(line, 80, clientY); clientY += 3.5; });
+  if (data.clientEmail) clientY = drawColumn(data.clientEmail, clientX, clientW, clientY);
+  if (data.clientAddress) clientY = drawColumn(data.clientAddress, clientX, clientW, clientY);
+  if (data.clientTaxId?.trim()) {
+    clientY = drawColumn(`${clientTaxIdDisplayLabel(data.currency)}: ${data.clientTaxId.trim()}`, clientX, clientW, clientY);
   }
 
   doc.setFontSize(7);
@@ -188,7 +218,8 @@ export async function generateInvoicePDF(
     styles: { font: ff },
     headStyles: {
       fillColor: [...primaryRgb] as [number, number, number],
-      textColor: [255, 255, 255],
+      // White on most brand colours; dark on pale/gold ones (e.g. Executive).
+      textColor: hexToRgb(readableTextOn(style.primaryColor, "#ffffff")),
       fontStyle: "bold",
       fontSize: 8,
       cellPadding: 3,
@@ -334,13 +365,14 @@ export async function generateInvoicePDF(
       doc.setFont(ff, "normal");
       doc.setFontSize(7.5);
       doc.setTextColor(107, 114, 128);
-      const termLines = doc.splitTextToSize(data.terms, contentW);
-      doc.text(termLines, mL, tY);
-      tY += termLines.length * 3.5 + 4;
+      // Line-by-line so long terms continue on the next page instead of
+      // running off the bottom edge.
+      tY = drawWrappedText(doc, data.terms, mL, tY, { maxWidth: contentW, lineHeight: 3.5 }) + 4;
     }
 
     // Notes at the bottom
     if (hasNotes) {
+      if (tY > pageHeight - 20) { doc.addPage(); tY = 20; }
       doc.setFontSize(8);
       doc.setFont(ff, "bold");
       doc.setTextColor(55, 65, 81);
@@ -350,9 +382,7 @@ export async function generateInvoicePDF(
       doc.setFont(ff, "normal");
       doc.setFontSize(7.5);
       doc.setTextColor(107, 114, 128);
-      const noteLines = doc.splitTextToSize(data.notes, contentW);
-      doc.text(noteLines, mL, tY);
-      tY += noteLines.length * 3.5;
+      tY = drawWrappedText(doc, data.notes, mL, tY, { maxWidth: contentW, lineHeight: 3.5 });
     }
   }
 
@@ -374,9 +404,10 @@ export async function generateInvoicePDF(
     const rowStartY = tY;
 
     // QR Code (left side)
-    if (hasQR && qrDataURL) {
+    const qrImg = hasQR && qrDataURL ? await toPdfImage(qrDataURL) : null;
+    if (qrImg) {
       try {
-        doc.addImage(qrDataURL, "PNG", mL, rowStartY, 28, 28);
+        doc.addImage(qrImg.data, qrImg.format, mL, rowStartY, 28, 28);
         doc.setFontSize(8);
         doc.setFont(ff, "bold");
         doc.setTextColor(55, 65, 81);
@@ -393,9 +424,11 @@ export async function generateInvoicePDF(
     }
 
     // Signature (right side, same row as QR)
-    if (hasSig && data.signature) {
+    const sigImg = hasSig && data.signature ? await toPdfImage(data.signature) : null;
+    if (sigImg) {
       try {
-        doc.addImage(data.signature, "PNG", pageWidth - 60, rowStartY, 40, 15);
+        const { w: sigW, h: sigH } = fitImage(doc, sigImg.data, 40, 15);
+        doc.addImage(sigImg.data, sigImg.format, pageWidth - 60, rowStartY + (15 - sigH), sigW, sigH);
         const sigLineY = rowStartY + 16;
         doc.setDrawColor(156, 163, 175);
         doc.setLineWidth(0.3);

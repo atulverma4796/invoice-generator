@@ -6,7 +6,7 @@ const SITE_URL = "https://freeinvoicegen.org";
 export const metadata: Metadata = {
   title: "About InvoiceGen — Why We Built a Free Invoice Generator",
   description:
-    "The story, mission, and values behind InvoiceGen — a 100% free invoice generator built for freelancers and small businesses worldwide. No signup, no paywalls, no catch.",
+    "The story and mission behind InvoiceGen — a 100% free invoice generator for freelancers and small businesses worldwide. No signup, no paywalls, no catch.",
   alternates: { canonical: `${SITE_URL}/about` },
   robots: { index: true, follow: true },
 };

@@ -30,7 +30,7 @@ function threeDigits(n: number): string {
 /** Convert an integer rupee amount into Indian English words ("lakh", "crore"). */
 export function numberToIndianWords(n: number): string {
   n = Math.floor(Math.abs(n));
-  if (n === 0) return "Zero";
+  if (n === 0 || !Number.isFinite(n)) return "Zero";
   if (n > 999999999999) return n.toString();
 
   const crores = Math.floor(n / 10000000);
@@ -39,7 +39,9 @@ export function numberToIndianWords(n: number): string {
   const rest = n % 1000;
 
   const parts: string[] = [];
-  if (crores > 0) parts.push(twoDigits(crores) + " Crore");
+  // crores can exceed 99 (e.g. 100 Crore = 1,000,000,000) — twoDigits()
+  // only handles 0–99, so recurse to get "One Hundred Crore" etc.
+  if (crores > 0) parts.push(numberToIndianWords(crores) + " Crore");
   if (lakhs > 0) parts.push(twoDigits(lakhs) + " Lakh");
   if (thousands > 0) parts.push(twoDigits(thousands) + " Thousand");
   if (rest > 0) parts.push(threeDigits(rest));

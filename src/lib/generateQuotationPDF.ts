@@ -1,11 +1,8 @@
 import jsPDF from "jspdf";
 import type { QuotationData } from "@/components/QuotationForm";
-import { getCurrencySymbol } from "@/components/QuotationForm";
+import { getCurrencySymbol, computeQuotationTotals } from "@/components/QuotationForm";
 import { applyUnicodeFont, PDF_FONT_FAMILY } from "./pdfFont";
-
-function fmt(n: number): string {
-  return new Intl.NumberFormat("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n);
-}
+import { formatAmount, drawWrappedText, wrap } from "./pdfHelpers";
 
 function isoToReadable(iso: string): string {
   if (!iso) return "";
@@ -32,6 +29,7 @@ export async function generateQuotationPDF(
   const symbol = getCurrencySymbol(data.currency);
   // jsPDF's default font doesn't render the rupee glyph; substitute "Rs."
   const moneyPrefix = data.currency === "INR" ? "Rs. " : symbol;
+  const fmt = (n: number) => formatAmount(n, data.currency);
 
   // Header band
   doc.setFillColor(37, 99, 235);
@@ -67,27 +65,32 @@ export async function generateQuotationPDF(
   doc.setFontSize(11);
   doc.setTextColor(31, 41, 55);
   doc.setFont(ff, "bold");
-  doc.text(data.senderName || "—", mL, y);
-  doc.text(data.clientName || "—", pageWidth / 2 + 4, y);
-  y += 5;
+  // Each column is wrapped to its own width so long names/addresses can't
+  // run into the other column or off the page.
+  const colW = pageWidth / 2 - mL - 6;
+  const toX = pageWidth / 2 + 4;
+  const fromName = wrap(doc, data.senderName || "—", colW);
+  const toName = wrap(doc, data.clientName || "—", colW);
+  fromName.forEach((l, i) => doc.text(l, mL, y + i * 5));
+  toName.forEach((l, i) => doc.text(l, toX, y + i * 5));
+  y += 5 * Math.max(fromName.length, toName.length);
   doc.setFont(ff, "normal");
   doc.setFontSize(9);
   doc.setTextColor(75, 85, 99);
 
-  const fromLines: string[] = [];
-  if (data.senderEmail) fromLines.push(data.senderEmail);
-  if (data.senderPhone) fromLines.push(data.senderPhone);
-  if (data.senderAddress) fromLines.push(...data.senderAddress.split("\n"));
-  if (data.senderTaxId) fromLines.push(`Tax ID: ${data.senderTaxId}`);
-
-  const toLines: string[] = [];
-  if (data.clientEmail) toLines.push(data.clientEmail);
-  if (data.clientAddress) toLines.push(...data.clientAddress.split("\n"));
+  const wrapAll = (parts: string[]) => parts.flatMap((p) => p.split("\n")).flatMap((p) => wrap(doc, p, colW));
+  const fromLines = wrapAll([
+    data.senderEmail,
+    data.senderPhone,
+    data.senderAddress,
+    data.senderTaxId ? `Tax ID: ${data.senderTaxId}` : "",
+  ].filter(Boolean));
+  const toLines = wrapAll([data.clientEmail, data.clientAddress].filter(Boolean));
 
   const maxLines = Math.max(fromLines.length, toLines.length);
   for (let i = 0; i < maxLines; i++) {
     if (fromLines[i]) doc.text(fromLines[i], mL, y);
-    if (toLines[i]) doc.text(toLines[i], pageWidth / 2 + 4, y);
+    if (toLines[i]) doc.text(toLines[i], toX, y);
     y += 5;
   }
   y += 5;
@@ -100,32 +103,38 @@ export async function generateQuotationPDF(
   const colRate = tableX + tableW - 40;
   const colAmount = tableX + tableW - 2;
 
-  // Table header
-  doc.setFillColor(243, 244, 246);
-  doc.rect(tableX, y, tableW, 9, "F");
-  doc.setFontSize(9);
-  doc.setTextColor(75, 85, 99);
-  doc.setFont(ff, "bold");
-  doc.text("DESCRIPTION", colDesc, y + 6);
-  doc.text("QTY", colQty, y + 6, { align: "right" });
-  doc.text("RATE", colRate, y + 6, { align: "right" });
-  doc.text("AMOUNT", colAmount, y + 6, { align: "right" });
-  y += 12;
+  // Table header — redrawn at the top of every continuation page.
+  const drawTableHeader = () => {
+    doc.setFillColor(243, 244, 246);
+    doc.rect(tableX, y, tableW, 9, "F");
+    doc.setFontSize(9);
+    doc.setTextColor(75, 85, 99);
+    doc.setFont(ff, "bold");
+    doc.text("DESCRIPTION", colDesc, y + 6);
+    doc.text("QTY", colQty, y + 6, { align: "right" });
+    doc.text("RATE", colRate, y + 6, { align: "right" });
+    doc.text("AMOUNT", colAmount, y + 6, { align: "right" });
+    y += 12;
+    doc.setFont(ff, "normal");
+    doc.setTextColor(31, 41, 55);
+    doc.setFontSize(10);
+  };
+  if (y > pageHeight - 40) {
+    doc.addPage();
+    y = 20;
+  }
+  drawTableHeader();
 
   // Rows
-  doc.setFont(ff, "normal");
-  doc.setTextColor(31, 41, 55);
-  doc.setFontSize(10);
-  let subtotal = 0;
   for (const it of data.lineItems) {
     if (!it.description.trim() && it.rate === 0 && it.quantity === 0) continue;
-    if (y > pageHeight - 60) {
+    const amount = (it.quantity || 0) * (it.rate || 0);
+    const descLines = doc.splitTextToSize(it.description || "—", tableW - 80);
+    if (y + 5 * descLines.length > pageHeight - 20) {
       doc.addPage();
       y = 20;
+      drawTableHeader();
     }
-    const amount = it.quantity * it.rate;
-    subtotal += amount;
-    const descLines = doc.splitTextToSize(it.description || "—", tableW - 80);
     doc.text(descLines, colDesc, y);
     doc.text(String(it.quantity || 0), colQty, y, { align: "right" });
     doc.text(`${moneyPrefix}${fmt(it.rate || 0)}`, colRate, y, { align: "right" });
@@ -136,11 +145,8 @@ export async function generateQuotationPDF(
     y += 3;
   }
 
-  // Totals
-  const discount = (subtotal * (data.discountRate || 0)) / 100;
-  const taxableBase = subtotal - discount;
-  const tax = (taxableBase * (data.taxRate || 0)) / 100;
-  const total = taxableBase + tax;
+  // Totals — same function the on-screen form uses.
+  const { subtotal, discount, tax, total } = computeQuotationTotals(data);
 
   if (y > pageHeight - 80) {
     doc.addPage();
@@ -194,9 +200,7 @@ export async function generateQuotationPDF(
     y += 5;
     doc.setFont(ff, "normal");
     doc.setTextColor(75, 85, 99);
-    const lines = doc.splitTextToSize(data.notes, pageWidth - mL - mR);
-    doc.text(lines, mL, y);
-    y += 5 * lines.length + 4;
+    y = drawWrappedText(doc, data.notes, mL, y, { maxWidth: pageWidth - mL - mR, lineHeight: 5, bottomMargin: 20 }) + 4;
   }
 
   if (data.terms && data.terms.trim()) {
@@ -210,9 +214,7 @@ export async function generateQuotationPDF(
     y += 5;
     doc.setFont(ff, "normal");
     doc.setTextColor(75, 85, 99);
-    const lines = doc.splitTextToSize(data.terms, pageWidth - mL - mR);
-    doc.text(lines, mL, y);
-    y += 5 * lines.length + 4;
+    y = drawWrappedText(doc, data.terms, mL, y, { maxWidth: pageWidth - mL - mR, lineHeight: 5, bottomMargin: 20 }) + 4;
   }
 
   // Footer

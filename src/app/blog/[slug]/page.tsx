@@ -19,14 +19,15 @@ export async function generateMetadata({
   const { slug } = await params;
   const post = BLOG_POSTS[slug];
   if (!post) return {};
+  const seoTitle = post.seoTitle ?? post.title;
 
   return {
-    title: post.title,
+    title: seoTitle,
     description: post.metaDescription,
     keywords: post.keywords,
     alternates: { canonical: `${SITE_URL}/blog/${slug}` },
     openGraph: {
-      title: post.title,
+      title: seoTitle,
       description: post.metaDescription,
       url: `${SITE_URL}/blog/${slug}`,
       type: "article",
@@ -36,7 +37,7 @@ export async function generateMetadata({
     },
     twitter: {
       card: "summary_large_image",
-      title: post.title,
+      title: seoTitle,
       description: post.metaDescription,
     },
   };

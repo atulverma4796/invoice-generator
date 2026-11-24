@@ -72,12 +72,47 @@ function FieldError({ message }: { message?: string }) {
 
 export { validateInvoice } from "@/lib/validation";
 
+// Which country the Country <select> should show for a currency. Keeps the
+// user's explicit pick while it still matches the currency; otherwise falls
+// back to the issuing country (ISO 4217 codes start with the issuer's
+// ISO 3166 code: USD→US, SGD→SG), then to the only country using it, else
+// blank (e.g. EUR — ambiguous, don't pretend it's "Austria").
+export function countryDisplayCode(picked: string, currency: string): string {
+  const matches = COUNTRIES.filter((c) => c.currency === currency);
+  if (picked && matches.some((c) => c.code === picked)) return picked;
+  const issuer = matches.find((c) => currency.startsWith(c.code));
+  if (issuer) return issuer.code;
+  return matches.length === 1 ? matches[0].code : "";
+}
+
 export default function InvoiceForm({ data, onChange, showErrors = false }: InvoiceFormProps) {
   const errors: ValidationErrors = showErrors ? validateInvoice(data) : {};
   const rule = getCountryRule(data.currency);
   const complianceNote = getComplianceNote(data.currency);
   const [savedClients, setSavedClients] = useState<SavedClient[]>([]);
   const [catalog, setCatalog] = useState<CatalogItem[]>([]);
+  // Many countries share a currency (USD, EUR, SGD…), so the country can't
+  // be derived from the currency alone — remember what the user picked.
+  const [countryCode, setCountryCode] = useState("");
+  const selectedCountry = countryDisplayCode(countryCode, data.currency);
+  // "Add tax" toggle. Unchecking zeroes the rate (so preview, PDF and
+  // totals drop the tax line) and remembers the last rate so re-checking
+  // restores it. taxRate stays the single source of truth for all math.
+  const [chargeTax, setChargeTax] = useState(true);
+  const [lastTaxRate, setLastTaxRate] = useState(0);
+  useEffect(() => {
+    // A loaded template/saved invoice with tax should show as checked.
+    if (data.taxRate > 0) setChargeTax(true);
+  }, [data.taxRate]);
+  const toggleTax = (on: boolean) => {
+    setChargeTax(on);
+    if (on) {
+      if (lastTaxRate > 0) update("taxRate", lastTaxRate);
+    } else {
+      setLastTaxRate(data.taxRate);
+      update("taxRate", 0);
+    }
+  };
 
   useEffect(() => {
     setSavedClients(getSavedClients());
@@ -94,6 +129,7 @@ export default function InvoiceForm({ data, onChange, showErrors = false }: Invo
 
   function handleCountryChange(countryCode: string) {
     const country = COUNTRIES.find((c) => c.code === countryCode);
+    setCountryCode(countryCode);
     if (country) {
       onChange({ ...data, currency: country.currency, taxLabel: getTaxLabelForCurrency(country.currency) });
     }
@@ -287,7 +323,7 @@ export default function InvoiceForm({ data, onChange, showErrors = false }: Invo
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Country</label>
           <select
-            value={COUNTRIES.find((c) => c.currency === data.currency)?.code ?? ""}
+            value={selectedCountry}
             onChange={(e) => handleCountryChange(e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           >
@@ -388,7 +424,7 @@ export default function InvoiceForm({ data, onChange, showErrors = false }: Invo
           <div>
             <input
               type="text"
-              placeholder={`${rule.taxIdLabel}${rule.taxIdRequired ? " *" : " (Optional)"}`}
+              placeholder={`${rule.taxIdLabel}${rule.taxIdRequired && data.taxRate > 0 ? " *" : " (Optional)"}`}
               value={data.senderTaxId}
               onChange={(e) => update("senderTaxId", e.target.value)}
               onFocus={(e) => e.target.select()}
@@ -567,19 +603,22 @@ export default function InvoiceForm({ data, onChange, showErrors = false }: Invo
       {/* Tax, Discount, Shipping & Late Fee */}
       <div className="grid grid-cols-4 gap-3">
         <div>
-          <label className="block text-xs font-medium text-gray-700 mb-1 truncate">
-            {data.taxLabel} %{rule.taxRateRequired && <RequiredStar />}
+          <label className="flex items-center gap-1.5 text-xs font-medium text-gray-700 mb-1 cursor-pointer select-none">
+            <input type="checkbox" checked={chargeTax} onChange={(e) => toggleTax(e.target.checked)} className="h-3.5 w-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
+            <span className="truncate">Add {data.taxLabel} %</span>
           </label>
-          <input type="number" value={data.taxRate || ""} onChange={(e) => update("taxRate", parseFloat(e.target.value) || 0)} onFocus={(e) => e.target.select()} placeholder="0" min="0" max="100" step="0.1" className={`w-full px-2.5 py-2 border rounded-lg text-sm focus:ring-2 focus:border-transparent ${errors.taxRate ? errBorder : okBorder}`} />
+          <input type="number" value={chargeTax ? (data.taxRate || "") : ""} disabled={!chargeTax} onChange={(e) => update("taxRate", parseFloat(e.target.value) || 0)} onFocus={(e) => e.target.select()} placeholder={chargeTax ? "0" : "No tax"} min="0" max="100" step="0.1" className={`w-full px-2.5 py-2 border rounded-lg text-sm focus:ring-2 focus:border-transparent disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed ${errors.taxRate ? errBorder : okBorder}`} />
           <FieldError message={errors.taxRate} />
         </div>
         <div>
           <label className="block text-xs font-medium text-gray-700 mb-1 truncate">Discount %</label>
-          <input type="number" value={data.discountRate || ""} onChange={(e) => update("discountRate", parseFloat(e.target.value) || 0)} onFocus={(e) => e.target.select()} placeholder="0" min="0" max="100" step="0.1" className="w-full px-2.5 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+          <input type="number" value={data.discountRate || ""} onChange={(e) => update("discountRate", parseFloat(e.target.value) || 0)} onFocus={(e) => e.target.select()} placeholder="0" min="0" max="100" step="0.1" className={`w-full px-2.5 py-2 border rounded-lg text-sm focus:ring-2 focus:border-transparent ${errors.discountRate ? errBorder : okBorder}`} />
+          <FieldError message={errors.discountRate} />
         </div>
         <div>
           <label className="block text-xs font-medium text-gray-700 mb-1 truncate">Shipping</label>
-          <input type="number" value={data.shippingFee || ""} onChange={(e) => update("shippingFee", parseFloat(e.target.value) || 0)} onFocus={(e) => e.target.select()} placeholder="0" min="0" step="0.01" className="w-full px-2.5 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+          <input type="number" value={data.shippingFee || ""} onChange={(e) => update("shippingFee", parseFloat(e.target.value) || 0)} onFocus={(e) => e.target.select()} placeholder="0" min="0" step="0.01" className={`w-full px-2.5 py-2 border rounded-lg text-sm focus:ring-2 focus:border-transparent ${errors.shippingFee ? errBorder : okBorder}`} />
+          <FieldError message={errors.shippingFee} />
         </div>
         <div>
           <label className="block text-xs font-medium text-gray-700 mb-1 truncate">Late Fee %/mo</label>

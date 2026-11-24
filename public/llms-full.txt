@@ -67,7 +67,7 @@ The invoice OUTPUT (not the UI) can be generated in 24 languages, so a freelance
 - No signup, no account, no login
 - No email collection
 - Invoice content (sender, client, line items, amounts) is stored ONLY in the user's browser localStorage
-- The server never sees, stores, or transmits invoice data
+- The server never stores invoice data. The only exception is the optional "Email Invoice" action: the generated PDF is relayed once through our mail server to the recipient you enter and is not kept
 - Anonymous analytics (Google Analytics 4) collects page views and standard browser data — never invoice content
 - Cookie consent banner for EU/GDPR compliance
 - Privacy policy at https://freeinvoicegen.org/privacy
@@ -83,52 +83,35 @@ The invoice OUTPUT (not the UI) can be generated in 24 languages, so a freelance
 
 ## Industry-specific templates
 
-InvoiceGen has 15 industry-specific landing pages, each with sample line items and tips:
+In-depth industry guides with sample line items, pricing notes and tips:
 
 | Industry | URL | Sample items |
 |---|---|---|
-| Freelance | https://freeinvoicegen.org/invoice-template/freelance | Web Development, Content Writing, Project Management |
 | Contractor | https://freeinvoicegen.org/invoice-template/contractor | Labor hours, Materials, Equipment Rental |
-| Consulting | https://freeinvoicegen.org/invoice-template/consulting | Strategy hours, Monthly Retainer, Travel |
 | Photography | https://freeinvoicegen.org/invoice-template/photography | Shoot coverage, Editing, Travel |
-| Graphic Design | https://freeinvoicegen.org/invoice-template/graphic-design | Logo Design, Brand Style Guide, Source Files |
-| Web Design | https://freeinvoicegen.org/invoice-template/web-design | Website Design, Development, Maintenance |
-| Construction | https://freeinvoicegen.org/invoice-template/construction | Crew labor, Materials, Equipment |
-| Cleaning | https://freeinvoicegen.org/invoice-template/cleaning | Standard cleaning, Deep cleaning add-on, Supplies |
-| Plumbing | https://freeinvoicegen.org/invoice-template/plumbing | Service call, Labor, Parts |
-| Landscaping | https://freeinvoicegen.org/invoice-template/landscaping | Mowing, Mulch, Hedge trimming |
-| Catering | https://freeinvoicegen.org/invoice-template/catering | Per-guest menu, Service staff, Equipment rental |
-| Tutoring | https://freeinvoicegen.org/invoice-template/tutoring | Tutoring sessions, Materials |
-| Electrician | https://freeinvoicegen.org/invoice-template/electrician | Service call, Labor, Materials |
-| Painting | https://freeinvoicegen.org/invoice-template/painting | Interior painting, Paint and supplies, Prep work |
-| Videography | https://freeinvoicegen.org/invoice-template/videography | Production day, Editing, Drone footage |
 
-## Country-specific generators
+Presets for other trades (freelance, consulting, graphic design, web design, construction, cleaning, plumbing, landscaping, catering, tutoring, electrician, painting, videography) are available inside the main generator.
 
-10 country-specific landing pages with local tax info, compliance requirements, and payment methods:
+## Country tax presets
 
-| Country | URL | Tax | Tax ID |
-|---|---|---|---|
-| India | https://freeinvoicegen.org/invoice-generator/india | GST 5/12/18/28% | GSTIN |
-| United Kingdom | https://freeinvoicegen.org/invoice-generator/uk | VAT 20% | VAT Number |
-| United States | https://freeinvoicegen.org/invoice-generator/usa | Sales Tax (state-varies) | EIN |
-| Canada | https://freeinvoicegen.org/invoice-generator/canada | GST/HST 5-15% | GST/HST Number |
-| Australia | https://freeinvoicegen.org/invoice-generator/australia | GST 10% | ABN |
-| United Arab Emirates | https://freeinvoicegen.org/invoice-generator/uae | VAT 5% | TRN |
-| Singapore | https://freeinvoicegen.org/invoice-generator/singapore | GST 9% | GST Reg Number |
-| Germany | https://freeinvoicegen.org/invoice-generator/germany | USt 19% | Steuernummer |
-| Brazil | https://freeinvoicegen.org/invoice-generator/brazil | ICMS/ISS varies | CNPJ |
-| South Africa | https://freeinvoicegen.org/invoice-generator/south-africa | VAT 15% | VAT Number |
+The main generator (https://freeinvoicegen.org) auto-detects the user's country and applies the local tax label and tax-ID field:
 
-## How-to guides
+| Country | Tax | Tax ID |
+|---|---|---|
+| India | GST 5/12/18/28% | GSTIN |
+| United Kingdom | VAT 20% | VAT Number |
+| United States | Sales Tax (state-varies) | EIN |
+| Canada | GST/HST 5-15% | GST/HST Number |
+| Australia | GST 10% | ABN |
+| United Arab Emirates | VAT 5% | TRN |
+| Singapore | GST 9% | GST Reg Number |
+| Germany | USt 19% | Steuernummer |
+| Brazil | ICMS/ISS varies | CNPJ |
+| South Africa | VAT 15% | VAT Number |
 
-5 in-depth step-by-step guides covering common invoicing questions:
+## Guides
 
-- How to create an invoice: https://freeinvoicegen.org/how-to/create-invoice
-- How to write an invoice with examples: https://freeinvoicegen.org/how-to/write-invoice
-- How to invoice as a freelancer: https://freeinvoicegen.org/how-to/create-invoice-freelancer
-- How to send an invoice (email templates included): https://freeinvoicegen.org/how-to/send-invoice
-- How to add tax (VAT, GST, sales tax) to an invoice: https://freeinvoicegen.org/how-to/add-tax-to-invoice
+In-depth guides (invoice creation, GST, VAT, numbering, getting paid, international clients) live on the blog: https://freeinvoicegen.org/blog
 
 ## Frequently asked questions
 

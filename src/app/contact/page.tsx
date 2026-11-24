@@ -7,7 +7,7 @@ const CONTACT_EMAIL = "iimtatul102@gmail.com";
 export const metadata: Metadata = {
   title: "Contact InvoiceGen — Support, Feedback & Bug Reports",
   description:
-    "Get in touch with the InvoiceGen team. Email us for support, feature requests, bug reports, or partnership enquiries. We read every message and usually reply within 1–2 business days.",
+    "Contact InvoiceGen for support, feature requests, bug reports or partnerships. We read every message and usually reply within 1–2 business days.",
   alternates: { canonical: `${SITE_URL}/contact` },
   robots: { index: true, follow: true },
 };

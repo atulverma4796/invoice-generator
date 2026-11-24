@@ -4,6 +4,8 @@
 export interface BlogPost {
   slug: string;
   title: string;
+  /** Shorter <title> for search results when `title` (the on-page H1) exceeds ~60 chars. */
+  seoTitle?: string;
   excerpt: string;
   metaDescription: string;
   publishedAt: string; // ISO date
@@ -47,8 +49,9 @@ export const BLOG_POSTS: Record<string, BlogPost> = {
   "professional-invoice-complete-guide-2026": {
     slug: "professional-invoice-complete-guide-2026",
     title: "How to Create a Professional Invoice in 2026: Complete Step-by-Step Guide",
+    seoTitle: "How to Create a Professional Invoice (2026 Step-by-Step)",
     excerpt: "Everything freelancers and small businesses need to know about creating invoices that look professional, comply with tax laws, and actually get paid on time.",
-    metaDescription: "Learn how to create a professional invoice in 2026 with our step-by-step guide. Covers required fields, tax compliance for India/US/UK/EU, payment terms, and common mistakes to avoid.",
+    metaDescription: "Step-by-step guide to creating a professional invoice in 2026: required fields, tax rules for India/US/UK/EU, payment terms, and mistakes to avoid.",
     publishedAt: "2026-04-28", // overridden by POST_META
     updatedAt: "2026-04-28",   // overridden by POST_META
     author: "Atul Verma",       // overridden by POST_META
@@ -618,6 +621,7 @@ If you need to generate any of these documents, our [free invoice generator](/) 
   "invoice-numbering-best-practices": {
     slug: "invoice-numbering-best-practices",
     title: "Invoice Numbering Best Practices: Complete Guide for Small Businesses",
+    seoTitle: "Invoice Numbering Best Practices for Small Businesses",
     excerpt: "How to set up an invoice numbering system that scales, complies with tax laws, and never causes confusion. Real examples and templates included.",
     metaDescription: "Learn invoice numbering best practices: sequential vs date-based, format examples, common mistakes, and tax compliance rules for India, UK, US.",
     publishedAt: "2026-04-28", // overridden by POST_META
@@ -903,7 +907,7 @@ If you're starting fresh, our [free invoice generator](/) auto-numbers your invo
     slug: "gst-invoice-india-compliance",
     title: "GST Invoice Format India: Complete Compliance Guide for 2026",
     excerpt: "A practical, plain-English guide to creating GST-compliant invoices in India — required fields, HSN codes, e-invoicing thresholds, and the most common mistakes that trigger notices.",
-    metaDescription: "Learn the exact GST invoice format required in India, including mandatory fields, HSN/SAC codes, IGST vs CGST/SGST, e-invoicing rules, and common compliance mistakes.",
+    metaDescription: "The exact GST invoice format for India: mandatory fields, HSN/SAC codes, IGST vs CGST/SGST, e-invoicing rules, and common compliance mistakes.",
     publishedAt: "2026-04-28", // overridden by POST_META
     updatedAt: "2026-04-28",   // overridden by POST_META
     author: "Atul Verma",       // overridden by POST_META
@@ -1069,8 +1073,9 @@ If you are new to GST, the most valuable thing you can do is read the official i
   "vat-invoice-uk-freelancers": {
     slug: "vat-invoice-uk-freelancers",
     title: "VAT Invoice UK: Everything Freelancers and Small Businesses Need to Know",
+    seoTitle: "VAT Invoice UK: A Guide for Freelancers & Small Businesses",
     excerpt: "A practical guide to UK VAT invoicing — when you need to register, what fields are required, the difference between full and simplified invoices, and how Making Tax Digital changes the game.",
-    metaDescription: "Complete guide to UK VAT invoices: registration thresholds, mandatory fields, simplified vs full invoices, MTD compliance, and reverse charge for digital services.",
+    metaDescription: "UK VAT invoice guide: registration thresholds, mandatory fields, simplified vs full invoices, MTD compliance, and reverse charge for digital services.",
     publishedAt: "2026-04-28", // overridden by POST_META
     updatedAt: "2026-04-28",   // overridden by POST_META
     author: "Atul Verma",       // overridden by POST_META
@@ -1340,7 +1345,7 @@ Fixing your invoice template is one of the highest-leverage things you can do as
     slug: "send-invoices-get-paid-on-time",
     title: "How to Send Invoices That Actually Get Paid On Time",
     excerpt: "Late payments are not just bad luck — they are usually caused by predictable, fixable issues in how you send invoices. Here is the playbook for cutting your average payment cycle in half.",
-    metaDescription: "A practical playbook for sending invoices that get paid faster: timing, channels, follow-up sequences, and how to handle silent clients without burning the relationship.",
+    metaDescription: "A practical playbook for invoices that get paid faster: timing, channels, follow-up sequences, and handling silent clients without burning bridges.",
     publishedAt: "2026-04-28", // overridden by POST_META
     updatedAt: "2026-04-28",   // overridden by POST_META
     author: "Atul Verma",       // overridden by POST_META
@@ -1803,7 +1808,7 @@ The world is a patchwork of overlapping tax regimes, and there is no universal "
     slug: "invoice-email-templates-get-paid-faster",
     title: "7 Invoice Email Templates That Actually Get You Paid Faster",
     excerpt: "Copy-paste-ready email templates for sending invoices, polite first reminders, firmer overdue follow-ups, and payment confirmations. Each template explains the psychology behind the wording.",
-    metaDescription: "Free invoice email templates for first send, friendly reminder, polite payment chase, firm overdue notice, final demand, payment thank-you, and credit note — with the reasoning behind each line.",
+    metaDescription: "Free invoice email templates: first send, friendly reminder, payment chase, overdue notice, final demand, thank-you and credit note, with the why behind each.",
     publishedAt: "2026-04-28", // overridden by POST_META
     updatedAt: "2026-04-28",   // overridden by POST_META
     author: "Atul Verma",       // overridden by POST_META
@@ -2010,7 +2015,7 @@ Save the templates today. The next invoice you send is the first one that benefi
     slug: "self-employed-tax-tracking-invoices",
     title: "Self-Employed Tax: How to Track Income From Invoices Year-Round",
     excerpt: "A practical system for self-employed people, freelancers, and one-person businesses to keep invoice income organised for tax filing — without paying for accounting software.",
-    metaDescription: "How to track invoice income for self-employed tax: simple spreadsheet system, what to record, deductions to remember, country-specific notes for India, UK, US, and EU.",
+    metaDescription: "Track invoice income for self-employed tax: a simple spreadsheet system, what to record, deductions to remember, and notes for India, UK, US and EU.",
     publishedAt: "2026-04-28", // overridden by POST_META
     updatedAt: "2026-04-28",   // overridden by POST_META
     author: "Atul Verma",       // overridden by POST_META
@@ -2178,8 +2183,9 @@ The single highest-leverage habit you can adopt: update your tracker the same da
   "invoice-international-clients-from-india": {
     slug: "invoice-international-clients-from-india",
     title: "How to Invoice International Clients from India: GST, FIRC & Getting Paid in USD (2026 Guide)",
+    seoTitle: "Invoice International Clients from India: GST, LUT & FIRC",
     excerpt: "A complete, India-specific guide to invoicing foreign clients legally. GST registration, LUT, export of services, FIRC documentation, RBI exchange rates, and which payment processor (Wise, Stripe, Razorpay, PayPal) to use.",
-    metaDescription: "Invoice international clients from India in 2026: GST registration thresholds, LUT for zero-rated supply, FIRC / e-FIRA, RBI exchange rates, payment processors compared.",
+    metaDescription: "Invoice international clients from India in 2026: GST thresholds, LUT for zero-rated exports, FIRC / e-FIRA, RBI rates, and payment processors compared.",
     publishedAt: "2026-04-28", // overridden by POST_META
     updatedAt: "2026-04-28",   // overridden by POST_META
     author: "Atul Verma",       // overridden by POST_META
@@ -2346,8 +2352,9 @@ Set up your stack once, document it for yourself, and never think about it again
   "late-payment-recovery-india-freelancers": {
     slug: "late-payment-recovery-india-freelancers",
     title: "Late Payment Recovery: Legal Steps for Indian Freelancers and Small Businesses (2026)",
+    seoTitle: "Late Payment Recovery in India: Legal Steps for Freelancers",
     excerpt: "When polite reminders stop working, what comes next. A practical, India-specific playbook for using the MSME Act, MSEFC Council, ODR Portal, summary suits, and other legal tools to recover unpaid invoices.",
-    metaDescription: "Recover unpaid invoices in India: MSME Act 2006, ODR Portal (mandatory from Oct 2025), MSEFC Council, summary suits under Order XXXVII CPC, demand notices, and the 3-year limitation rule.",
+    metaDescription: "Recover unpaid invoices in India: MSME Act 2006, the ODR Portal, MSEFC Council, summary suits under Order XXXVII CPC, demand notices and the 3-year limit.",
     publishedAt: "2026-04-28", // overridden by POST_META
     updatedAt: "2026-04-28",   // overridden by POST_META
     author: "Atul Verma",       // overridden by POST_META

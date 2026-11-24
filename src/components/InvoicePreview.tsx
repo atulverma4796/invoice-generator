@@ -13,6 +13,7 @@ import {
   calculateDiscount,
   calculateTotal,
 } from "@/lib/calculations";
+import { invoiceHeaderColors, formatAmount, clientTaxIdDisplayLabel } from "@/lib/pdfHelpers";
 
 interface InvoicePreviewProps {
   data: InvoiceData;
@@ -35,10 +36,12 @@ export default function InvoicePreview({ data }: InvoicePreviewProps) {
   const discount = calculateDiscount(subtotal, data.discountRate);
   const tax = calculateTax(subtotal, data.taxRate, discount);
   const total = calculateTotal(subtotal, tax, discount) + (data.shippingFee || 0);
-  const isLight = data.template === "minimal" || data.template === "pastel" || data.template === "monochrome";
   const isDark = data.template === "executive";
   const templateConfig = TEMPLATES[data.template];
-  const headerBg = isLight ? (data.template === "pastel" ? "#f5f0e8" : data.template === "monochrome" ? "#ffffff" : "#f9fafb") : (templateConfig?.headerBg || style.primaryColor);
+  // Same luminance-based colour choice as the PDF (generatePDF.ts).
+  const header = invoiceHeaderColors(data.template, templateConfig?.headerBg || style.primaryColor, style.primaryColor);
+  const headerBg = header.bg;
+  const money = (n: number) => `${symbol}${formatAmount(n, data.currency)}`;
   const taxLabel = data.taxLabel || "Tax";
   const bodyBg = data.template === "pastel" ? "#faf8f4" : isDark ? "#1c1c1e" : "white";
   const bodyText = isDark ? "#e5e5e5" : "#1f2937";
@@ -82,7 +85,7 @@ export default function InvoicePreview({ data }: InvoicePreviewProps) {
         className="px-8 py-6"
         style={{
           backgroundColor: headerBg,
-          color: isLight ? (data.template === "monochrome" ? "#000000" : style.primaryColor) : (isDark ? "#d4a843" : "#ffffff"),
+          color: header.text,
         }}
       >
         <div className="flex justify-between items-start">
@@ -147,6 +150,11 @@ export default function InvoicePreview({ data }: InvoicePreviewProps) {
             {data.clientAddress && (
               <p className="text-gray-600 whitespace-pre-line">{data.clientAddress}</p>
             )}
+            {data.clientTaxId?.trim() && (
+              <p className="text-gray-500 text-xs mt-1">
+                {clientTaxIdDisplayLabel(data.currency)}: {data.clientTaxId.trim()}
+              </p>
+            )}
           </div>
           <div className="text-right">
             <div className="mb-2">
@@ -192,10 +200,10 @@ export default function InvoicePreview({ data }: InvoicePreviewProps) {
               <div className="col-span-5" style={{ color: bodyText }}>{item.description || "\u2014"}</div>
               <div className="col-span-2 text-center" style={{ color: mutedText }}>{item.quantity}</div>
               <div className="col-span-2 text-right" style={{ color: mutedText }}>
-                {symbol}{item.rate.toFixed(2)}
+                {money(item.rate)}
               </div>
               <div className="col-span-3 text-right font-medium" style={{ color: bodyText }}>
-                {symbol}{item.amount.toFixed(2)}
+                {money(item.amount)}
               </div>
             </div>
           ))}
@@ -206,24 +214,24 @@ export default function InvoicePreview({ data }: InvoicePreviewProps) {
           <div className="w-64 space-y-2 text-sm">
             <div className="flex justify-between">
               <span style={{ color: mutedText }}>{L.subtotal}</span>
-              <span style={{ color: bodyText }}>{symbol}{subtotal.toFixed(2)}</span>
+              <span style={{ color: bodyText }}>{money(subtotal)}</span>
             </div>
             {data.taxRate > 0 && (
               <div className="flex justify-between">
                 <span style={{ color: mutedText }}>{taxLabel} ({data.taxRate}%)</span>
-                <span style={{ color: bodyText }}>{symbol}{tax.toFixed(2)}</span>
+                <span style={{ color: bodyText }}>{money(tax)}</span>
               </div>
             )}
             {data.discountRate > 0 && (
               <div className="flex justify-between">
                 <span style={{ color: mutedText }}>{L.discount} ({data.discountRate}%)</span>
-                <span className="text-red-600">-{symbol}{discount.toFixed(2)}</span>
+                <span className="text-red-600">-{money(discount)}</span>
               </div>
             )}
             {data.shippingFee > 0 && (
               <div className="flex justify-between">
                 <span style={{ color: mutedText }}>{L.shipping}</span>
-                <span style={{ color: bodyText }}>{symbol}{data.shippingFee.toFixed(2)}</span>
+                <span style={{ color: bodyText }}>{money(data.shippingFee)}</span>
               </div>
             )}
             <div
@@ -231,7 +239,7 @@ export default function InvoicePreview({ data }: InvoicePreviewProps) {
               style={{ borderColor: style.primaryColor }}
             >
               <span>{L.total}</span>
-              <span style={{ color: style.primaryColor }}>{symbol}{total.toFixed(2)}</span>
+              <span style={{ color: style.primaryColor }}>{money(total)}</span>
             </div>
             {data.lateFeeRate > 0 && (
               <p className="text-[10px] mt-2 text-right" style={{ color: "#dc2626" }}>

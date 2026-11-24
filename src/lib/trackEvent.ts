@@ -40,6 +40,7 @@ function getDeviceInfo(): DeviceInfo {
 
   let os = "Unknown";
   if (ua.includes("Windows")) os = "Windows";
+  else if (ua.includes("iPhone") || ua.includes("iPad")) os = "iOS"; // before "Mac OS": iOS UAs contain "like Mac OS X"
   else if (ua.includes("Mac OS")) os = "macOS";
   else if (ua.includes("Android")) os = "Android";
   else if (ua.includes("iPhone") || ua.includes("iPad")) os = "iOS";

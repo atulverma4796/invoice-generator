@@ -41,6 +41,23 @@ export function groupMonthsIntoReceipts(months: string[], split: ReceiptSplit): 
 
 const STORAGE_KEY = "rent_receipt_form_v1";
 
+// Landlord PAN is mandatory for an HRA claim when the ANNUAL rent exceeds
+// ₹1,00,000 (CBDT Circular 08/2013). It's judged on the yearly rent — not
+// on whatever span of months the receipts happen to cover — so 3 receipts
+// of ₹10,000 still need the PAN (₹1.2 lakh a year).
+export const LANDLORD_PAN_ANNUAL_RENT_THRESHOLD = 100000;
+export function isLandlordPanRequired(monthlyRent: number): boolean {
+  return (monthlyRent || 0) * 12 > LANDLORD_PAN_ANNUAL_RENT_THRESHOLD;
+}
+
+// Indian Stamp Act: a cash receipt for MORE than ₹5,000 needs a revenue
+// stamp. The test is the amount on that receipt — a quarterly cash receipt
+// of 3 × ₹2,000 = ₹6,000 needs one even though each month is under ₹5,000.
+export const REVENUE_STAMP_THRESHOLD = 5000;
+export function needsRevenueStamp(paymentMode: RentReceiptData["paymentMode"], receiptAmount: number): boolean {
+  return paymentMode === "Cash" && receiptAmount > REVENUE_STAMP_THRESHOLD;
+}
+
 // Indian financial year that a given date falls in (FY starts 1 April).
 export function currentFyStartYear(now = new Date()): number {
   return now.getMonth() >= 3 ? now.getFullYear() : now.getFullYear() - 1;
@@ -49,6 +66,14 @@ export function currentFyStartYear(now = new Date()): number {
 // A financial year's month range, e.g. 2025 -> { start: "2025-04", end: "2026-03" }.
 export function fyRange(startYear: number): { start: string; end: string } {
   return { start: `${startYear}-04`, end: `${startYear + 1}-03` };
+}
+
+// The same range keyed as form fields. (Spreading fyRange() straight into
+// the form data used to add stray `start`/`end` keys and leave
+// startMonth/endMonth untouched — the FY picker silently did nothing.)
+export function fyPeriod(startYear: number): Pick<RentReceiptData, "startMonth" | "endMonth"> {
+  const { start, end } = fyRange(startYear);
+  return { startMonth: start, endMonth: end };
 }
 
 // FY start-year derived from a "YYYY-MM" month (April onwards belongs to that year).
@@ -136,6 +161,7 @@ export default function RentReceiptForm({ data, setData, onGenerate, generating 
   const totalMonths = months.length;
   const totalReceipts = groups.length;
   const totalAmount = totalMonths * (data.monthlyRent || 0);
+  const panRequired = isLandlordPanRequired(data.monthlyRent);
 
   const tenantRef = useRef<HTMLInputElement>(null);
   const landlordRef = useRef<HTMLInputElement>(null);
@@ -267,7 +293,7 @@ export default function RentReceiptForm({ data, setData, onGenerate, generating 
               setData({
                 ...data,
                 periodMode: "fy",
-                ...fyRange(fyStartFromMonth(data.startMonth)),
+                ...fyPeriod(fyStartFromMonth(data.startMonth)),
               })
             }
             className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-colors ${
@@ -297,7 +323,7 @@ export default function RentReceiptForm({ data, setData, onGenerate, generating 
               value={fyStartFromMonth(data.startMonth)}
               onChange={(e) => {
                 const y = Number(e.target.value);
-                setData({ ...data, ...fyRange(y) });
+                setData({ ...data, ...fyPeriod(y) });
               }}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
@@ -381,8 +407,8 @@ export default function RentReceiptForm({ data, setData, onGenerate, generating 
         {totalReceipts > 0 && data.monthlyRent > 0 && (
           <p className="mt-3 text-[11px] text-gray-500 text-center">
             From {monthLabel(data.startMonth)} to {monthLabel(data.endMonth)}
-            {totalAmount * 1 >= 100000 && !data.landlordPan
-              ? " · Landlord PAN required (annual rent ≥ ₹1 lakh)"
+            {panRequired && !data.landlordPan
+              ? " · Landlord PAN required (annual rent > ₹1 lakh)"
               : ""}
           </p>
         )}
@@ -416,8 +442,8 @@ export default function RentReceiptForm({ data, setData, onGenerate, generating 
             focusAndScroll(rentRef.current);
             return;
           }
-          if (totalAmount >= 100000 && !data.landlordPan.trim()) {
-            toast.error("Landlord PAN is required when annual rent ≥ ₹1 lakh.");
+          if (panRequired && !data.landlordPan.trim()) {
+            toast.error("Landlord PAN is required when annual rent exceeds ₹1 lakh.");
             focusAndScroll(panRef.current);
             return;
           }

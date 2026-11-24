@@ -1,11 +1,26 @@
 import { LineItem } from "@/types/invoice";
 
+// Round a money value to 2 decimals, half away from zero.
+// `Math.round(x * 100) / 100` is wrong for values like 1.005 or 1234.005:
+// in binary floating point 1.005 * 100 === 100.49999999999999, so the
+// naive version rounds DOWN and the invoice is a cent short. Snapping the
+// scaled value to 15 significant digits first removes that binary noise
+// before rounding.
+export function roundMoney(value: number): number {
+  if (!Number.isFinite(value)) return value;
+  const scaled = Number((Math.abs(value) * 100).toPrecision(15));
+  const rounded = Math.round(scaled) / 100;
+  return value < 0 ? -rounded : rounded;
+}
+
 export function calculateLineAmount(qty: number, rate: number): number {
-  return Math.round(qty * rate * 100) / 100;
+  return roundMoney(qty * rate);
 }
 
 export function calculateSubtotal(items: LineItem[]): number {
-  return items.reduce((sum, item) => sum + item.amount, 0);
+  // Round the sum too — adding already-rounded amounts can still drift
+  // (0.1 + 0.2 === 0.30000000000000004).
+  return roundMoney(items.reduce((sum, item) => sum + item.amount, 0));
 }
 
 // Tax applies to the *discounted* base, not the raw subtotal — that is
@@ -21,14 +36,14 @@ export function calculateTax(
   discount: number = 0,
 ): number {
   const taxableBase = Math.max(0, subtotal - discount);
-  return Math.round(taxableBase * (taxRate / 100) * 100) / 100;
+  return roundMoney(taxableBase * (taxRate / 100));
 }
 
 export function calculateDiscount(
   subtotal: number,
   discountRate: number
 ): number {
-  return Math.round(subtotal * (discountRate / 100) * 100) / 100;
+  return roundMoney(subtotal * (discountRate / 100));
 }
 
 export function calculateTotal(
@@ -36,5 +51,5 @@ export function calculateTotal(
   tax: number,
   discount: number
 ): number {
-  return Math.round((subtotal + tax - discount) * 100) / 100;
+  return roundMoney(subtotal + tax - discount);
 }

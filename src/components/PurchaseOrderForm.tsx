@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useRef } from "react";
 import toast from "react-hot-toast";
+import { formatAmount } from "@/lib/pdfHelpers";
 
 export interface POLineItem {
   id: string;
@@ -105,6 +106,30 @@ export function defaultPurchaseOrderData(): PurchaseOrderData {
   };
 }
 
+// Money is rounded to cents at each step so the form, the PDF and any
+// accountant re-adding the lines all arrive at the same figures.
+const r2 = (n: number) => Math.round((n + Number.EPSILON) * 100) / 100;
+
+export interface PurchaseOrderTotals {
+  subtotal: number;
+  discount: number;
+  tax: number;
+  shipping: number;
+  total: number;
+}
+
+/** Single source of truth for PO totals (form + PDF). Tax is on the discounted base; shipping is untaxed. */
+export function computePurchaseOrderTotals(
+  data: Pick<PurchaseOrderData, "lineItems" | "taxRate" | "discountRate" | "shippingFee">,
+): PurchaseOrderTotals {
+  const subtotal = r2(data.lineItems.reduce((sum, it) => sum + r2((it.quantity || 0) * (it.rate || 0)), 0));
+  const discount = r2((subtotal * (data.discountRate || 0)) / 100);
+  const tax = r2(((subtotal - discount) * (data.taxRate || 0)) / 100);
+  const shipping = r2(data.shippingFee || 0);
+  const total = r2(subtotal - discount + tax + shipping);
+  return { subtotal, discount, tax, shipping, total };
+}
+
 export function getCurrencySymbol(code: string): string {
   return CURRENCIES.find((c) => c.code === code)?.symbol || "$";
 }
@@ -131,14 +156,12 @@ export default function PurchaseOrderForm({ data, setData, onGenerate, generatin
     el.scrollIntoView({ behavior: "smooth", block: "center" });
   };
 
-  const totals = useMemo(() => {
-    const subtotal = data.lineItems.reduce((sum, it) => sum + it.quantity * it.rate, 0);
-    const discount = (subtotal * (data.discountRate || 0)) / 100;
-    const taxableBase = subtotal - discount;
-    const tax = (taxableBase * (data.taxRate || 0)) / 100;
-    const total = taxableBase + tax + (data.shippingFee || 0);
-    return { subtotal, discount, tax, total };
-  }, [data.lineItems, data.taxRate, data.discountRate, data.shippingFee]);
+  const totals = useMemo(
+    () => computePurchaseOrderTotals(data),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [data.lineItems, data.taxRate, data.discountRate, data.shippingFee],
+  );
+  const money = (n: number) => formatAmount(n, data.currency);
 
   const symbol = getCurrencySymbol(data.currency);
 
@@ -383,7 +406,7 @@ export default function PurchaseOrderForm({ data, setData, onGenerate, generatin
                   className="col-span-4 md:col-span-2 px-3 py-2 border border-gray-300 rounded-lg text-sm text-right focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
                 <div className="col-span-3 md:col-span-2 text-right text-sm font-medium text-gray-700 px-2">
-                  {symbol}{amount.toFixed(2)}
+                  {symbol}{money(amount)}
                 </div>
                 <button
                   type="button"
@@ -461,29 +484,29 @@ export default function PurchaseOrderForm({ data, setData, onGenerate, generatin
         <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 space-y-2">
           <div className="flex justify-between text-sm">
             <span className="text-gray-600">Subtotal</span>
-            <span className="font-medium">{symbol}{totals.subtotal.toFixed(2)}</span>
+            <span className="font-medium">{symbol}{money(totals.subtotal)}</span>
           </div>
           {totals.discount > 0 && (
             <div className="flex justify-between text-sm">
               <span className="text-gray-600">Discount ({data.discountRate}%)</span>
-              <span className="font-medium text-red-600">−{symbol}{totals.discount.toFixed(2)}</span>
+              <span className="font-medium text-red-600">−{symbol}{money(totals.discount)}</span>
             </div>
           )}
           {totals.tax > 0 && (
             <div className="flex justify-between text-sm">
               <span className="text-gray-600">{data.taxLabel} ({data.taxRate}%)</span>
-              <span className="font-medium">{symbol}{totals.tax.toFixed(2)}</span>
+              <span className="font-medium">{symbol}{money(totals.tax)}</span>
             </div>
           )}
           {(data.shippingFee || 0) > 0 && (
             <div className="flex justify-between text-sm">
               <span className="text-gray-600">Shipping</span>
-              <span className="font-medium">{symbol}{(data.shippingFee || 0).toFixed(2)}</span>
+              <span className="font-medium">{symbol}{money(totals.shipping)}</span>
             </div>
           )}
           <div className="flex justify-between border-t border-gray-200 pt-2 text-base font-bold">
             <span>PO Total</span>
-            <span className="text-blue-700">{symbol}{totals.total.toFixed(2)}</span>
+            <span className="text-blue-700">{symbol}{money(totals.total)}</span>
           </div>
         </div>
       </div>

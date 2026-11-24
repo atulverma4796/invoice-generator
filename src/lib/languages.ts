@@ -652,6 +652,19 @@ const TAX_LABELS: Record<string, string> = {
   EGP: "VAT",
   PKR: "Sales Tax",
   BDT: "VAT",
+  CZK: "VAT",
+  HUF: "VAT",
+  RON: "VAT",
+  RSD: "VAT",
+  ISK: "VAT",
+  ALL: "VAT",
+  BAM: "VAT",
+  MKD: "VAT",
+  MDL: "VAT",
+  NPR: "VAT",
+  HKD: "Tax",
+  TWD: "VAT",
+  ILS: "VAT",
 };
 
 export function getTaxLabelForCurrency(currency: string): string {

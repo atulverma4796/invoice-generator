@@ -12,7 +12,8 @@ const DOC_LABELS: Record<string, { name: string; subjectTag: string }> = {
 };
 const FEATURE_FIELDS = ["hasLogo", "hasSignature", "hasQrCode", "hasNotes", "hasTerms", "hasWatermark", "hasPaymentInfo", "hasShipping", "hasLateFee", "hasPoNumber", "hasDueDate"] as const;
 
-function text(value: unknown, maxLength: number): string { return typeof value === "string" ? value.trim().slice(0, maxLength) : ""; }
+// Single-line, control-char-free: values land in the Subject header.
+function text(value: unknown, maxLength: number): string { return typeof value === "string" ? value.replace(/[\x00-\x1F\x7F\u2028\u2029]+/g, " ").replace(/ {2,}/g, " ").trim().slice(0, maxLength) : ""; }
 function escapeHtml(value: string): string { return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;"); }
 function sameOrigin(req: NextRequest): boolean { const origin = req.headers.get("origin"); try { return !!origin && new URL(origin).origin === req.nextUrl.origin; } catch { return false; } }
 function clientKey(req: NextRequest): string { return req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || req.headers.get("x-real-ip") || req.headers.get("user-agent") || "unknown"; }
@@ -25,14 +26,15 @@ export async function POST(req: NextRequest) {
   if (!sameOrigin(req)) return NextResponse.json({ success: false }, { status: 403 });
   if (Number(req.headers.get("content-length") || "0") > MAX_BODY_BYTES) return NextResponse.json({ success: false }, { status: 413 });
   if (!withinRateLimit(clientKey(req))) return NextResponse.json({ success: false }, { status: 429 });
+  let body: unknown;
+  try { body = await req.json(); } catch { return NextResponse.json({ success: false }, { status: 400 }); }
   try {
-    const body: unknown = await req.json();
     if (!body || typeof body !== "object" || Array.isArray(body)) return NextResponse.json({ success: false }, { status: 400 });
     const payload = body as Record<string, unknown>;
     const rawDevice = payload.device && typeof payload.device === "object" && !Array.isArray(payload.device) ? payload.device as Record<string, unknown> : {};
     const rawSignals = payload.signals && typeof payload.signals === "object" && !Array.isArray(payload.signals) ? payload.signals as Record<string, unknown> : {};
     const docType = text(payload.docType, 40);
-    const doc = DOC_LABELS[docType] || DOC_LABELS.invoice;
+    const doc = Object.hasOwn(DOC_LABELS, docType) ? DOC_LABELS[docType] : DOC_LABELS.invoice;
     const action = payload.action === "email" ? "email" : "download";
     const browser = text(rawDevice.browser, 40) || "Unknown";
     const os = text(rawDevice.os, 40) || "Unknown";

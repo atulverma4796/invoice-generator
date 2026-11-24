@@ -29,6 +29,21 @@ export function escapeHtml(value: unknown): string {
     .replace(/'/g, "&#39;");
 }
 
+// ---- Header-safe single-line strings ----------------------------------
+
+/**
+ * Collapse CR/LF/TAB and other control characters to single spaces so a
+ * user-supplied value can be used in an email header (subject, display
+ * name) without header injection ("Name\r\nBcc: victim@x.com").
+ */
+export function toHeaderSafe(value: unknown): string {
+  if (value === null || value === undefined) return "";
+  return String(value)
+    .replace(/[\x00-\x1F\x7F\u2028\u2029]+/g, " ")
+    .replace(/ {2,}/g, " ")
+    .trim();
+}
+
 // ---- Filename sanitization -------------------------------------------
 
 /**
@@ -85,9 +100,10 @@ export function isAllowedOrigin(
       return false;
     }
   };
-  if (isHostAllowed(origin)) return true;
-  if (isHostAllowed(referer)) return true;
-  return false;
+  // When the browser sends Origin it is authoritative: a foreign Origin
+  // must not be rescued by an allowed-looking Referer.
+  if (origin) return isHostAllowed(origin);
+  return isHostAllowed(referer);
 }
 
 // ---- Rate limiting ---------------------------------------------------
